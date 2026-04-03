@@ -92,8 +92,8 @@ public class PlayerMove : MonoBehaviour
          *  funzione permette di aggiustare la posizione, rimettendola 
          *  in linea con la griglia */
 
-        float newX = Mathf.Floor(pos.x / fCellSize) * fCellSize + gridOffset.x;
-        float newY = Mathf.Floor(pos.y / fCellSize) * fCellSize + gridOffset.y;
+        float newX = Mathf.Round(pos.x / fCellSize) * fCellSize;
+        float newY = Mathf.Round(pos.y / fCellSize) * fCellSize;
         return new Vector3(newX, newY, pos.z);  //La z rimane invariata
     }
 

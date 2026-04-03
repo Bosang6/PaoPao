@@ -205,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 228570701}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.5, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -360,6 +360,7 @@ GameObject:
   - component: {fileID: 512986710}
   - component: {fileID: 512986709}
   - component: {fileID: 512986711}
+  - component: {fileID: 512986715}
   - component: {fileID: 512986712}
   - component: {fileID: 512986714}
   - component: {fileID: 512986713}
@@ -438,7 +439,7 @@ Transform:
   m_GameObject: {fileID: 512986708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.5, y: 4.5, z: 0}
+  m_LocalPosition: {x: -6, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -457,7 +458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   fCellSize: 1
-  gridOffset: {x: 0.5, y: 0.5}
+  gridOffset: {x: 0, y: 0}
   fSpeed: 5
   lmCollisionLayer:
     serializedVersion: 2
@@ -557,6 +558,65 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &512986715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512986708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7c4cf3c588674ab953589ae4387e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBombHandler
+  maxBombs: 10
+--- !u!1 &665293008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 665293010}
+  - component: {fileID: 665293009}
+  m_Layer: 0
+  m_Name: BombPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &665293009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665293008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b36b331d97b99e54ab3294f853b7d404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BombPool
+  bombPrefab: {fileID: 3814818534713039899, guid: ce2086df1fdbf1541ac8287960c5bfc4, type: 3}
+  initialPoolSize: 7
+--- !u!4 &665293010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665293008}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &788903792
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,11 +765,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3288487927467772729, guid: 4371fe7b0aafd474b9320763695da1a5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3288487927467772729, guid: 4371fe7b0aafd474b9320763695da1a5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3288487927467772729, guid: 4371fe7b0aafd474b9320763695da1a5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -916,3 +976,4 @@ SceneRoots:
   - {fileID: 350772213}
   - {fileID: 1283083821}
   - {fileID: 1073464543}
+  - {fileID: 665293010}
