@@ -36,7 +36,6 @@ public class BombPool : MonoBehaviour
         BombController bomb = pool.Count > 0 ? pool.Dequeue() : CreateBomb();   //crea solo se pool vuoto
         bomb.transform.position = position; //Assegna alla bomba l'attuale posizione del player
         bomb.gameObject.SetActive(true);
-        bomb.Initialize();
         return bomb;
     }
 

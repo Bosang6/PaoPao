@@ -1,44 +1,46 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBombHandler : MonoBehaviour
 {
-    [Header("Bomb Settings")]
-    [SerializeField] private int maxBombs = 1;       // quante bombe può piazzare contemporaneamente
+
+    [SerializeField] private PlayerData playerData;
+
     private int currentBombs = 0;
+    private PlayerMove movement;
 
-    private PlayerMove movement;              // riferimento al tuo script movimento
+    void Start() { movement = GetComponent<PlayerMove>(); }
 
-    void Awake() { movement = GetComponent<PlayerMove>(); }
-
-    void Update() { if (Input.GetKeyDown(KeyCode.Space)) { TryPlaceBomb(); } }
+    void Update() { if (Input.GetKeyDown(playerData.bombKey)) { TryPlaceBomb(); } }
 
     void TryPlaceBomb()
     {
-        if (currentBombs >= maxBombs) return;
+        if (currentBombs >= playerData.maxBombs) return;
 
-        // Snap della posizione del player alla griglia
-        Vector3 bombPos = SnapToGrid(transform.position);
+        //Posizione (allineata alla griglia) della bomba da piazzare
+        Vector3 bombPos = GridUtils.AdjustPosition(transform.position, movement.fCellSize);
 
         BombController bomb = BombPool.Instance.Get(bombPos);
+        if(bomb == null) return;
+
+        bomb.Initialize(PlayerManager.Instance.GetAllPlayers());
 
         // Sottoscrivi l'evento di ritorno al pool per decrementare il contatore
-        bomb.OnBombReturned += HandleBombReturned;
+        bomb.OnBombReturned += ReleaseBomb;
+
+        /*  Registra il listener "ReleaseBomb" come listener dell'evento "OnBombReturned"
+         *  (che è un evento, spiegato in BombController > Explode ()). Quando, nel metodo
+         *  Explode() di BombController, verrà invocato OnBombReturned?.Invoke(), Unity
+         *  invocherà automaticamente la funzione ReleaseBomb() di questo player.
+         *  La sintassi += permette di aprire il canale di comunicazione coi listener */
 
         currentBombs++;
     }
 
-    void HandleBombReturned()
+    void ReleaseBomb()
     {
         currentBombs--;
     }
 
-    Vector3 SnapToGrid(Vector3 pos)
-    {
-        float cellSize = movement.fCellSize;
-        return new Vector3(
-            Mathf.Round(pos.x / cellSize) * cellSize,
-            Mathf.Round(pos.y / cellSize) * cellSize,
-            pos.z
-        );
-    }
+    
 }

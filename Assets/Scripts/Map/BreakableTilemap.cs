@@ -16,6 +16,24 @@ public class BreakableTilemap : MonoBehaviour
         tilemap = GetComponent<Tilemap>();
     }
 
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+        if (!other.CompareTag(targetTag)) return;
+
+        // La fiamma è già centrata sulla cella, usiamo direttamente la sua posizione
+        Vector3Int cellPos = tilemap.WorldToCell(other.transform.position);
+        TileBase tile = tilemap.GetTile(cellPos);
+
+        if (tile == null) return;
+
+        Vector3 effectPos = tilemap.GetCellCenterWorld(cellPos);
+
+        if (breakEffectPrefab != null)
+            Instantiate(breakEffectPrefab, effectPos, Quaternion.identity);
+
+        tilemap.SetTile(cellPos, null);
+    }
+    /*
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!other.gameObject.CompareTag(targetTag)) return;
@@ -44,4 +62,6 @@ public class BreakableTilemap : MonoBehaviour
             
         }
     }
+    */
+    
 }

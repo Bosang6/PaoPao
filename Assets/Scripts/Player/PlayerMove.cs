@@ -3,21 +3,37 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [Header("Grid Settings")]
-    public float fCellSize = 1f;                            //Dimensione di ogni cella
+    [Header("Player Settings")]
+    [SerializeField] private PlayerData playerData;
+
+    [Header("Game Settings")]
+    [SerializeField] private GameData gameData;
+
     public Vector2 gridOffset = new Vector2(0.5f, 0.5f);    //Offset dal centro della tile
-    public float fSpeed = 5f;                               //Velocità di spostamento tra le celle
-    public LayerMask lmCollisionLayer;                      //Layer degli ostacoli (muri, bombe, ...)
 
     private bool bIsMoving = false;
     private Vector3 v3TargetPosition;
     private Animator animator;
+    public float fCellSize;                            //Dimensione di ogni cella
+    private float fSpeed = 5f;                               //Velocità di spostamento tra le celle
+
+    private InputSystem_Actions _inputActions;
+    private Vector2 _currentInput;
+
+    private void Awake() { _inputActions = new InputSystem_Actions(); }
+    void OnEnable() { _inputActions.Player.Enable(); }
+    void OnDisable() { _inputActions.Player.Disable(); }
+    void OnDestroy() { _inputActions.Dispose(); PlayerManager.Instance?.Unregister(transform); }
+
 
     void Start()
     {
-        transform.position = AdjustPosition(transform.position);    //Allinea la posizione alla griglia
+        fSpeed = playerData.moveSpeed;
+        fCellSize = gameData.fCellSize;
+        transform.position = GridUtils.AdjustPosition(transform.position, fCellSize);    //Allinea la posizione alla griglia
         v3TargetPosition = transform.position;
         animator = GetComponent<Animator>();
+        PlayerManager.Instance.Register(transform);
     }
 
     void Update() { if (bIsMoving) { Move(); } else { ReadInput(); } }
@@ -25,9 +41,9 @@ public class PlayerMove : MonoBehaviour
 
     void ReadInput()
     {
-        //GetAxisRaw permette di rendere i valori solo -1, 0 o 1
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        Vector2 raw = _inputActions.Player.Move.ReadValue<Vector2>();
+        float h = Mathf.RoundToInt(raw.x);  //Per avere solo -1, 0 o 1
+        float v = Mathf.RoundToInt(raw.y);  //Per avere solo -1, 0 o 1
 
         Vector2 direction = Vector2.zero;
 
@@ -59,7 +75,7 @@ public class PlayerMove : MonoBehaviour
 
         // BoxCast: proietta un box della stessa dimensione della cella
         Vector2 boxSize = new Vector2(fCellSize * 0.9f, fCellSize * 0.9f); // 0.9 = margine minimo
-        Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, lmCollisionLayer);
+        Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, playerData.lmCollisionLayer);
 
         if (hit == null)    //Cella libera, ci si può muovere
         {
@@ -79,29 +95,17 @@ public class PlayerMove : MonoBehaviour
 
         if (transform.position == end)
         {
-            transform.position = AdjustPosition(end);   //Doppio controllo sull'accuratezza della posizione
+            transform.position = GridUtils.AdjustPosition(end, fCellSize);   //Doppio controllo sull'accuratezza della posizione
             bIsMoving = false;
             if (animator != null) { animator.SetBool("IsMoving", false); }
         }
-    }
-
-    Vector3 AdjustPosition(Vector3 pos)
-    {
-        /*  A causa delle moltiplicazioni tra float, a lungo andare 
-         *  la posizione potrebbe essere leggermente traslata, questa 
-         *  funzione permette di aggiustare la posizione, rimettendola 
-         *  in linea con la griglia */
-
-        float newX = Mathf.Round(pos.x / fCellSize) * fCellSize;
-        float newY = Mathf.Round(pos.y / fCellSize) * fCellSize;
-        return new Vector3(newX, newY, pos.z);  //La z rimane invariata
     }
 
     void OnDrawGizmos()
     {
         // Mostra la posizione snappata (pallino giallo)
         Gizmos.color = Color.yellow;
-        Vector3 snapped = AdjustPosition(transform.position);
+        Vector3 snapped = GridUtils.AdjustPosition(transform.position, fCellSize);
         Gizmos.DrawWireSphere(snapped, 0.1f);
 
         // Mostra il target attuale (pallino rosso)
