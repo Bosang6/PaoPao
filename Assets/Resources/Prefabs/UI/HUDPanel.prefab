@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  m_Sprite: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -293,7 +293,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  m_Sprite: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -808,7 +808,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  m_Sprite: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1078,6 +1078,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7889901847081383713}
+  - component: {fileID: 7460534825972546812}
   - component: {fileID: 5016307130032287115}
   m_Layer: 5
   m_Name: HUDPlayer_03
@@ -1108,6 +1109,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &7460534825972546812
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076815986293395716}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &5016307130032287115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1121,13 +1134,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
   hearts:
-  - {fileID: 6790489986282421614}
-  - {fileID: 7890116160741956001}
   - {fileID: 1226362174718917432}
+  - {fileID: 7890116160741956001}
+  - {fileID: 6790489986282421614}
   fullHeart: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   emptyHeart: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   maxLives: 3
   currentLives: 3
+  canvasGroup: {fileID: 7460534825972546812}
 --- !u!1 &4136829953310357159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1207,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  m_Sprite: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1287,6 +1301,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5834566417329227582}
+  - component: {fileID: 4580405158162735567}
   - component: {fileID: 6381154328317042365}
   m_Layer: 5
   m_Name: HUDPlayer_02
@@ -1317,6 +1332,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &4580405158162735567
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4388118072524893396}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &6381154328317042365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1337,6 +1364,7 @@ MonoBehaviour:
   emptyHeart: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   maxLives: 3
   currentLives: 1
+  canvasGroup: {fileID: 4580405158162735567}
 --- !u!1 &4465370469074199682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,6 +1599,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8211261691280684925}
+  - component: {fileID: 7308023692018474530}
   - component: {fileID: 7264714973621605217}
   m_Layer: 5
   m_Name: HUDPlayer_04
@@ -1601,6 +1630,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &7308023692018474530
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4735457349920737758}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &7264714973621605217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1614,13 +1655,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
   hearts:
-  - {fileID: 4322426459101617270}
-  - {fileID: 5324890548325559792}
   - {fileID: 3441910328406925037}
+  - {fileID: 5324890548325559792}
+  - {fileID: 4322426459101617270}
   fullHeart: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   emptyHeart: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   maxLives: 3
   currentLives: 2
+  canvasGroup: {fileID: 7308023692018474530}
 --- !u!1 &4765921729691171611
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,6 +1748,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3177417477004954620}
+  - component: {fileID: 1359901055192104431}
   - component: {fileID: 6472473346024845697}
   m_Layer: 5
   m_Name: HUDPlayer_01
@@ -1736,6 +1779,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1359901055192104431
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859758713281988368}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &6472473346024845697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,6 +1811,7 @@ MonoBehaviour:
   emptyHeart: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   maxLives: 3
   currentLives: 1
+  canvasGroup: {fileID: 1359901055192104431}
 --- !u!1 &5290783627712855020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1961,7 +2017,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -646594873, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  m_Sprite: {fileID: -1095917349, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

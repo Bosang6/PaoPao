@@ -16,13 +16,24 @@ public class UIPlayerLives : MonoBehaviour
     [SerializeField] private int maxLives = 3;
     [SerializeField] private int currentLives = 3;
 
+    [Header("UI Fade")]
+    [SerializeField] private CanvasGroup canvasGroup;
+
+
 
     private void Start()
     {
         UpdateHearts(currentLives);
+        SetDead(currentLives <= 0);
     }
 
+    // Funzione che viene chiamata solo nell'editor, utile per debug quando cambia qualcosa nell'ispector
+    private void OnValidate()
+    {
+        UpdateHearts(currentLives);
+        SetDead(currentLives <= 0);
 
+    }
 
     private void UpdateHearts(int lives)
     {
@@ -34,6 +45,16 @@ public class UIPlayerLives : MonoBehaviour
 
             hearts[i].sprite = i < currentLives ? fullHeart : emptyHeart;
         }
+
+        SetDead(currentLives <= 0);
+    }
+
+
+    public void SetDead(bool isDead)
+    {
+        if (canvasGroup == null) return;
+        
+        canvasGroup.alpha = isDead ? 0.3f : 1f;
     }
 
 
