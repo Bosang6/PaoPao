@@ -181,8 +181,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1741154489161117165}
+  m_Children: []
   m_Father: {fileID: 7078581267869569204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 1}
@@ -843,17 +842,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3792292023256113477}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: -1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8664645674331064909}
+  m_Father: {fileID: 7078581267869569204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 0}
+  m_AnchoredPosition: {x: -199.99997, y: 151.83374}
+  m_SizeDelta: {x: -599.99994, y: -303.66748}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6519314160766465011
 CanvasRenderer:
@@ -1674,6 +1673,7 @@ GameObject:
   - component: {fileID: 7078581267869569204}
   - component: {fileID: 2036616130403874148}
   - component: {fileID: 527929069443102943}
+  - component: {fileID: 2308602892591478668}
   m_Layer: 5
   m_Name: TimerPanel
   m_TagString: Untagged
@@ -1694,6 +1694,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8664645674331064909}
+  - {fileID: 1741154489161117165}
   m_Father: {fileID: 6160033888004673334}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1739,6 +1740,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2308602892591478668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4765921729691171611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386e4720b6fcc43a99d96f1d3d333d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITimer
+  timerText: {fileID: 7872742794730829980}
 --- !u!1 &4859758713281988368
 GameObject:
   m_ObjectHideFlags: 0
