@@ -4,13 +4,14 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager: MonoBehaviour
 {
-
+    [SerializeField] private string gameSceneName = "GameScene";
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject settingsPanel;
 
     public void OnPlayPressed()
     {
-        
+        // Carica la scena di gioco
+        gameSceneName
     }
 
 
