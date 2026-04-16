@@ -964,8 +964,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6684271647831127993}
   - component: {fileID: 5094452888101833212}
+  - component: {fileID: -6851776615952038749}
   m_Layer: 0
-  m_Name: Map2
+  m_Name: MapWinter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1002,6 +1003,27 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!114 &-6851776615952038749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4891831934167337107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb5f5eac4eaf646ef85df1daac483345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapComponent
+  playerPos:
+  - x: -6
+    y: 5
+  - x: 6
+    y: 5
+  - x: -6
+    y: -5
+  - x: 6
+    y: -5
 --- !u!1 &5092755546461446396
 GameObject:
   m_ObjectHideFlags: 0

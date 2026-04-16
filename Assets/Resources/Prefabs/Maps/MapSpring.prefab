@@ -3544,8 +3544,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3288487927467772729}
   - component: {fileID: 4212848414915464274}
+  - component: {fileID: 5679167247766309573}
   m_Layer: 0
-  m_Name: Map1
+  m_Name: MapSpring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3560,7 +3561,7 @@ Transform:
   m_GameObject: {fileID: 6801861011367061636}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3581,3 +3582,24 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!114 &5679167247766309573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801861011367061636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb5f5eac4eaf646ef85df1daac483345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapComponent
+  playerPos:
+  - x: -6
+    y: 5
+  - x: 6
+    y: 5
+  - x: -6
+    y: -5
+  - x: 6
+    y: -5
