@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 257796649036301593}
   - component: {fileID: 7569200503526132852}
   - component: {fileID: 2356016567605322222}
-  - component: {fileID: 7950340424202809461}
+  - component: {fileID: 2345060826736137830}
   m_Layer: 5
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -429,7 +429,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 257796649036301593}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PauseMenuManager, Assembly-CSharp
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2356016567605322222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,7 +468,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &7950340424202809461
+--- !u!114 &2345060826736137830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -465,9 +477,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1732664719401707531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 4296901749157400403}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &3056939586205424452
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +496,7 @@ GameObject:
   - component: {fileID: 8098518164369448516}
   - component: {fileID: 331118353619654342}
   - component: {fileID: 7479740500505932404}
-  - component: {fileID: 5230052904588209950}
+  - component: {fileID: 9103550838008061918}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -630,7 +645,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &5230052904588209950
+--- !u!114 &9103550838008061918
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -639,9 +654,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3056939586205424452}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 8191655562139055264}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &3632161413627161686
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,7 +985,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -424, y: -160}
+  m_SizeDelta: {x: -424, y: -140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4459631709528313502
 CanvasRenderer:
@@ -1100,6 +1118,7 @@ GameObject:
   - component: {fileID: 8661711658877075875}
   - component: {fileID: 4469447231278952185}
   - component: {fileID: 1686386050904481216}
+  - component: {fileID: 609211121160911552}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -1248,6 +1267,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &609211121160911552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7559125738362098287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 9083070739070573179}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &7568572074827151064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,6 +1430,8 @@ GameObject:
   - component: {fileID: 2803016925420560311}
   - component: {fileID: 8497663736990421840}
   - component: {fileID: 7237902914401992004}
+  - component: {fileID: 621426330435492407}
+  - component: {fileID: 6368135645165148838}
   m_Layer: 5
   m_Name: PauseMenuPanel
   m_TagString: Untagged
@@ -1462,6 +1498,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &621426330435492407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8668519838033768881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e599ca2d077974ea0081e17353547b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIPanelAnimator
+  panelGroup: {fileID: 6368135645165148838}
+  background: {fileID: 2293335601988240887}
+  duration: 0.3
+--- !u!225 &6368135645165148838
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8668519838033768881}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9147615711516540194
 GameObject:
   m_ObjectHideFlags: 0
