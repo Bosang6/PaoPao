@@ -968,7 +968,7 @@ GameObject:
   - component: {fileID: 7027013252674596745}
   - component: {fileID: 9135667730817095315}
   - component: {fileID: 4549287140779326727}
-  - component: {fileID: 787617971691917109}
+  - component: {fileID: 7089788643733406518}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -1105,7 +1105,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
---- !u!114 &787617971691917109
+--- !u!114 &7089788643733406518
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1114,9 +1114,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4747654139098508551}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 8209456453593527662}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &5974258892830975639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,7 +1223,7 @@ GameObject:
   - component: {fileID: 3862063166118319422}
   - component: {fileID: 2795073529828428645}
   - component: {fileID: 8178978810741135695}
-  - component: {fileID: 216816381968482630}
+  - component: {fileID: 2725535937395714508}
   m_Layer: 5
   m_Name: ApplyButton
   m_TagString: Untagged
@@ -1345,7 +1348,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
---- !u!114 &216816381968482630
+--- !u!114 &2725535937395714508
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1354,9 +1357,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6829171149504879686}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 6346277475409184020}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &7891575872311368341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,6 +1486,7 @@ GameObject:
   - component: {fileID: 2600079031107072458}
   - component: {fileID: 7903277775488110586}
   - component: {fileID: 2434256522402654865}
+  - component: {fileID: 5037764070691877555}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -1558,6 +1565,21 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &5037764070691877555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8532343993129124825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e599ca2d077974ea0081e17353547b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIPanelAnimator
+  panelGroup: {fileID: 2434256522402654865}
+  background: {fileID: 2225217098319153552}
+  duration: 0.3
 --- !u!1 &8713665510947420199
 GameObject:
   m_ObjectHideFlags: 0

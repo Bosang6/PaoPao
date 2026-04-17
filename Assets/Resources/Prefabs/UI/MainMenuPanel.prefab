@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 4960823908200223836}
   - component: {fileID: 1868832462557272552}
   - component: {fileID: 2645309059243695788}
-  - component: {fileID: 1131494884010677789}
+  - component: {fileID: 3983847072201684605}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -262,8 +262,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnSettingPressed
+        m_TargetAssemblyTypeName: UIMainMenuManager, Assembly-CSharp
+        m_MethodName: OnSettingsPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.7058824}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
---- !u!114 &1131494884010677789
+--- !u!114 &3983847072201684605
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,9 +297,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 957975359047438535}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 284956962734088360}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &1832805790681499285
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,11 +808,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e599ca2d077974ea0081e17353547b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPanelAnimator
-  panelGroup: {fileID: 0}
-  background: {fileID: 0}
+  panelGroup: {fileID: 6707805647800578109}
+  background: {fileID: 6930789582643858670}
   duration: 0.3
-  startScale: {x: 0.9, y: 0.9, z: 1}
-  endScale: {x: 1, y: 1, z: 1}
 --- !u!225 &6707805647800578109
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -926,7 +927,7 @@ GameObject:
   - component: {fileID: 7182281358857216456}
   - component: {fileID: 3529833879232818303}
   - component: {fileID: 1212201122084319180}
-  - component: {fileID: 3273194379915445620}
+  - component: {fileID: 4260045812532747646}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -1038,7 +1039,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: UIMainMenuManager, Assembly-CSharp
         m_MethodName: OnQuitPressed
         m_Mode: 1
         m_Arguments:
@@ -1064,7 +1065,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.7058824}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 0
---- !u!114 &3273194379915445620
+--- !u!114 &4260045812532747646
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1073,9 +1074,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7835198324363834188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 2346651287793240873}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &8170697664928057212
 GameObject:
   m_ObjectHideFlags: 0
@@ -1428,7 +1432,7 @@ GameObject:
   - component: {fileID: 1107491430970135412}
   - component: {fileID: 5329753015262825760}
   - component: {fileID: 8405818581930283685}
-  - component: {fileID: 3414380875133791825}
+  - component: {fileID: 5165265043211695078}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -1540,7 +1544,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: UIMainMenuManager, Assembly-CSharp
         m_MethodName: OnPlayMenuPressed
         m_Mode: 1
         m_Arguments:
@@ -1566,7 +1570,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.7058824}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
---- !u!114 &3414380875133791825
+--- !u!114 &5165265043211695078
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1575,9 +1579,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8320070923223068192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 3291892531483709366}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &9213379756441959708
 GameObject:
   m_ObjectHideFlags: 0
