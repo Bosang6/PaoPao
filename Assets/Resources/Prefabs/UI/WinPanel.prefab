@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3630316876105891086}
   - component: {fileID: 4007502330517561022}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,16 +226,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2788221094859893193}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8798214446975222465}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140, y: 0}
+  m_AnchoredPosition: {x: 140, y: 7}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &570884299141185707
@@ -503,16 +503,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3699812768173744499}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8798214446975222465}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -140, y: 0}
+  m_AnchoredPosition: {x: -134, y: 7}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6099592779318464012
@@ -766,6 +766,7 @@ GameObject:
   - component: {fileID: 6304925612588476108}
   - component: {fileID: 1695162030411621229}
   - component: {fileID: 611807200629390317}
+  - component: {fileID: 8099565898060173670}
   m_Layer: 5
   m_Name: WinPanel
   m_TagString: Untagged
@@ -832,6 +833,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8099565898060173670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4582168375428597098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ce644d5338e0948a47ee48d0ed6999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIWLAnimation
+  leftItem: {fileID: 7212658256784067860}
+  rightItem: {fileID: 127477249545106652}
+  delayBeforeStart: 2
+  animationDuration: 4
+  horizontalOffset: 500
 --- !u!1 &4856230163110766719
 GameObject:
   m_ObjectHideFlags: 0
@@ -1119,6 +1137,7 @@ GameObject:
   - component: {fileID: 7711965651769663450}
   - component: {fileID: 4108562670704572297}
   - component: {fileID: 7868365553597228721}
+  - component: {fileID: 8655740392010995951}
   m_Layer: 5
   m_Name: ReplayButton
   m_TagString: Untagged
@@ -1243,6 +1262,21 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &8655740392010995951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5360545062560942097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 6243302804172121955}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &5385285732127510336
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,6 +1722,7 @@ GameObject:
   - component: {fileID: 5724896091801407500}
   - component: {fileID: 3773774796665085627}
   - component: {fileID: 6443857563653027499}
+  - component: {fileID: 7594484694561551396}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -1812,6 +1847,21 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &7594484694561551396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056352702252488406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 6429826367647212026}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &7122824639892608546
 GameObject:
   m_ObjectHideFlags: 0
