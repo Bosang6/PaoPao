@@ -35,7 +35,8 @@ public class UIPlayerLives : MonoBehaviour
 
     }
 
-    private void UpdateHearts(int lives)
+    // Aggiorna le immagini dei cuori in base al numero di vite attuali
+    public void UpdateHearts(int lives)
     {
         currentLives = Mathf.Clamp(lives, 0, maxLives);
 
@@ -49,7 +50,7 @@ public class UIPlayerLives : MonoBehaviour
         SetDead(currentLives <= 0);
     }
 
-
+    // Se il player muore rende i cuori più trasparenti
     public void SetDead(bool isDead)
     {
         if (canvasGroup == null) return;
