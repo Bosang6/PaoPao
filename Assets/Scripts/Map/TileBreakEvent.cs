@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BrickBreak : MonoBehaviour
+public class TileBreakEvent : MonoBehaviour
 {
     public void DestroySelf()
     {
