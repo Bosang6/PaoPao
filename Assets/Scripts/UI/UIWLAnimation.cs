@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TitleAnimation : MonoBehaviour
+public class UIWLAnimation : MonoBehaviour
 {
     [Header("Items")]
     [SerializeField] private Image leftItem;
@@ -20,39 +20,54 @@ public class TitleAnimation : MonoBehaviour
 
     private Coroutine currentRoutine;
 
+    
     private void Awake()
     {
-        if (leftItem != null)
-            leftTargetPosition = leftItem.rectTransform.anchoredPosition;
-
-        if (rightItem != null)
-            rightTargetPosition = rightItem.rectTransform.anchoredPosition;
+        // Salva le posizioni target finali 
+        if (leftItem != null) leftTargetPosition = leftItem.rectTransform.anchoredPosition;
+        if (rightItem != null) rightTargetPosition = rightItem.rectTransform.anchoredPosition;
     }
+
+
+    private void OnEnable()
+    {
+        PlayAnimation();
+    }
+
 
     public void PlayAnimation()
     {
+
+        // Avvia la coroutine 
+
         if (leftItem == null || rightItem == null)
         {
             Debug.LogWarning($"{name}: assegna leftItem e rightItem nell'Inspector.");
             return;
         }
 
-        if (currentRoutine != null)
-            StopCoroutine(currentRoutine);
+        if (currentRoutine != null) StopCoroutine(currentRoutine);
 
         currentRoutine = StartCoroutine(PlayRoutine());
     }
 
     private IEnumerator PlayRoutine()
     {
+        /* Mette gli elementi fuori posizione 
+         * Resetta la rotazione
+         * Applica un delay
+         * Animazione di entrata
+         * Li rimette perfetti alla fine
+        */
+
         RectTransform leftRect = leftItem.rectTransform;
         RectTransform rightRect = rightItem.rectTransform;
 
-        Vector2 leftStartPosition = leftTargetPosition + Vector2.left * horizontalOffset;
-        Vector2 rightStartPosition = rightTargetPosition + Vector2.right * horizontalOffset;
+        Vector2 leftStart = leftTargetPosition + Vector2.left * horizontalOffset;
+        Vector2 rightStart = rightTargetPosition + Vector2.right * horizontalOffset;
 
-        leftRect.anchoredPosition = leftStartPosition;
-        rightRect.anchoredPosition = rightStartPosition;
+        leftRect.anchoredPosition = leftStart;
+        rightRect.anchoredPosition = rightStart;
 
         leftRect.localRotation = Quaternion.identity;
         rightRect.localRotation = Quaternion.identity;
@@ -65,17 +80,13 @@ public class TitleAnimation : MonoBehaviour
         {
             time += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(time / animationDuration);
+            float eased = EaseOutCubic(t);
 
-            float easedT = EaseOutCubic(t);
+            leftRect.anchoredPosition = Vector2.Lerp(leftStart, leftTargetPosition, eased);
+            rightRect.anchoredPosition = Vector2.Lerp(rightStart, rightTargetPosition, eased);
 
-            leftRect.anchoredPosition = Vector2.Lerp(leftStartPosition, leftTargetPosition, easedT);
-            rightRect.anchoredPosition = Vector2.Lerp(rightStartPosition, rightTargetPosition, easedT);
-
-            float leftRotation = Mathf.Lerp(0f, 360f, easedT);
-            float rightRotation = Mathf.Lerp(0f, -360f, easedT);
-
-            leftRect.localRotation = Quaternion.Euler(0f, 0f, leftRotation);
-            rightRect.localRotation = Quaternion.Euler(0f, 0f, rightRotation);
+            leftRect.localRotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, 360, eased));
+            rightRect.localRotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, -360, eased));
 
             yield return null;
         }
@@ -91,6 +102,7 @@ public class TitleAnimation : MonoBehaviour
 
     private float EaseOutCubic(float t)
     {
+        // Trasforma un movimento lineare in uno più naturale
         return 1f - Mathf.Pow(1f - t, 3f);
     }
 }

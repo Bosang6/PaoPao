@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 563899512396757617}
   - component: {fileID: 4648508170420846873}
   - component: {fileID: 4926104585294745549}
+  - component: {fileID: 5827583879319468693}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -213,6 +214,21 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &5827583879319468693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082301901729593859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 2477651280610199733}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &1918939707856775348
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,7 +610,7 @@ GameObject:
   - component: {fileID: 2156762819156226268}
   - component: {fileID: 7144621357562048957}
   - component: {fileID: 4018392182500647186}
-  - component: {fileID: 5125308834427557367}
+  - component: {fileID: 7211255008795352250}
   m_Layer: 5
   m_Name: CancelButton
   m_TagString: Untagged
@@ -731,7 +747,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
---- !u!114 &5125308834427557367
+--- !u!114 &7211255008795352250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -740,9 +756,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4739235832625177159}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699d5a7a5b26ad84792be4211c71f8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ab0554cc80b784fab073310d18b187, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
+  target: {fileID: 394259963374891841}
+  pressedScale: 0.9
+  speed: 12
 --- !u!1 &4974458363997655850
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,13 +865,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e599ca2d077974ea0081e17353547b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPanelAnimator
-  canvasGroup: {fileID: 4757908104591597674}
+  panelGroup: {fileID: 4757908104591597674}
   background: {fileID: 4277164904059557503}
-  underlyingPanel: {fileID: 0}
   duration: 0.3
-  closedScale: {x: 0.85, y: 0.85, z: 1}
-  openScale: {x: 1, y: 1, z: 1}
-  overshootScale: {x: 1.05, y: 1.05, z: 1}
 --- !u!1 &5954370179319731211
 GameObject:
   m_ObjectHideFlags: 0

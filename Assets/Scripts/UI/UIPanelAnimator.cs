@@ -3,108 +3,57 @@ using UnityEngine;
 
 public class UIPanelAnimator : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private CanvasGroup panelGroup;
     [SerializeField] private RectTransform background;
-
-    [Header("Underlying Panel")]
-    [SerializeField] private GameObject underlyingPanel;
-
-    [Header("Animation")]
     [SerializeField] private float duration = 0.3f;
-    [SerializeField] private Vector3 closedScale = new Vector3(0.85f, 0.85f, 1f);
-    [SerializeField] private Vector3 openScale = Vector3.one;
-    [SerializeField] private Vector3 overshootScale = new Vector3(1.05f, 1.05f, 1f);
 
-    private Coroutine currentRoutine;
-
-    public void Open()
+    private void OnEnable()
     {
-        if (currentRoutine != null) StopCoroutine(currentRoutine);
-
-        gameObject.SetActive(true);
-        currentRoutine = StartCoroutine(OpenRoutine());
+        StartCoroutine(OpenRoutine());
     }
 
     public void Close()
     {
-        if (currentRoutine != null) StopCoroutine(currentRoutine);
-
-        currentRoutine = StartCoroutine(CloseRoutine());
+        StartCoroutine(CloseRoutine());
     }
 
     private IEnumerator OpenRoutine()
     {
-        float time = 0f;
+        float t = 0f;
 
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
-        background.localScale = closedScale;
+        panelGroup.alpha = 0f;
+        background.localScale = new Vector3(0.9f, 0.9f, 1f);
 
-        while (time < duration)
+        while (t < duration)
         {
-            time += Time.unscaledDeltaTime;
-            float progress = Mathf.Clamp01(time / duration);
-            float ease = 1f - Mathf.Pow(1f - progress, 3f);
+            t += Time.unscaledDeltaTime;
+            float progress = t / duration;
 
-            canvasGroup.alpha = ease;
-
-            Vector3 targetScale;
-            if (progress < 0.8f)
-            {
-                float t1 = progress / 0.8f;
-                targetScale = Vector3.Lerp(closedScale, overshootScale, t1);
-            }
-            else
-            {
-                float t2 = (progress - 0.8f) / 0.2f;
-                targetScale = Vector3.Lerp(overshootScale, openScale, t2);
-            }
-
-            background.localScale = targetScale;
+            panelGroup.alpha = progress;
+            background.localScale = Vector3.Lerp(new Vector3(0.9f, 0.9f, 1f), Vector3.one, progress);
 
             yield return null;
         }
 
-        canvasGroup.alpha = 1f;
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
-        background.localScale = openScale;
-
-        if (underlyingPanel != null)
-            underlyingPanel.SetActive(false);
-
-        currentRoutine = null;
+        panelGroup.alpha = 1f;
+        background.localScale = Vector3.one;
     }
 
     private IEnumerator CloseRoutine()
     {
-        float time = 0f;
+        float t = 0f;
 
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 1f;
-
-        Vector3 startScale = background.localScale;
-
-        while (time < duration)
+        while (t < duration)
         {
-            time += Time.unscaledDeltaTime;
-            float progress = Mathf.Clamp01(time / duration);
-            float ease = 1f - Mathf.Pow(1f - progress, 3f);
+            t += Time.unscaledDeltaTime;
+            float progress = t / duration;
 
-            background.localScale = Vector3.Lerp(startScale, closedScale, ease);
+            panelGroup.alpha = 1f - progress;
+            background.localScale = Vector3.Lerp(Vector3.one, new Vector3(0.9f, 0.9f, 1f), progress);
 
             yield return null;
         }
 
-        background.localScale = closedScale;
-        canvasGroup.alpha = 0f;
         gameObject.SetActive(false);
-
-        if (underlyingPanel != null) underlyingPanel.SetActive(true);
-
-        currentRoutine = null;
     }
 }

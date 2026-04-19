@@ -8,10 +8,7 @@ public class TestManager : MonoBehaviour
     [SerializeField] private UIPanelAnimator quitConfirmPanel;
     [SerializeField] private string mainMenu;
 
-    public void OnSettingsPressed()
-    {
-        settingsPanel.Open();
-    }
+
 
     public void OnResumePressed()
     {
@@ -23,10 +20,6 @@ public class TestManager : MonoBehaviour
         settingsPanel.Close();
     }
 
-    public void OnQuitPressed()
-    {
-        quitConfirmPanel.Open();
-    }
 
     public void OnCancelPressed()
     {
