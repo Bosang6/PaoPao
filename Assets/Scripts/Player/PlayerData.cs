@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PaoPaoOBJ/PlayerData")]
 public class PlayerData : ScriptableObject
@@ -9,13 +10,16 @@ public class PlayerData : ScriptableObject
     public Sprite playerSprite;
 
     [Header("Input")]
-    public string horizontalAxis;
-    public string verticalAxis;
-    public KeyCode bombKey;
+    public InputActionAsset inputActionAsset;
+    public string controlScheme;
 
-    [Header("Stats")]
+    [Header("Game-stats")]
+    public int maxHp;
+    public int hp;
     public int maxBombs;
     public float moveSpeed;
+    public Vector3 spawnPosition;
+    public Quaternion spawnRotation;
 
     [Header("Collision")]
     public LayerMask lmCollisionLayer;

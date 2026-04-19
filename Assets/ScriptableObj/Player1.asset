@@ -15,11 +15,14 @@ MonoBehaviour:
   playerName: Baturina
   playerColor: {r: 0, g: 1, b: 0.9533293, a: 0}
   playerSprite: {fileID: 0}
-  horizontalAxis: Horizontal
-  verticalAxis: Vertical
-  bombKey: 32
+  inputActionAsset: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
+  controlScheme: Player1
+  maxHp: 3
+  hp: 0
   maxBombs: 1
   moveSpeed: 5
+  spawnPosition: {x: -6, y: 5, z: 0}
+  spawnRotation: {x: 0, y: 0, z: 0, w: 0}
   lmCollisionLayer:
     serializedVersion: 2
     m_Bits: 960

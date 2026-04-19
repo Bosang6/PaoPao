@@ -1,20 +1,23 @@
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour, IExplosionReceiver
+public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int iHealth;
+    private PlayerData pData;
 
-    void Start()
-    {
-        iHealth = 3;
+    public void Initialize(PlayerData playerData) { 
+        pData = playerData;
+        pData.hp = pData.maxHp;
     }
 
-    public void OnHitByExplosion(ExplosionData data)
+    public int Hitted(ExplosionData data)
     {
-        if (iHealth > 0) {
-            iHealth--;
-            Debug.Log($"Player colpito! Danni: {data.iDamage}, Vita: {iHealth}");
-            if(iHealth == 0) { Debug.Log($"Player morto!"); }
+        if (pData.hp > 0)
+        {
+            pData.hp--;
+            Debug.Log($"Player colpito! Danni: {data.iDamage}, Vita: {pData.hp}");
+            if (pData.hp == 0) { Debug.Log($"Player morto!"); }
         }
+        return pData.hp;
     }
+
 }

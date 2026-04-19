@@ -1,49 +1,43 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    [Header("Player Settings")]
-    [SerializeField] private PlayerData playerData;
+    private PlayerData pData;
+    private GameData gData;
 
-    [Header("Game Settings")]
-    [SerializeField] private GameData gameData;
-
-    public Vector2 gridOffset = new Vector2(0.5f, 0.5f);    //Offset dal centro della tile
-
+    private bool isInitialized = false;
     private bool bIsMoving = false;
     private Vector3 v3TargetPosition;
     private Animator animator;
-    public float fCellSize;                            //Dimensione di ogni cella
-    private float fSpeed = 5f;                               //Velocità di spostamento tra le celle
 
-    private InputSystem_Actions _inputActions;
-    private Vector2 _currentInput;
-
-    private void Awake() { _inputActions = new InputSystem_Actions(); }
-    void OnEnable() { _inputActions.Player.Enable(); }
-    void OnDisable() { _inputActions.Player.Disable(); }
-    void OnDestroy() { _inputActions.Dispose(); PlayerManager.Instance?.Unregister(transform); }
-
-
-    void Start()
-    {
-        fSpeed = playerData.moveSpeed;
-        fCellSize = gameData.fCellSize;
-        transform.position = GridUtils.AdjustPosition(transform.position, fCellSize);    //Allinea la posizione alla griglia
-        v3TargetPosition = transform.position;
-        animator = GetComponent<Animator>();
-        PlayerManager.Instance.Register(transform);
+    void Start() { 
+        animator = GetComponent<Animator>(); 
+        PlayerManager.Instance.Register(transform); 
     }
 
-    void Update() { if (bIsMoving) { Move(); } else { ReadInput(); } }
-
-
-    void ReadInput()
+    public void Initialize(PlayerData playerData, GameData gameData)
     {
-        Vector2 raw = _inputActions.Player.Move.ReadValue<Vector2>();
-        float h = Mathf.RoundToInt(raw.x);  //Per avere solo -1, 0 o 1
-        float v = Mathf.RoundToInt(raw.y);  //Per avere solo -1, 0 o 1
+        pData = playerData;
+        gData = gameData;
+
+        //Allinea la posizione alla griglia
+        transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize);
+        transform.rotation = pData.spawnRotation;
+        v3TargetPosition = transform.position;
+
+        isInitialized = true;
+    }
+
+    void Update() { if (bIsMoving) { Move(); } }
+
+    public void HandleInput(Vector2 input)
+    {
+        if (bIsMoving) return;
+
+        float h = Mathf.RoundToInt(input.x);  //Per avere solo -1, 0 o 1
+        float v = Mathf.RoundToInt(input.y);  //Per avere solo -1, 0 o 1
 
         Vector2 direction = Vector2.zero;
 
@@ -65,7 +59,7 @@ public class PlayerMove : MonoBehaviour
 
     void TryMove(Vector2 direction)
     {
-        Vector3 target = transform.position + new Vector3(direction.x, direction.y, 0) * fCellSize;
+        Vector3 target = transform.position + new Vector3(direction.x, direction.y, 0) * gData.fCellSize;
 
         if(animator != null)
         {
@@ -74,8 +68,8 @@ public class PlayerMove : MonoBehaviour
         }
 
         // BoxCast: proietta un box della stessa dimensione della cella
-        Vector2 boxSize = new Vector2(fCellSize * 0.9f, fCellSize * 0.9f); // 0.9 = margine minimo
-        Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, playerData.lmCollisionLayer);
+        Vector2 boxSize = new Vector2(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f); // 0.9 = margine minimo
+        Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, pData.lmCollisionLayer);
 
         if (hit == null)    //Cella libera, ci si può muovere
         {
@@ -89,23 +83,33 @@ public class PlayerMove : MonoBehaviour
     {
         Vector3 start = transform.position;
         Vector3 end = v3TargetPosition;
-        float movement = fSpeed * Time.deltaTime;
+        float movement = pData.moveSpeed * Time.deltaTime;
 
         transform.position = Vector3.MoveTowards(start, end, movement);
 
         if (transform.position == end)
         {
-            transform.position = GridUtils.AdjustPosition(end, fCellSize);   //Doppio controllo sull'accuratezza della posizione
+            transform.position = GridUtils.AdjustPosition(end, gData.fCellSize);   //Doppio controllo sull'accuratezza della posizione
             bIsMoving = false;
             if (animator != null) { animator.SetBool("IsMoving", false); }
         }
     }
+    public void Respawn() {
+        transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize); 
+        transform.rotation = pData.spawnRotation;
+        v3TargetPosition = transform.position;
+        bIsMoving = false;
+    }
+
+    void OnDestroy() { PlayerManager.Instance?.Unregister(transform); }
 
     void OnDrawGizmos()
     {
+        if(!isInitialized) { return; }
+
         // Mostra la posizione snappata (pallino giallo)
         Gizmos.color = Color.yellow;
-        Vector3 snapped = GridUtils.AdjustPosition(transform.position, fCellSize);
+        Vector3 snapped = GridUtils.AdjustPosition(transform.position, gData.fCellSize);
         Gizmos.DrawWireSphere(snapped, 0.1f);
 
         // Mostra il target attuale (pallino rosso)
@@ -114,6 +118,6 @@ public class PlayerMove : MonoBehaviour
 
         // Mostra il box di rilevamento collisioni sul target (cubo verde)
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(v3TargetPosition, new Vector3(fCellSize * 0.9f, fCellSize * 0.9f, 0));
+        Gizmos.DrawWireCube(v3TargetPosition, new Vector3(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f, 0));
     }
 }

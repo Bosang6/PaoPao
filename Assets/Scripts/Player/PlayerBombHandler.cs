@@ -3,22 +3,23 @@ using UnityEngine;
 
 public class PlayerBombHandler : MonoBehaviour
 {
-
-    [SerializeField] private PlayerData playerData;
+    private PlayerData pData;
+    private GameData gData;
 
     private int currentBombs = 0;
-    private PlayerMove movement;
 
-    void Start() { movement = GetComponent<PlayerMove>(); }
-
-    void Update() { if (Input.GetKeyDown(playerData.bombKey)) { TryPlaceBomb(); } }
-
-    void TryPlaceBomb()
+    public void Initialize(PlayerData playerData, GameData gameData)
     {
-        if (currentBombs >= playerData.maxBombs) return;
+        pData = playerData;
+        gData = gameData;
+    }
+
+    public void TryPlaceBomb()
+    {
+        if (currentBombs >= pData.maxBombs) return;
 
         //Posizione (allineata alla griglia) della bomba da piazzare
-        Vector3 bombPos = GridUtils.AdjustPosition(transform.position, movement.fCellSize);
+        Vector3 bombPos = GridUtils.AdjustPosition(transform.position, gData.fCellSize);
 
         BombController bomb = BombPool.Instance.Get(bombPos);
         if(bomb == null) return;
@@ -37,10 +38,5 @@ public class PlayerBombHandler : MonoBehaviour
         currentBombs++;
     }
 
-    void ReleaseBomb()
-    {
-        currentBombs--;
-    }
-
-    
+    void ReleaseBomb() { currentBombs--; }
 }
