@@ -11,9 +11,8 @@ public class UIMainMenuManager : MonoBehaviour
      Inotre attiva i flag per le animazioni
     */
 
-    [Header("Scenes")]
-    [SerializeField] private string GameMap1 = "GameMap_1" ;
-    [SerializeField] private string GameMap2 = "GameMap_2";
+    [Header("Scene")]
+    [SerializeField] private string gameSceneName = "GameScene";
 
     [Header("UI Panels")]
     [SerializeField] private GameObject mainMenuPanel;
@@ -116,14 +115,10 @@ public class UIMainMenuManager : MonoBehaviour
     private IEnumerator BackFromMatchSetupRoutine()
     {
         isBusy = true;
-
         yield return new WaitForSecondsRealtime(buttonDelay);
-
         if (matchSetupPanel != null) matchSetupPanel.SetActive(false);
         if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
-
         ResetMapSelection();
-
         isBusy = false;
     }
 
@@ -158,10 +153,22 @@ public class UIMainMenuManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(buttonDelay);
 
-        if (selectedMapIndex == 0)
-            SceneManager.LoadScene(GameMap1);
-        else if (selectedMapIndex == 1)
-            SceneManager.LoadScene(GameMap2);
+
+        switch(selectedMapIndex)
+        {
+            case 0:
+                GameSession.SelectedMap = E_Map.Spring;
+                break;
+            case 1:
+                GameSession.SelectedMap = E_Map.Winter;
+                break;
+            default:
+                Debug.LogError("Indice mappa non valido: " + selectedMapIndex);
+                isBusy = false;
+                yield break;
+        }
+
+        SceneManager.LoadScene(gameSceneName);
     }
 
     private IEnumerator QuitRoutine()

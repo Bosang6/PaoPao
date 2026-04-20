@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 32464422}
   - component: {fileID: 32464421}
   - component: {fileID: 32464420}
+  - component: {fileID: 32464423}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -211,6 +212,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &32464423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32464419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824ae9647b5c2b6478f002b22bbb09e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFitMap
+  mapWidth: 16
+  mapHeight: 13
+  padding: 0
 --- !u!1 &502078280 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4518526792929841872, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
@@ -354,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6801861011367061636, guid: 4371fe7b0aafd474b9320763695da1a5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -25,6 +25,11 @@ public class MapManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        LoadMap(GameSession.SelectedMap);
+    }
+
     public void LoadMap(E_Map eMap)
     {
         if (currentMap != null)
