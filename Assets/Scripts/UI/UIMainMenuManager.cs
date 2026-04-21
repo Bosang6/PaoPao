@@ -7,7 +7,7 @@ public class UIMainMenuManager : MonoBehaviour
 {
 
     /* Manager che gestisce il Main Menu
-     Attiva/disattiva i panel e dal MatchSetupPanel indirizza il giocatore alla mappa
+     Attiva/disattiva i panel e dal MatchSetupPanel indirizza il giocatore nella partita con la mappa selezionata
      Inotre attiva i flag per le animazioni
     */
 
@@ -20,8 +20,8 @@ public class UIMainMenuManager : MonoBehaviour
     [SerializeField] private GameObject matchSetupPanel;
 
     [Header("Selection Glow")]
-    [SerializeField] private GameObject selectionGlow_1;
-    [SerializeField] private GameObject selectionGlow_2;
+    [SerializeField] private GameObject springGlow;
+    [SerializeField] private GameObject winterGlow;
 
     [Header("Buttons")]
     [SerializeField] private Button matchPlayButton;
@@ -29,7 +29,7 @@ public class UIMainMenuManager : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float buttonDelay = 0.2f;
 
-    private int selectedMapIndex = -1;
+    private E_Map? selectedMap = null;
     private bool isBusy = false;
 
     private void Start()
@@ -76,16 +76,16 @@ public class UIMainMenuManager : MonoBehaviour
 
 
     /* Match Setup Menu */
-    public void SelectMap(int mapIndex)
+    public void SelectMap(E_Map map)
     {
-        selectedMapIndex = mapIndex;
+        selectedMap = map;
 
-        if (selectionGlow_1 != null) selectionGlow_1.SetActive(mapIndex == 0);
-        if (selectionGlow_2 != null) selectionGlow_2.SetActive(mapIndex == 1);
+        if(springGlow != null) springGlow.SetActive(map == E_Map.Spring);
+        if(winterGlow != null) winterGlow.SetActive(map == E_Map.Winter);
 
         UpdateMatchPlayButton();
 
-        Debug.Log("Mappa selezionata: " + selectedMapIndex);
+        Debug.Log("Mappa selezionata: " + map);
     }
 
     public void OnConfirmPlayPressed()
@@ -144,7 +144,7 @@ public class UIMainMenuManager : MonoBehaviour
     {
         isBusy = true;
 
-        if (selectedMapIndex == -1)
+        if (selectedMap == null)
         {
             Debug.LogWarning("Nessuna mappa selezionata.");
             isBusy = false;
@@ -153,20 +153,7 @@ public class UIMainMenuManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(buttonDelay);
 
-
-        switch(selectedMapIndex)
-        {
-            case 0:
-                GameSession.SelectedMap = E_Map.Spring;
-                break;
-            case 1:
-                GameSession.SelectedMap = E_Map.Winter;
-                break;
-            default:
-                Debug.LogError("Indice mappa non valido: " + selectedMapIndex);
-                isBusy = false;
-                yield break;
-        }
+        GameSession.SelectedMap = selectedMap.Value;
 
         SceneManager.LoadScene(gameSceneName);
     }
@@ -185,15 +172,13 @@ public class UIMainMenuManager : MonoBehaviour
     }
 
 
-
-
     /* Helpers */
 
     private void ResetMapSelection()
     {
-        selectedMapIndex = -1;
-        if (selectionGlow_1 != null) selectionGlow_1.SetActive(false);
-        if (selectionGlow_2 != null) selectionGlow_2.SetActive(false);
+        selectedMap = null;
+        if (springGlow != null) springGlow.SetActive(false);
+        if (winterGlow != null) winterGlow.SetActive(false);
 
         UpdateMatchPlayButton();
     }
@@ -201,6 +186,6 @@ public class UIMainMenuManager : MonoBehaviour
     private void UpdateMatchPlayButton()
     {
         if (matchPlayButton != null)
-            matchPlayButton.interactable = (selectedMapIndex != -1);
+            matchPlayButton.interactable = (selectedMap != null);
     }
 }
