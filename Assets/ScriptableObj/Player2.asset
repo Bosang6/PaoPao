@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Player2
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   playerName: Dzeko
+  playerID: 1
   playerColor: {r: 1, g: 0.8212325, b: 0, a: 0}
   playerSprite: {fileID: 0}
   inputActionAsset: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   controlScheme: Player2
-  maxHp: 5
-  hp: 2
+  maxHp: 3
+  hp: 3
   maxBombs: 5
   moveSpeed: 1
   spawnPosition: {x: 6, y: 5, z: 0}

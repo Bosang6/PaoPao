@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     private PlayerBombHandler _pBombHandler;
     private PlayerHealth _pHealth;
 
+    public int MaxHealth => playerData.maxHp;
+    public int PlayerID => playerData.playerID;
+
     //Evento da invocare alla morte 
     public event System.Action<PlayerController> OnPlayerDied;
 
