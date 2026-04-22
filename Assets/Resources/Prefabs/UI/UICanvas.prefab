@@ -1263,6 +1263,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4076815986293395716, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: m_Name
+      value: HUDPlayer_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388118072524893396, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: m_Name
+      value: HUDPlayer_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 5016307130032287115, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: playerID
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5122228133904930849, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
