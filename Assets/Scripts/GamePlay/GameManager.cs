@@ -3,29 +3,87 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    void Start()
+    [Header("UI")]
+    [SerializeField] private UIGameManager uiGameManager;
+
+    [Header("Timer")]
+    [SerializeField] private UITimer uiTimer;
+
+    private List<PlayerController> players = new List<PlayerController>();
+    private bool isMatchEnded = false;
+
+    private void Start()
     {
-        //Registra tutti i player in scena al momento dell'avvio
-        foreach (PlayerController p in FindObjectsByType<PlayerController>(FindObjectsSortMode.None))
+        foreach (PlayerController player in FindObjectsByType<PlayerController>(FindObjectsSortMode.None))
         {
-            RegisterPlayer(p);
+            RegisterPlayer(player);
         }
     }
 
-    private List<PlayerController> _players = new List<PlayerController>();
 
     public void RegisterPlayer(PlayerController player)
     {
-        _players.Add(player);
+        if (player == null || players.Contains(player)) return;
+
+        players.Add(player);
         player.OnPlayerDied += OnPlayerDied;
     }
 
+
     private void OnPlayerDied(PlayerController player)
     {
-        _players.Remove(player);
+        if (isMatchEnded) return;
 
-        //Controllo se(rimane un player){ finePartita() }
+        if (player != null)
+        {
+            player.OnPlayerDied -= OnPlayerDied;
+            players.Remove(player);
+        }
+
+        bool humanAlive = false;
+        int aliveCount = players.Count;
+
+        foreach (PlayerController currentPlayer in players)
+        {
+            if (currentPlayer.IsHuman)
+            {
+                humanAlive = true;
+                break;
+            }
+        }
+
+        if (!humanAlive)
+        {
+            EndMatch(false);
+            return;
+        }
+
+        if (aliveCount == 1 && humanAlive)
+        {
+            EndMatch(true);
+        }
     }
 
-  
+
+    private void EndMatch(bool isWin)
+    {
+        if (isMatchEnded) return;
+
+        isMatchEnded = true;
+
+        if (uiTimer != null)
+        {
+            uiTimer.StopTimer();
+        }
+
+        string finalTime = uiTimer != null ? uiTimer.GetFormattedTime() : "00:00";
+
+        if (uiGameManager != null)
+        {
+            if (isWin)
+                uiGameManager.ShowWinPanel(finalTime);
+            else
+                uiGameManager.ShowLosePanel(finalTime);
+        }
+    }
 }

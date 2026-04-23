@@ -138,5 +138,4 @@ public class UIPlayerLives : MonoBehaviour
 
     public PlayerController GetTargetPlayer() { return targetPlayer; }
 
-
 }

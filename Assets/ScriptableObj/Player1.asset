@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Player1
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   playerName: Baturina
+  playerID: 0
+  isHuman: 1
   playerColor: {r: 0, g: 1, b: 0.9533293, a: 0}
   playerSprite: {fileID: 0}
   inputActionAsset: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}

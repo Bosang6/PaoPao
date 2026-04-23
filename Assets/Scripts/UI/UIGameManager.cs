@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,10 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject quitDialogPanel;
+
+    [Header("Final Timer Text")]
+    [SerializeField] private TextMeshProUGUI winTimeText;
+    [SerializeField] private TextMeshProUGUI loseTimeText;
 
     [Header("Scene")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
@@ -92,19 +97,21 @@ public class UIGameManager : MonoBehaviour
 
     // WIN / LOSE
 
-    public void ShowWinPanel()
+    public void ShowWinPanel(string finalTime)
     {
         HideAllPanels();
         Time.timeScale = 0f;
         isPaused = false;
+        if (winTimeText != null) winTimeText.text = finalTime;
         winPanel.SetActive(true);
     }
 
-    public void ShowLosePanel()
+    public void ShowLosePanel(string finalTime)
     {
         HideAllPanels();
         Time.timeScale = 0f;
         isPaused = false;
+        if (loseTimeText != null) loseTimeText.text = finalTime;
         losePanel.SetActive(true);
     }
 

@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     public int MaxHealth => playerData.maxHp;
     public int PlayerID => playerData.playerID;
 
+    public bool IsHuman => playerData.isHuman;
+
     //Evento da invocare alla morte 
     public event System.Action<PlayerController> OnPlayerDied;
 

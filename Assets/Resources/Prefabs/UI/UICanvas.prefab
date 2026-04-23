@@ -223,6 +223,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4856230163110766719, guid: 88b7bd94061f9b24ca3f0919423c9977, type: 3}
+      propertyPath: m_Name
+      value: WinTimeNumb
+      objectReference: {fileID: 0}
     - target: {fileID: 4923654414031324424, guid: 88b7bd94061f9b24ca3f0919423c9977, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -1648,6 +1652,10 @@ PrefabInstance:
     - target: {fileID: 4582168375428597098, guid: 243d4f495fee8fc44b7eb2777fd1a431, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856230163110766719, guid: 243d4f495fee8fc44b7eb2777fd1a431, type: 3}
+      propertyPath: m_Name
+      value: LoseTimeNumb
       objectReference: {fileID: 0}
     - target: {fileID: 4923654414031324424, guid: 243d4f495fee8fc44b7eb2777fd1a431, type: 3}
       propertyPath: m_AnchorMax.y

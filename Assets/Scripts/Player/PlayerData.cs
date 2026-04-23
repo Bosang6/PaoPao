@@ -7,6 +7,7 @@ public class PlayerData : ScriptableObject
     [Header("Identity")]
     public string playerName;
     public int playerID;
+    public bool isHuman;
     public Color playerColor;
     public Sprite playerSprite;
 
