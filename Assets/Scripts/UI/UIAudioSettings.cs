@@ -3,6 +3,15 @@ using UnityEngine.UI;
 
 public class UIAudioSettings : MonoBehaviour
 {
+
+    /*
+     * Questo script gestisce le impostazioni audio nell'UI. 
+     * Regola il vol Music ed Effects tramite gli slider 
+     * Salva le impostazioni quando si preme il pulsante "Apply".
+     *
+     */
+
+
     [Header("Slider")]
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider effectsSlider;
@@ -30,6 +39,12 @@ public class UIAudioSettings : MonoBehaviour
     private void OnEffectsChanged(float value)
     {
         if (AudioManager.Instance != null) AudioManager.Instance.SetEffectsVolume(value);
+    }
+
+
+    public void OnApplyPressed()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.SaveVolumeSettings();
     }
 
 
