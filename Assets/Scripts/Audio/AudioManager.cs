@@ -21,6 +21,8 @@ public class AudioManager : MonoBehaviour
     private float musicVolume = 1f;
     private float effectsVolume = 1f;
 
+
+
     private void Awake()
     {
         if(Instance != null && Instance != this)
