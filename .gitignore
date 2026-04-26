@@ -104,3 +104,15 @@ InitTestScene*.unity*
 # OS
 .DS_Store
 Thumbs.db
+
+#FMOD
+FMOD/Autosave/
+FMOD/.cache/
+FMOD/.unsaved/
+FMOD/.user/
+FMOD/*.tmp
+FMOD/*.log
+FMOD/*.cache
+FMOD/Build/Desktop/.cache/
+FMOD/Build/Mobile/.cache/
+*.fspro.user
