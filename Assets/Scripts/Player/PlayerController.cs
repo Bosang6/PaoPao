@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IExplosionReceiver
 {
+    private float invicibilityTimer = 0f;
+
     [Header("Player Settings")]
     [SerializeField] private PlayerData playerData;
 
@@ -41,12 +43,16 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     {
         _pMove.HandleInput(_pInput.GetMoveInput());
         if (_pInput.GetBombInput()) { _pBombHandler.TryPlaceBomb(); }
+        if(invicibilityTimer > 0) { invicibilityTimer -= Time.deltaTime; }  //Se in fase invincibile
     }
 
     public void OnHitByExplosion(ExplosionData data)
     {
+        if (invicibilityTimer > 0) { return; }  //Ancora in fase di invincibilità
         //_pHealth.Hitted(data) restituisce il numero di hp rimanenti
         if (_pHealth.Hitted(data) > 0) { _pMove.Respawn(); } else { Death(); }
+        invicibilityTimer = playerData.invincibilityDuration;
+        _pHealth?.StartBlink(playerData.invincibilityDuration); //Lampeggia durante l'invincibilità
     }
 
     private void Death()

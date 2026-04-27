@@ -1,10 +1,15 @@
 using System;
 using UnityEngine;
+using System.Collections;
+
 
 public class PlayerHealth : MonoBehaviour
 {
     private PlayerData pData;
     private int currentHp;
+    private float blinkInterval = 0.3f; // Velocità del blink
+    private SpriteRenderer spriteRenderer;
+    private Coroutine blinkCoroutine;
 
     // Getter pub per leggere gli hp correnti dall'esterno
     public int CurrentHp => currentHp;
@@ -23,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
         pData = playerData;
         currentHp = pData.maxHp;
         OnHpChanged?.Invoke(currentHp, MaxHp);
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public int Hitted(ExplosionData data)
@@ -39,6 +45,33 @@ public class PlayerHealth : MonoBehaviour
         if(currentHp == 0) { Debug.Log($"Player morto!"); }
 
         return currentHp;
+    }
+
+
+    //IA, il player dovrebbe lampeggiare mentre è invincibile, da testare dopo aver impostato l'animator
+    public void StartBlink(float duration)
+    {
+        if (blinkCoroutine != null) { StopCoroutine(blinkCoroutine); }
+        blinkCoroutine = StartCoroutine(BlinkRoutine(duration));
+    }
+
+    private IEnumerator BlinkRoutine(float duration)
+    {
+        float elapsed = 0f;
+        bool visible = true;
+        Color normal = spriteRenderer.color;
+        Color transparent = new Color(normal.r, normal.g, normal.b, 0.2f);
+
+        while (elapsed < duration)
+        {
+            spriteRenderer.color = visible ? transparent : normal;
+            visible = !visible;
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+
+        spriteRenderer.color = normal; // Ripristina colore originale
+        blinkCoroutine = null;
     }
 
 }

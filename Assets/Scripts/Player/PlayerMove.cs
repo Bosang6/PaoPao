@@ -10,10 +10,12 @@ public class PlayerMove : MonoBehaviour
     private bool isInitialized = false;
     private bool bIsMoving = false;
     private Vector3 v3TargetPosition;
+    private Vector2 v2LastDirection = Vector2.zero;
+    private Vector2 boxSize;
     private Animator animator;
 
-    void Start() { 
-        animator = GetComponent<Animator>(); 
+    void Start() {
+        animator = null; //= GetComponent<Animator>(); 
         PlayerManager.Instance.Register(transform); 
     }
 
@@ -26,6 +28,9 @@ public class PlayerMove : MonoBehaviour
         transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize);
         transform.rotation = pData.spawnRotation;
         v3TargetPosition = transform.position;
+
+        //Usato per il boxCast: proietta un box della stessa dimensione della cella
+        boxSize = new Vector2(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f); // 0.9 = margine minimo
 
         isInitialized = true;
     }
@@ -67,15 +72,18 @@ public class PlayerMove : MonoBehaviour
             animator.SetFloat("MoveY", direction.y);
         }
 
-        // BoxCast: proietta un box della stessa dimensione della cella
-        Vector2 boxSize = new Vector2(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f); // 0.9 = margine minimo
         Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, pData.lmCollisionLayer);
 
         if (hit == null)    //Cella libera, ci si può muovere
         {
             v3TargetPosition = target;
+            v2LastDirection = direction;
             bIsMoving = true;
             if(animator != null) { animator.SetBool("IsMoving", true); }
+        }
+        else                //Cella occupata, ci si ferma
+        {
+            v2LastDirection = Vector2.zero;
         }
     }
 
@@ -87,13 +95,32 @@ public class PlayerMove : MonoBehaviour
 
         transform.position = Vector3.MoveTowards(start, end, movement);
 
-        if (transform.position == end)
+        if (transform.position == end)  //Invocato al termine del movimento (arrivato a destinazione)
         {
             transform.position = GridUtils.AdjustPosition(end, gData.fCellSize);   //Doppio controllo sull'accuratezza della posizione
             bIsMoving = false;
             if (animator != null) { animator.SetBool("IsMoving", false); }
+
+            //Todo: invocare solo in mappa di ghiaccio (?)
+            if (true)
+            {
+                CheckIcePlate();    //Controlla se si può proseguire col movimento
+            }
         }
+
+        
     }
+
+    void CheckIcePlate()
+    {
+        if (v2LastDirection == Vector2.zero) return;
+        
+        //Controlla se la cella corrente è una IcePlate, in caso prosegue il movimento ("scivola")
+        Collider2D hit = Physics2D.OverlapBox(transform.position, boxSize, 0f, gData.lmIcePlate);
+
+        if (hit != null) { TryMove(v2LastDirection); } else { v2LastDirection = Vector2.zero; }
+    }
+
     public void Respawn() {
         transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize); 
         transform.rotation = pData.spawnRotation;

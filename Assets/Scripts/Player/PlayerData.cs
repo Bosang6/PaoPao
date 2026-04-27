@@ -20,6 +20,7 @@ public class PlayerData : ScriptableObject
     public int hp;
     public int maxBombs;
     public float moveSpeed;
+    public float invincibilityDuration;
     public Vector3 spawnPosition;
     public Quaternion spawnRotation;
 

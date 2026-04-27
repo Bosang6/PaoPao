@@ -35,10 +35,17 @@ public class FlameController : MonoBehaviour
 
     private IEnumerator Flame()
     {
-        //Notifica gli oggetti nella cella
-        NotifyReceivers();
+        float fElapsedTime = 0f;
+        float fTimeToCall = 0.1f;   //Ogni quanto controlla e chiama i receiver
 
-        yield return new WaitForSeconds(data.fFlameDuration);
+        while(fElapsedTime < data.fFlameDuration)
+        {
+            NotifyReceivers();      //Notifica gli oggetti nella cella
+            yield return new WaitForSeconds(fTimeToCall);   //Attende un tot (evita chiamata ad ogni fraem)
+            fElapsedTime += fTimeToCall;
+
+            //Nota: nel playerHealth gestisco la ricezione di più chiamate, altrimenti subirebbe più volte danno
+        }
 
         FlamePool.Instance.ReturnToPool(this);
     }
