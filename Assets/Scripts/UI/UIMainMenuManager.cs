@@ -92,6 +92,17 @@ public class UIMainMenuManager : MonoBehaviour
         Debug.Log("Mappa selezionata: " + map);
     }
 
+
+    public void SelectSpringMap()
+    {
+        SelectMap(E_Map.Spring);
+    }
+
+    public void SelectWinterMap()
+    {
+        SelectMap(E_Map.Winter);
+    }
+
     public void OnConfirmPlayPressed()
     {
         if (isBusy) return;

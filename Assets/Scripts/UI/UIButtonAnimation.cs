@@ -5,7 +5,6 @@ public class UIButtonAnimation : MonoBehaviour, IPointerDownHandler, IPointerUpH
 {
     [SerializeField] private RectTransform target;
     [SerializeField] private float pressedScale = 0.9f;
-    [SerializeField] private float speed = 12f;
 
     private Vector3 defaultScale;
 

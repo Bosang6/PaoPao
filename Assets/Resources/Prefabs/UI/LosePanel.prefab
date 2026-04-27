@@ -1138,6 +1138,7 @@ GameObject:
   - component: {fileID: 4108562670704572297}
   - component: {fileID: 7868365553597228721}
   - component: {fileID: 8655740392010995951}
+  - component: {fileID: 1502527436201273996}
   m_Layer: 5
   m_Name: ReplayButton
   m_TagString: Untagged
@@ -1276,7 +1277,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 6243302804172121955}
   pressedScale: 0.9
-  speed: 12
+--- !u!114 &1502527436201273996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5360545062560942097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
 --- !u!1 &5385285732127510336
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,6 +1735,7 @@ GameObject:
   - component: {fileID: 3773774796665085627}
   - component: {fileID: 6443857563653027499}
   - component: {fileID: 7594484694561551396}
+  - component: {fileID: 3501457149757412941}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -1861,7 +1874,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 6429826367647212026}
   pressedScale: 0.9
-  speed: 12
+--- !u!114 &3501457149757412941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056352702252488406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
 --- !u!1 &7122824639892608546
 GameObject:
   m_ObjectHideFlags: 0
