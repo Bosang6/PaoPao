@@ -103,6 +103,7 @@ public class UIGameManager : MonoBehaviour
         Time.timeScale = 0f;
         isPaused = false;
         if (winTimeText != null) winTimeText.text = finalTime;
+        if(AudioManager.Instance != null) AudioManager.Instance.PlayWinSound();
         winPanel.SetActive(true);
     }
 
@@ -112,6 +113,7 @@ public class UIGameManager : MonoBehaviour
         Time.timeScale = 0f;
         isPaused = false;
         if (loseTimeText != null) loseTimeText.text = finalTime;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayLoseSound();
         losePanel.SetActive(true);
     }
 

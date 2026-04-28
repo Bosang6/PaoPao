@@ -29,6 +29,7 @@ public class UIMainMenuManager : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float buttonDelay = 0.2f;
 
+
     private E_Map? selectedMap = null;
     private bool isBusy = false;
 
@@ -38,6 +39,9 @@ public class UIMainMenuManager : MonoBehaviour
         if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
         if(settingsPanel != null) settingsPanel.SetActive(false);
         if(matchSetupPanel != null) matchSetupPanel.SetActive(false);
+
+        // MenuMusic
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayMenuMusic();
 
         ResetMapSelection();
     }
@@ -86,6 +90,17 @@ public class UIMainMenuManager : MonoBehaviour
         UpdateMatchPlayButton();
 
         Debug.Log("Mappa selezionata: " + map);
+    }
+
+
+    public void SelectSpringMap()
+    {
+        SelectMap(E_Map.Spring);
+    }
+
+    public void SelectWinterMap()
+    {
+        SelectMap(E_Map.Winter);
     }
 
     public void OnConfirmPlayPressed()
@@ -154,6 +169,9 @@ public class UIMainMenuManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(buttonDelay);
 
         GameSession.SelectedMap = selectedMap.Value;
+
+        //STOP MUSIC
+        if (AudioManager.Instance != null) AudioManager.Instance.StopMusic();
 
         SceneManager.LoadScene(gameSceneName);
     }

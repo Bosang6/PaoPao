@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 1511693630647720382}
   - component: {fileID: 5301774364779115399}
   - component: {fileID: 8414168699807422312}
+  - component: {fileID: 7838490571222820221}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -303,7 +304,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 6934731346832225913}
   pressedScale: 0.9
-  speed: 12
 --- !u!114 &8414168699807422312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,6 +319,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
+--- !u!114 &7838490571222820221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059853752272657258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
 --- !u!1 &1482626603630073796
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,6 +484,7 @@ GameObject:
   - component: {fileID: 8234182814392960501}
   - component: {fileID: 4860518965300443047}
   - component: {fileID: 8314493734655938900}
+  - component: {fileID: 5113986265588594469}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -607,7 +620,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 6927178293205293181}
   pressedScale: 0.9
-  speed: 12
 --- !u!114 &8314493734655938900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,6 +635,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
+--- !u!114 &5113986265588594469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283978541859431154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
 --- !u!1 &2373070294295175223
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,9 +1018,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: SelectMap
-        m_Mode: 3
+        m_TargetAssemblyTypeName: UIMainMenuManager, Assembly-CSharp
+        m_MethodName: SelectSpringMap
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1126,9 +1150,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: SelectMap
-        m_Mode: 3
+        m_TargetAssemblyTypeName: UIMainMenuManager, Assembly-CSharp
+        m_MethodName: SelectWinterMap
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

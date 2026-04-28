@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 4648508170420846873}
   - component: {fileID: 4926104585294745549}
   - component: {fileID: 5827583879319468693}
+  - component: {fileID: 1318837900114325420}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -228,7 +229,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 2477651280610199733}
   pressedScale: 0.9
-  speed: 12
+--- !u!114 &1318837900114325420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082301901729593859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
 --- !u!1 &1918939707856775348
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +623,7 @@ GameObject:
   - component: {fileID: 7144621357562048957}
   - component: {fileID: 4018392182500647186}
   - component: {fileID: 7211255008795352250}
+  - component: {fileID: 3691543766389692518}
   m_Layer: 5
   m_Name: CancelButton
   m_TagString: Untagged
@@ -761,7 +774,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 394259963374891841}
   pressedScale: 0.9
-  speed: 12
+--- !u!114 &3691543766389692518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739235832625177159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
 --- !u!1 &4974458363997655850
 GameObject:
   m_ObjectHideFlags: 0
