@@ -247,7 +247,7 @@ PrefabInstance:
     - target: {fileID: 6882933910029337089, guid: 446af36e02ff285469830c5fd06ff264, type: 3}
       propertyPath: winTimeText
       value: 
-      objectReference: {fileID: 431029519}
+      objectReference: {fileID: 0}
     - target: {fileID: 6882933910029337089, guid: 446af36e02ff285469830c5fd06ff264, type: 3}
       propertyPath: loseTimeText
       value: 
@@ -363,17 +363,6 @@ Transform:
 --- !u!114 &431029518 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7620388143109683292, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
-  m_PrefabInstance: {fileID: 611207919}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &431029519 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1992034180114190473, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
   m_PrefabInstance: {fileID: 611207919}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
