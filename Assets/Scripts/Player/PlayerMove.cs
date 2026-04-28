@@ -48,7 +48,7 @@ public class PlayerMove : MonoBehaviour
 
         if (h != 0) { direction = new Vector2(h, 0); }
         if (v != 0) { direction = new Vector2(0, v); }
-        //Premendo due assi insieme, da priorit‡ al verticale
+        //Premendo due assi insieme, da priorit√† al verticale
 
         if (direction != Vector2.zero) { TryMove(direction); }
         else
@@ -74,7 +74,7 @@ public class PlayerMove : MonoBehaviour
 
         Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, pData.lmCollisionLayer);
 
-        if (hit == null)    //Cella libera, ci si puÚ muovere
+        if (hit == null)    //Cella libera, ci si pu√≤ muovere
         {
             v3TargetPosition = target;
             v2LastDirection = direction;
@@ -104,7 +104,7 @@ public class PlayerMove : MonoBehaviour
             //Todo: invocare solo in mappa di ghiaccio (?)
             if (true)
             {
-                CheckIcePlate();    //Controlla se si puÚ proseguire col movimento
+                CheckIcePlate();    //Controlla se si pu√≤ proseguire col movimento
             }
         }
 
@@ -115,7 +115,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (v2LastDirection == Vector2.zero) return;
         
-        //Controlla se la cella corrente Ë una IcePlate, in caso prosegue il movimento ("scivola")
+        //Controlla se la cella corrente √® una IcePlate, in caso prosegue il movimento ("scivola")
         Collider2D hit = Physics2D.OverlapBox(transform.position, boxSize, 0f, gData.lmIcePlate);
 
         if (hit != null) { TryMove(v2LastDirection); } else { v2LastDirection = Vector2.zero; }
