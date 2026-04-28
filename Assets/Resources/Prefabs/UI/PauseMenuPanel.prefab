@@ -482,7 +482,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 4296901749157400403}
   pressedScale: 0.9
-  speed: 12
 --- !u!1 &3056939586205424452
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +658,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 8191655562139055264}
   pressedScale: 0.9
-  speed: 12
 --- !u!1 &3632161413627161686
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,7 +983,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -424, y: -140}
+  m_SizeDelta: {x: -424, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4459631709528313502
 CanvasRenderer:
@@ -1281,7 +1279,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 9083070739070573179}
   pressedScale: 0.9
-  speed: 12
 --- !u!1 &7568572074827151064
 GameObject:
   m_ObjectHideFlags: 0
