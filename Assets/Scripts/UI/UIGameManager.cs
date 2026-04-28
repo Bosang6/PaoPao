@@ -10,6 +10,7 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject quitDialogPanel;
+    [SerializeField] private GameObject mobileControlsPanel;
 
     [Header("Final Timer Text")]
     [SerializeField] private TextMeshProUGUI winTimeText;
@@ -24,6 +25,7 @@ public class UIGameManager : MonoBehaviour
     private void Start()
     {
         HideAllPanels();
+        SetMobileControlsActive(true);
         Time.timeScale = 1f;
         isPaused = false;
     }
@@ -39,6 +41,11 @@ public class UIGameManager : MonoBehaviour
         quitDialogPanel.SetActive(false);
     }
 
+    private void SetMobileControlsActive(bool active)
+    {
+        if (mobileControlsPanel != null) mobileControlsPanel.SetActive(active);
+    }
+
 
 
     // PAUSE
@@ -48,6 +55,8 @@ public class UIGameManager : MonoBehaviour
 
         isPaused = true;
         Time.timeScale = 0f;
+
+        SetMobileControlsActive(false);
         pausePanel.SetActive(true);
     }
 
@@ -55,6 +64,8 @@ public class UIGameManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = 1f;
+
+        SetMobileControlsActive(true);
         pausePanel.SetActive(false);
     }
 
@@ -78,7 +89,8 @@ public class UIGameManager : MonoBehaviour
         pausePanel.SetActive(true);
     }
 
-    // mettere tasto apply alle modifiche del settings 
+  
+    // Aggiungere bottone Apply 
 
 
     // QUIT GAME
