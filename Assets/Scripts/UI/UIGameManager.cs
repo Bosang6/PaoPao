@@ -112,6 +112,7 @@ public class UIGameManager : MonoBehaviour
     public void ShowWinPanel(string finalTime)
     {
         HideAllPanels();
+        SetMobileControlsActive(false);
         Time.timeScale = 0f;
         isPaused = false;
         if (winTimeText != null) winTimeText.text = finalTime;
@@ -122,6 +123,7 @@ public class UIGameManager : MonoBehaviour
     public void ShowLosePanel(string finalTime)
     {
         HideAllPanels();
+        SetMobileControlsActive(false);
         Time.timeScale = 0f;
         isPaused = false;
         if (loseTimeText != null) loseTimeText.text = finalTime;
