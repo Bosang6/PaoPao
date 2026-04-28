@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7029478511656787212}
   - component: {fileID: 5493281000167361216}
   - component: {fileID: 1126069425435920837}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TilemapBricks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2500,7 +2500,7 @@ GameObject:
   - component: {fileID: 4634398975130868537}
   - component: {fileID: 5537521956051866427}
   - component: {fileID: 286594950174025219}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TilemapWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3595,11 +3595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapComponent
   playerPos:
-  - x: -6
-    y: 5
-  - x: 6
-    y: 5
-  - x: -6
-    y: -5
-  - x: 6
-    y: -5
+  - {x: -6, y: 5}
+  - {x: 6, y: 5}
+  - {x: -6, y: -5}
+  - {x: 6, y: -5}
