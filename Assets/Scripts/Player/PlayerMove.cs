@@ -15,7 +15,7 @@ public class PlayerMove : MonoBehaviour
     private Animator animator;
 
     void Start() {
-        animator = null; //= GetComponent<Animator>(); 
+        animator = GetComponent<Animator>(); 
         PlayerManager.Instance.Register(transform); 
     }
 
@@ -55,8 +55,8 @@ public class PlayerMove : MonoBehaviour
         {
             if (animator != null)
             {
-                animator.SetFloat("MoveX", 0);
-                animator.SetFloat("MoveY", 0);
+                // animator.SetFloat("MoveX", 0);
+                // animator.SetFloat("MoveY", 0);
                 animator.SetBool("IsMoving", false);
             }
         }
@@ -68,8 +68,9 @@ public class PlayerMove : MonoBehaviour
 
         if(animator != null)
         {
-            animator.SetFloat("MoveX", direction.x);
-            animator.SetFloat("MoveY", direction.y);
+            animator.SetInteger("MovingDir", DirToInt(direction));
+            // animator.SetFloat("MoveX", direction.x);
+            // animator.SetFloat("MoveY", direction.y);
         }
 
         Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, pData.lmCollisionLayer);
@@ -146,5 +147,51 @@ public class PlayerMove : MonoBehaviour
         // Mostra il box di rilevamento collisioni sul target (cubo verde)
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(v3TargetPosition, new Vector3(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f, 0));
+    }
+
+    int lastDir = -1;
+    private int DirToInt(Vector2 direction)
+    {
+        if (direction == Vector2.zero) return lastDir;
+        
+        int x = (int) direction.x;
+        int y = (int) direction.y;
+
+        // Up
+        if (x == 0 && y == 1)
+        {
+            lastDir = 0;
+            return lastDir;
+        }
+        // Right
+        if (x == 1 && y == 0)
+        {
+            lastDir = 1;
+            return lastDir;
+        }
+        // Down
+        if (x == 0 && y == -1)
+        {
+            lastDir = 2;
+            return lastDir;
+        }
+        // Left
+        if (x == -1 && y == 0)
+        {
+            lastDir = 3;
+            return lastDir;
+        }
+        
+        return lastDir;
+    }
+
+    public void SetAnimatorHurtingTrigger()
+    {
+        animator.SetTrigger("Hurting");
+    }
+
+    public void SetAnimatorIsDead()
+    {
+        animator.SetBool("IsDead", true);
     }
 }

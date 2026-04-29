@@ -48,16 +48,25 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
 
     public void OnHitByExplosion(ExplosionData data)
     {
-        if (invicibilityTimer > 0) { return; }  //Ancora in fase di invincibilità
+        if (invicibilityTimer > 0) { return; }  //Ancora in fase di invincibilitï¿½
         //_pHealth.Hitted(data) restituisce il numero di hp rimanenti
-        if (_pHealth.Hitted(data) > 0) { _pMove.Respawn(); } else { Death(); }
+        if (_pHealth.Hitted(data) > 0)
+        {
+            //_pMove.Respawn();
+            _pMove.SetAnimatorHurtingTrigger();
+        }
+        else
+        {
+            _pMove.SetAnimatorIsDead();
+            Death();
+        }
         invicibilityTimer = playerData.invincibilityDuration;
-        _pHealth?.StartBlink(playerData.invincibilityDuration); //Lampeggia durante l'invincibilità
+        //_pHealth?.StartBlink(playerData.invincibilityDuration); //Lampeggia durante l'invincibilitï¿½
     }
 
     private void Death()
     {
-        OnPlayerDied?.Invoke(this); //This per indicare quale player è morto
-        Destroy(gameObject);
+        OnPlayerDied?.Invoke(this); //This per indicare quale player ï¿½ morto
+        Destroy(gameObject, 0.5f);
     }
 }
