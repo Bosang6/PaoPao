@@ -5,6 +5,8 @@ public enum E_Animator
     Slime1,
     Slime2,
     Slime3,
+    Penguin,
+    Bomberman,
 }
 
 public class AnimatorManager : MonoBehaviour
@@ -48,6 +50,9 @@ public class AnimatorManager : MonoBehaviour
                 break;
             case E_Animator.Slime3:
                 path = "Prefabs/Animators/Slime3";
+                break;
+            case E_Animator.Penguin:
+                path = "Prefabs/Animators/Penguin";
                 break;
         }
 

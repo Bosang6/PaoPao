@@ -14,10 +14,13 @@ public class PlayerMove : MonoBehaviour
     private Vector2 boxSize;
     private Animator animator;
 
+    [SerializeField]
+    private E_Animator eAnimator;
+
     void Start()
     {
         animator = GetComponent<Animator>(); 
-        animator.runtimeAnimatorController = AnimatorManager.Instance.LoadAnimator(E_Animator.Slime1);
+        animator.runtimeAnimatorController = AnimatorManager.Instance.LoadAnimator(eAnimator);
         PlayerManager.Instance.Register(transform); 
     }
 
