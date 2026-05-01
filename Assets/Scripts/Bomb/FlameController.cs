@@ -1,7 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-public enum FlameType { Center, HorizontalMid, HorizontalEnd, VerticalMid, VerticalEnd }
+public enum FlameType
+{
+    Center, 
+    HorizontalLeftMid,
+    HorizontalRightMid,
+    HorizontalLeftEnd, 
+    HorizontalRightEnd,
+    VerticalTopMid, 
+    VerticalBottomMid,
+    VerticalTopEnd,
+    VerticalBottomEnd,
+}
 
 public class FlameController : MonoBehaviour
 {
@@ -21,15 +32,48 @@ public class FlameController : MonoBehaviour
         if(data == null) { Debug.LogError("FlameController: ExplosionData == null"); }
         this.data = data;
 
-        if(animator != null) { animator.SetInteger(FlameTypeHash, (int)type); }
+        if (animator != null)
+        {
+            int animType = 0;
+            switch (type)
+            {
+                case FlameType.VerticalTopEnd:
+                case FlameType.VerticalBottomEnd:
+                    animType = 4;
+                    break;
+                case FlameType.VerticalTopMid:
+                case FlameType.VerticalBottomMid:
+                    animType = 3;
+                    break;
+                case FlameType.HorizontalRightMid:
+                case FlameType.HorizontalLeftMid:
+                    animType = 1;
+                    break;
+                case FlameType.HorizontalRightEnd:
+                case FlameType.HorizontalLeftEnd:
+                    animType = 2;
+                    break;
+                    
+            }
+            animator.SetInteger(FlameTypeHash, animType);
+        }
 
         if(flameCoroutine != null) { StopCoroutine(flameCoroutine); }
         flameCoroutine = StartCoroutine(Flame());
 
-        //Se l'esplosione è verticale, ruota lo sprite
-        if(type == FlameType.VerticalMid || type == FlameType.VerticalEnd) { 
+        //Se l'esplosione ï¿½ verticale, ruota lo sprite
+        if(type == FlameType.VerticalTopMid || type == FlameType.VerticalTopEnd) { 
             transform.rotation = Quaternion.Euler(0, 0, 90f); 
         }
+        else if (type == FlameType.VerticalBottomMid || type == FlameType.VerticalBottomEnd)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, -90f); 
+        }
+        else if (type == FlameType.HorizontalLeftMid || type == FlameType.HorizontalLeftEnd)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, -180f); 
+        }
+
         else { transform.rotation = Quaternion.identity; } //Reset per il pool
     }
 
@@ -44,7 +88,7 @@ public class FlameController : MonoBehaviour
             yield return new WaitForSeconds(fTimeToCall);   //Attende un tot (evita chiamata ad ogni fraem)
             fElapsedTime += fTimeToCall;
 
-            //Nota: nel playerHealth gestisco la ricezione di più chiamate, altrimenti subirebbe più volte danno
+            //Nota: nel playerHealth gestisco la ricezione di piï¿½ chiamate, altrimenti subirebbe piï¿½ volte danno
         }
 
         FlamePool.Instance.ReturnToPool(this);
