@@ -14,8 +14,10 @@ public class PlayerMove : MonoBehaviour
     private Vector2 boxSize;
     private Animator animator;
 
-    void Start() {
+    void Start()
+    {
         animator = GetComponent<Animator>(); 
+        animator.runtimeAnimatorController = AnimatorManager.Instance.LoadAnimator(E_Character.Slime1);
         PlayerManager.Instance.Register(transform); 
     }
 
