@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ExplosionData
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionData
   fTimeToExplode: 1
-  iRange: 2
-  fFlameDuration: 2
+  iRange: 3
+  fFlameDuration: 0.6
   iDamage: 1
   lmWallLayer:
     serializedVersion: 2

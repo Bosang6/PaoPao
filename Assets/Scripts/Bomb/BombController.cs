@@ -33,7 +33,7 @@ public class BombController : MonoBehaviour
         //Si parte col collider disattivato
         bombCollider.enabled = false;
         
-        //Si aspetta che non ci sia più nessun player sulla bomba
+        //Si aspetta che non ci sia piï¿½ nessun player sulla bomba
         while (AnyPlayerOnCell(bombCell)) { yield return null; }
 
         //Il collider diventa attivo
@@ -65,8 +65,8 @@ public class BombController : MonoBehaviour
 
         /*  Invoca un evento di tipo event System.Action. Il simbolo "?." significa "invoca
          *  solo se qualcuno sta ascoltando" (quindi se ci sono listener registrati).
-         *  Successivamente, si de-registra dall'evento (poiché la bomba torna nel pool).
-         *  La prossima volta che la bomba verrà estratta dal pool, gli verrà agganciato
+         *  Successivamente, si de-registra dall'evento (poichï¿½ la bomba torna nel pool).
+         *  La prossima volta che la bomba verrï¿½ estratta dal pool, gli verrï¿½ agganciato
          *  un nuovo listener
          *  La sintassi = null permette di chiudere il canale di comunicazione coi listener
          */
