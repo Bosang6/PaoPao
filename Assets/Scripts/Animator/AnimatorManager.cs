@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum E_Character
+public enum E_Animator
 {
     Slime1,
     Slime2,
@@ -22,9 +22,9 @@ public class AnimatorManager : MonoBehaviour
         Instance = this;
     }
 
-    public AnimatorOverrideController LoadAnimator(E_Character eCharacter)
+    public AnimatorOverrideController LoadAnimator(E_Animator eAnimator)
     {
-        AnimatorOverrideController animatorPrefab = Resources.Load<AnimatorOverrideController>(GetAnimatorPath(eCharacter));
+        AnimatorOverrideController animatorPrefab = Resources.Load<AnimatorOverrideController>(GetAnimatorPath(eAnimator));
 
         if (animatorPrefab != null)
         {
@@ -34,19 +34,19 @@ public class AnimatorManager : MonoBehaviour
         return null;
     }
 
-    private string GetAnimatorPath(E_Character eCharacter)
+    private string GetAnimatorPath(E_Animator eAnimator)
     {
         string path = "";
 
-        switch (eCharacter)
+        switch (eAnimator)
         {
-            case E_Character.Slime1:
+            case E_Animator.Slime1:
                 path = "Prefabs/Animators/Slime1";
                 break;
-            case E_Character.Slime2:
+            case E_Animator.Slime2:
                 path = "Prefabs/Animators/Slime2";
                 break;
-            case E_Character.Slime3:
+            case E_Animator.Slime3:
                 path = "Prefabs/Animators/Slime3";
                 break;
         }

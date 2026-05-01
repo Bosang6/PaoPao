@@ -17,7 +17,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>(); 
-        animator.runtimeAnimatorController = AnimatorManager.Instance.LoadAnimator(E_Character.Slime1);
+        animator.runtimeAnimatorController = AnimatorManager.Instance.LoadAnimator(E_Animator.Slime1);
         PlayerManager.Instance.Register(transform); 
     }
 
