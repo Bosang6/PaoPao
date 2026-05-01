@@ -678,15 +678,15 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 95805902, guid: 0198afa659f7541e587ddb98fb7ea19c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.16, y: 0.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!95 &452132430
 Animator:
@@ -719,7 +719,7 @@ Transform:
   m_GameObject: {fileID: 452132428}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.38, y: 0.34, z: 0}
+  m_LocalPosition: {x: -9.32, y: 2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1700,7 +1700,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2060775463785302385, guid: 91d692ef3c5360d4fb5655c010fe5caf, type: 3}
       propertyPath: eAnimator
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4460567357172676665, guid: 91d692ef3c5360d4fb5655c010fe5caf, type: 3}
       propertyPath: m_LocalPosition.x

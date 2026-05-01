@@ -54,6 +54,9 @@ public class AnimatorManager : MonoBehaviour
             case E_Animator.Penguin:
                 path = "Prefabs/Animators/Penguin";
                 break;
+            case E_Animator.Bomberman:
+                path = "Prefabs/Animators/Bomberman";
+                break;
         }
 
         return path;
