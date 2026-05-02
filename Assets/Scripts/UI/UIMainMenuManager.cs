@@ -25,6 +25,7 @@ public class UIMainMenuManager : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button matchPlayButton;
+    [SerializeField] private Button multiPlayButton;
 
     [Header("Timing")]
     [SerializeField] private float buttonDelay = 0.2f;
@@ -40,6 +41,9 @@ public class UIMainMenuManager : MonoBehaviour
         if(settingsPanel != null) settingsPanel.SetActive(false);
         if(matchSetupPanel != null) matchSetupPanel.SetActive(false);
 
+        //Per il tasto Multiplayer (da togliere in futuro)
+        if (multiPlayButton != null) multiPlayButton.interactable = false;
+
         // MenuMusic
         if (AudioManager.Instance != null) AudioManager.Instance.PlayMenuMusic();
 
@@ -49,11 +53,16 @@ public class UIMainMenuManager : MonoBehaviour
 
 
     /* Main Menu */
-    public void OnPlayMenuPressed()
+    public void OnSinglePlayMenuPressed()
     {
         // Attiva il match panel
         if(isBusy) return;
         StartCoroutine(OpenMatchSetupRoutine());
+    }
+
+    public void OnMultiPlayMenuPressed()
+    {
+        if(isBusy) return;
     }
 
     public void OnSettingsPressed()
