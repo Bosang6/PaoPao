@@ -16,3 +16,4 @@
 *.bank filter=lfs diff=lfs merge=lfs -text
 *.strings.bank filter=lfs diff=lfs merge=lfs -text
 *.fspro filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
