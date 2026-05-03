@@ -268,6 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2847601614422981753}
   - component: {fileID: 242028984753402793}
+  - component: {fileID: 8530676865534729919}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -306,7 +307,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicSource: {fileID: 6172933632681191227}
   effectsSource: {fileID: 3697683727384784208}
-  menuMusic: {fileID: 8300000, guid: 1d2e8ce7f7234ec4f844c48055d73af2, type: 3}
+  menuMusicEmitter: {fileID: 8530676865534729919}
   buttonSound: {fileID: 8300000, guid: 75019af4eecde364cae2550d3e922227, type: 3}
   winSound: {fileID: 8300000, guid: 18c018ccade8fc247a2e6e9f280f18d5, type: 3}
   loseSound: {fileID: 8300000, guid: 2ded849252d0f614cb1ffe1c87cb891f, type: 3}
+--- !u!114 &8530676865534729919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8216276279936123183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1234649980
+      Data2: 1304457091
+      Data3: 1544691628
+      Data4: -620305654
+    Path: event:/UI/MusicMenu
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

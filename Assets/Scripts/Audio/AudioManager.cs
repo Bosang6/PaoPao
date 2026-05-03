@@ -1,4 +1,8 @@
 using UnityEngine;
+using FMODUnity;
+using FMOD.Studio;
+
+
 
 public class AudioManager : MonoBehaviour
 {
@@ -20,12 +24,13 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource effectsSource;
 
     [Header("Music Clip")]
-    [SerializeField] private AudioClip menuMusic;
+    [SerializeField] private StudioEventEmitter menuMusicEmitter;
 
     [Header("Effects Clip")]
-    [SerializeField] private AudioClip buttonSound;
     [SerializeField] private AudioClip winSound;
     [SerializeField] private AudioClip loseSound;
+
+    private Bus musicBus;
 
     private float musicVolume = 1f;
     private float effectsVolume = 1f;
@@ -44,37 +49,37 @@ public class AudioManager : MonoBehaviour
         
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        musicBus = RuntimeManager.GetBus("bus:/Music");
+
         LoadVolumeSettings();
     }
 
 
-    /* Music */
+    /* FMOD Music */
 
     public void PlayMenuMusic()
     {
-        if (musicSource == null || menuMusic == null) return;
+        if (menuMusicEmitter == null) return;
 
-        if(musicSource.clip == menuMusic && musicSource.isPlaying) return;
+        menuMusicEmitter.Play();
 
-        musicSource.clip = menuMusic;
-        musicSource.loop = true;
-        musicSource.volume = musicVolume;
-        musicSource.Play();
+
     }
 
     public void StopMusic()
     {
-        if (musicSource == null) return;
-        musicSource.Stop();
+        if (menuMusicEmitter == null) return;
+        menuMusicEmitter.Stop();
     }
 
     
     /* Effects */
 
-    public void PlayButtonSound()
-    {
-        PlayEffect(buttonSound);
-    }
+    //public void PlayButtonSound()
+    //{
+    //    PlayEffect(buttonSound);
+    //}
 
     public void PlayWinSound()
     {
@@ -99,7 +104,7 @@ public class AudioManager : MonoBehaviour
         musicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 1f);
         effectsVolume = PlayerPrefs.GetFloat(EffectsVolumeKey, 1f);
 
-        if(musicSource != null) musicSource.volume = musicVolume;
+        musicBus.setVolume(musicVolume);
         if(effectsSource != null) effectsSource.volume = effectsVolume;
     }
 
@@ -112,13 +117,11 @@ public class AudioManager : MonoBehaviour
 
 
     /* Volume Control */
+
     public void SetMusicVolume(float value)
     {
         musicVolume = Mathf.Clamp01(value);
-        if (musicSource != null)
-        {
-            musicSource.volume = musicVolume;
-        }
+        musicBus.setVolume(musicVolume);
     }
 
     public void SetEffectsVolume(float value)
