@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13caf1210f1722c4d9caf801bfaaeac7, type: 3}
+  m_Name: HumanInstanceData1
+  m_EditorClassIdentifier: Assembly-CSharp::HumanInstanceData
+  playerName: Goku
+  playerID: 1
+  playerColor: {r: 1, g: 0.5098561, b: 0, a: 0}
+  spawnPosition: {x: -6, y: 5, z: 0}
+  spawnRotation: {x: 0, y: 0, z: 0, w: 0}
+  isHuman: 1
+  inputActionAsset: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
+  controlScheme: Player1

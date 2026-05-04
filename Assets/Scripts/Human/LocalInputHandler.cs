@@ -7,20 +7,28 @@ public class LocalInputHandler : MonoBehaviour, IPlayerInput
     private InputActionAsset _actions;
     private InputAction _move;          
     private InputAction _placeBomb;
-    private PlayerData _playerData;
+    private CharacterData _characterData;
+    private HumanInstanceData _instanceData;
 
-    public void Initialize(PlayerData data)
+    public void Initialize(CharacterData characterData, PlayerInstanceData instanceData)
     {
-        _playerData = data;
+        _characterData = characterData;
+        _instanceData = instanceData as HumanInstanceData;
+
+        if (_instanceData == null)
+        {
+            Debug.LogError($"[BasicBotInputHandler] Initialize fallito: atteso HumanInstanceData, ricevuto {instanceData?.GetType().Name}", this);
+            return;
+        }
 
         //Spiegazione 1
-        _actions = Instantiate(_playerData.inputActionAsset);          
+        _actions = Instantiate(_instanceData.inputActionAsset);          
         _move = _actions.FindAction("Player/Move");
         _placeBomb = _actions.FindAction("Player/PlaceBomb");
 
         //Spiegazione 2
         _actions.FindActionMap("Player").Enable();
-        _actions.bindingMask = InputBinding.MaskByGroup(_playerData.controlScheme);
+        _actions.bindingMask = InputBinding.MaskByGroup(_instanceData.controlScheme);
     }
 
     void OnDisable() { _actions.FindActionMap("Player").Disable(); }

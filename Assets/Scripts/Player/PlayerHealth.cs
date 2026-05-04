@@ -5,7 +5,7 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private PlayerData pData;
+    private CharacterData _characterData;
     private int currentHp;
     private float blinkInterval = 0.3f; // Velocità del blink
     private SpriteRenderer spriteRenderer;
@@ -14,7 +14,7 @@ public class PlayerHealth : MonoBehaviour
     // Getter pub per leggere gli hp correnti dall'esterno
     public int CurrentHp => currentHp;
     // Getter pub per leggere gli hp massimi dall'esterno
-    public int MaxHp => pData != null ? pData.maxHp : 0;
+    public int MaxHp => _characterData != null ? _characterData.maxHp : 0;
 
 
     /* 
@@ -24,9 +24,9 @@ public class PlayerHealth : MonoBehaviour
     public event Action<int,int> OnHpChanged;
 
 
-    public void Initialize(PlayerData playerData) { 
-        pData = playerData;
-        currentHp = pData.maxHp;
+    public void Initialize(CharacterData characterData) { 
+        _characterData = characterData;
+        currentHp = _characterData.maxHp;
         OnHpChanged?.Invoke(currentHp, MaxHp);
         spriteRenderer = GetComponent<SpriteRenderer>();
     }

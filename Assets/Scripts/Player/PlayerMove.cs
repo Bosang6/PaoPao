@@ -4,8 +4,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    private PlayerData pData;
-    private GameData gData;
+
+    private GameData _gameData;
+    private CharacterData _characterData;
+    private PlayerInstanceData _instanceData;
 
     private bool isInitialized = false;
     private bool bIsMoving = false;
@@ -24,18 +26,19 @@ public class PlayerMove : MonoBehaviour
         PlayerManager.Instance.Register(transform); 
     }
 
-    public void Initialize(PlayerData playerData, GameData gameData)
+    public void Initialize(GameData gameData, CharacterData characterData, PlayerInstanceData instanceData)
     {
-        pData = playerData;
-        gData = gameData;
+        _gameData = gameData;
+        _characterData = characterData;
+        _instanceData = instanceData;
 
         //Allinea la posizione alla griglia
-        transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize);
-        transform.rotation = pData.spawnRotation;
+        transform.position = GridUtils.AdjustPosition(_instanceData.spawnPosition, _gameData.fCellSize);
+        transform.rotation = _instanceData.spawnRotation;
         v3TargetPosition = transform.position;
 
         //Usato per il boxCast: proietta un box della stessa dimensione della cella
-        boxSize = new Vector2(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f); // 0.9 = margine minimo
+        boxSize = new Vector2(_gameData.fCellSize * 0.9f, _gameData.fCellSize * 0.9f); // 0.9 = margine minimo
 
         isInitialized = true;
     }
@@ -69,7 +72,7 @@ public class PlayerMove : MonoBehaviour
 
     void TryMove(Vector2 direction)
     {
-        Vector3 target = transform.position + new Vector3(direction.x, direction.y, 0) * gData.fCellSize;
+        Vector3 target = transform.position + new Vector3(direction.x, direction.y, 0) * _gameData.fCellSize;
 
         if(animator != null)
         {
@@ -78,7 +81,7 @@ public class PlayerMove : MonoBehaviour
             // animator.SetFloat("MoveY", direction.y);
         }
 
-        Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, pData.lmCollisionLayer);
+        Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, _gameData.lmCollisionLayer);
 
         if (hit == null)    //Cella libera, ci si può muovere
         {
@@ -97,13 +100,13 @@ public class PlayerMove : MonoBehaviour
     {
         Vector3 start = transform.position;
         Vector3 end = v3TargetPosition;
-        float movement = pData.moveSpeed * Time.deltaTime;
+        float movement = _characterData.moveSpeed * Time.deltaTime;
 
         transform.position = Vector3.MoveTowards(start, end, movement);
 
         if (transform.position == end)  //Invocato al termine del movimento (arrivato a destinazione)
         {
-            transform.position = GridUtils.AdjustPosition(end, gData.fCellSize);   //Doppio controllo sull'accuratezza della posizione
+            transform.position = GridUtils.AdjustPosition(end, _gameData.fCellSize);   //Doppio controllo sull'accuratezza della posizione
             bIsMoving = false;
             if (animator != null) { animator.SetBool("IsMoving", false); }
 
@@ -122,14 +125,14 @@ public class PlayerMove : MonoBehaviour
         if (v2LastDirection == Vector2.zero) return;
         
         //Controlla se la cella corrente è una IcePlate, in caso prosegue il movimento ("scivola")
-        Collider2D hit = Physics2D.OverlapBox(transform.position, boxSize, 0f, gData.lmIcePlate);
+        Collider2D hit = Physics2D.OverlapBox(transform.position, boxSize, 0f, _gameData.lmIcePlate);
 
         if (hit != null) { TryMove(v2LastDirection); } else { v2LastDirection = Vector2.zero; }
     }
 
     public void Respawn() {
-        transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize); 
-        transform.rotation = pData.spawnRotation;
+        transform.position = GridUtils.AdjustPosition(_instanceData.spawnPosition, _gameData.fCellSize); 
+        transform.rotation = _instanceData.spawnRotation;
         v3TargetPosition = transform.position;
         bIsMoving = false;
     }
@@ -142,7 +145,7 @@ public class PlayerMove : MonoBehaviour
 
         // Mostra la posizione snappata (pallino giallo)
         Gizmos.color = Color.yellow;
-        Vector3 snapped = GridUtils.AdjustPosition(transform.position, gData.fCellSize);
+        Vector3 snapped = GridUtils.AdjustPosition(transform.position, _gameData.fCellSize);
         Gizmos.DrawWireSphere(snapped, 0.1f);
 
         // Mostra il target attuale (pallino rosso)
@@ -151,7 +154,7 @@ public class PlayerMove : MonoBehaviour
 
         // Mostra il box di rilevamento collisioni sul target (cubo verde)
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(v3TargetPosition, new Vector3(gData.fCellSize * 0.9f, gData.fCellSize * 0.9f, 0));
+        Gizmos.DrawWireCube(v3TargetPosition, new Vector3(_gameData.fCellSize * 0.9f, _gameData.fCellSize * 0.9f, 0));
     }
 
     int lastDir = -1;

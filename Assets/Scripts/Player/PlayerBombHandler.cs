@@ -3,23 +3,23 @@ using UnityEngine;
 
 public class PlayerBombHandler : MonoBehaviour
 {
-    private PlayerData pData;
-    private GameData gData;
+    private CharacterData _characterData;
+    private GameData _gameData;
 
     private int currentBombs = 0;
 
-    public void Initialize(PlayerData playerData, GameData gameData)
+    public void Initialize(GameData gameData, CharacterData characterData)
     {
-        pData = playerData;
-        gData = gameData;
+        _gameData = gameData;
+        _characterData = characterData;
     }
 
     public void TryPlaceBomb()
     {
-        if (currentBombs >= pData.maxBombs) return;
+        if (currentBombs >= _characterData.maxBombs) return;
 
         //Posizione (allineata alla griglia) della bomba da piazzare
-        Vector3 bombPos = GridUtils.AdjustPosition(transform.position, gData.fCellSize);
+        Vector3 bombPos = GridUtils.AdjustPosition(transform.position, _gameData.fCellSize);
 
         BombController bomb = BombPool.Instance.Get(bombPos);
         if(bomb == null) return;

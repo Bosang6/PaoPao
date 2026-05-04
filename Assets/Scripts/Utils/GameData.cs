@@ -12,4 +12,8 @@ public class GameData : ScriptableObject
 
     [Header("Grid Settings")]
     public float fCellSize = 1f;            //Dimensione della tile
+
+    [Header("Player collision")]
+    public LayerMask lmCollisionLayer;      //Layer con i quali i player collidono
+    //04/05/2026: Wall, Player, Breakable, Bomb
 }
