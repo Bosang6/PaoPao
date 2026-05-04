@@ -1,18 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
-using FMODUnity;
 
 [RequireComponent(typeof(Button))]
-[RequireComponent(typeof(StudioEventEmitter))]
 public class UIButtonSound : MonoBehaviour
 {
+    [SerializeField] private AudioEvent buttonAudioEvent = AudioEvent.ButtonSound;
+
     private Button button;
-    private StudioEventEmitter eventEmitter;
 
     private void Awake()
     {
         button = GetComponent<Button>();
-        eventEmitter = GetComponent<StudioEventEmitter>();
     }
 
     private void OnEnable()
@@ -27,6 +25,6 @@ public class UIButtonSound : MonoBehaviour
 
     private void PlaySound()
     {
-        eventEmitter.Play();
+        AudioManager.Instance.PlaySFX(buttonAudioEvent);
     }
 }
