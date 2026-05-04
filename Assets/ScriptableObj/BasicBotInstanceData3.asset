@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ccdf0c3fc197f8419894f36f6741a6d, type: 3}
-  m_Name: BasicBotInstanceData2
+  m_Name: BasicBotInstanceData3
   m_EditorClassIdentifier: Assembly-CSharp::BasicBotInstanceData
-  playerName: Junior
-  playerID: 2
-  playerColor: {r: 0.019223927, g: 0.33962262, b: 0.087180115, a: 0}
-  spawnPosition: {x: 6, y: 5, z: 0}
+  playerName: MajinBu
+  playerID: 3
+  playerColor: {r: 1, g: 0, b: 0.7677479, a: 0}
+  spawnPosition: {x: -6, y: -5, z: 0}
   spawnRotation: {x: 0, y: 0, z: 0, w: 0}
   isHuman: 0
   moveChangeCooldown: 0.5
-  bombCooldown: 5
+  bombCooldown: 10
+  difficulty: 1

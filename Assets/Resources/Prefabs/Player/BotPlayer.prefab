@@ -70,14 +70,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5118495651096295261, guid: 91d692ef3c5360d4fb5655c010fe5caf, type: 3}
       insertIndex: 3
-      addedObject: {fileID: -7432562459605994641}
+      addedObject: {fileID: -5129999399266965722}
   m_SourcePrefab: {fileID: 100100000, guid: 91d692ef3c5360d4fb5655c010fe5caf, type: 3}
 --- !u!1 &8865168356098867609 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5118495651096295261, guid: 91d692ef3c5360d4fb5655c010fe5caf, type: 3}
   m_PrefabInstance: {fileID: 4327936197402261188}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-7432562459605994641
+--- !u!114 &-5129999399266965722
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,8 +86,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8865168356098867609}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f13649367beb99a4ba10a4b82ed43194, type: 3}
+  m_Script: {fileID: 11500000, guid: d485f707acb00e5469de214d7cac9f8a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BasicBotInputHandler
-  moveChangeCooldown: 0.5
-  bombCooldown: 2.5
+  m_EditorClassIdentifier: Assembly-CSharp::BotInputHandler

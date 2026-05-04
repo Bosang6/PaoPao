@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c39eaba0685c8d44a12821705cd0c03, type: 3}
-  m_Name: Character01
-  m_EditorClassIdentifier: Assembly-CSharp::Character01
+  m_Script: {fileID: 11500000, guid: 2f0bcbf04ea612149b0c8d10542d38c3, type: 3}
+  m_Name: Character05
+  m_EditorClassIdentifier: Assembly-CSharp::Character05
   maxHp: 5
   hp: 0
   maxBombs: 3
   moveSpeed: 5
   invincibilityDuration: 3
-  animatorType: 0
+  animatorType: 4

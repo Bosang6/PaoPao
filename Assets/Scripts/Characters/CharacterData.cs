@@ -9,9 +9,6 @@ public abstract class CharacterData : ScriptableObject
     public float moveSpeed;
     public float invincibilityDuration;
 
-    [Header("TODO:Sprite")]
-    public Sprite playerSprite;
-
-    [Header("TODO:Animator")]
+    [Header("Animator")]
     public E_Animator animatorType;
 }

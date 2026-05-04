@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c39eaba0685c8d44a12821705cd0c03, type: 3}
-  m_Name: Character01
-  m_EditorClassIdentifier: Assembly-CSharp::Character01
+  m_Name: Character03
+  m_EditorClassIdentifier: Assembly-CSharp::Character03
   maxHp: 5
   hp: 0
   maxBombs: 3
   moveSpeed: 5
   invincibilityDuration: 3
-  animatorType: 0
+  animatorType: 2
