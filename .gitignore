@@ -114,3 +114,7 @@ FMOD/**/*.tmp
 FMOD/**/*.log
 FMOD/**/*.cache
 *.fspro.user
+
+# FMOD Unity Integration cache
+/[Aa]ssets/Plugins/FMOD/Cache/
+/[Aa]ssets/Plugins/FMOD/Cache.meta
