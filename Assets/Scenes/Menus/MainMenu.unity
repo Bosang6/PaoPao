@@ -3350,6 +3350,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4011952949247481351, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4011952949247481351, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4011952949247481351, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4011952949247481351, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5288770473393527244, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
       propertyPath: m_Name
       value: MatchSetupPanel
@@ -3410,6 +3426,46 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1134543667}
+    - target: {fileID: 8409787194041818257, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409787194041818257, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409787194041818257, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409787194041818257, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409787194041818257, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8678871112388439782, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8678871112388439782, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8678871112388439782, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8678871112388439782, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8678871112388439782, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8822296983071995381, guid: 4064f6cdd8f2af743a898775a90afadb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
