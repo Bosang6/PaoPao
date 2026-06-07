@@ -19,9 +19,14 @@ public class UIMainMenuManager : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject matchSetupPanel;
 
-    [Header("Selection Glow")]
+    [Header("Map Selection Glow")]
     [SerializeField] private GameObject springGlow;
     [SerializeField] private GameObject winterGlow;
+
+    [Header("Player Selecion Glow")]
+    [SerializeField] private GameObject bombermanGlow;
+    [SerializeField] private GameObject penguinGlow;
+
 
     [Header("Buttons")]
     [SerializeField] private Button matchPlayButton;
@@ -32,6 +37,7 @@ public class UIMainMenuManager : MonoBehaviour
 
 
     private E_Map? selectedMap = null;
+    private E_Character? selectedCharater = null;
     private bool isBusy = false;
 
     private void Start()
@@ -48,6 +54,7 @@ public class UIMainMenuManager : MonoBehaviour
         if (AudioManager.Instance != null) AudioManager.Instance.PlayMenuMusic();
 
         ResetMapSelection();
+        ResetCharacterSelection();
     }
 
 
@@ -101,6 +108,18 @@ public class UIMainMenuManager : MonoBehaviour
         Debug.Log("Mappa selezionata: " + map);
     }
 
+    public void SelectCharacter(E_Character character)
+    {
+        selectedCharater = character;
+
+        if (bombermanGlow != null) bombermanGlow.SetActive(character == E_Character.Bomberman);
+        if (penguinGlow != null) penguinGlow.SetActive(character == E_Character.Penguin);
+
+        UpdateMatchPlayButton();
+
+        Debug.Log("Character selezionato : " + character);
+    }
+
 
     public void SelectSpringMap()
     {
@@ -110,6 +129,16 @@ public class UIMainMenuManager : MonoBehaviour
     public void SelectWinterMap()
     {
         SelectMap(E_Map.Winter);
+    }
+
+    public void SelectBombermanCharacter()
+    {
+        SelectCharacter(E_Character.Bomberman);
+    }
+
+    public void SelectPenguinCharacter()
+    {
+        SelectCharacter(E_Character.Penguin);
     }
 
     public void OnConfirmPlayPressed()
@@ -143,6 +172,7 @@ public class UIMainMenuManager : MonoBehaviour
         if (matchSetupPanel != null) matchSetupPanel.SetActive(false);
         if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
         ResetMapSelection();
+        ResetCharacterSelection();
         isBusy = false;
     }
 
@@ -175,9 +205,17 @@ public class UIMainMenuManager : MonoBehaviour
             yield break;
         }
 
+        if(selectedCharater == null)
+        {
+            Debug.LogWarning("Nessun character selezionato.");
+            isBusy = false;
+            yield break;
+        }
+
         yield return new WaitForSecondsRealtime(buttonDelay);
 
         GameSession.SelectedMap = selectedMap.Value;
+        GameSession.SelectedCharacter = selectedCharater.Value;
 
         //STOP MUSIC
         if (AudioManager.Instance != null) AudioManager.Instance.StopMusic();
@@ -210,9 +248,18 @@ public class UIMainMenuManager : MonoBehaviour
         UpdateMatchPlayButton();
     }
 
+    private void ResetCharacterSelection()
+    {
+        selectedCharater = null;
+        if(bombermanGlow != null) bombermanGlow.SetActive(false);
+        if(penguinGlow != null) penguinGlow.SetActive(false);
+
+        UpdateMatchPlayButton();
+    }
+
     private void UpdateMatchPlayButton()
     {
         if (matchPlayButton != null)
-            matchPlayButton.interactable = (selectedMap != null);
+            matchPlayButton.interactable = (selectedMap != null && selectedCharater != null);
     }
 }
