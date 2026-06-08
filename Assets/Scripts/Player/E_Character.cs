@@ -4,5 +4,7 @@ public enum E_Character
 {
     Bomberman,
     Penguin,
-    Slime
+    Slime1,
+    Slime2,
+    Slime3
 }

@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 4666184065354329312}
   - component: {fileID: 1339868068114803448}
   m_Layer: 7
-  m_Name: Player1
+  m_Name: Enemy_Slime2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1739e1e3ec9a729498193348117a22d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerData: {fileID: 11400000, guid: 897c2e4c3bf6a954eb13a01bb3d25f8b, type: 2}
+  playerData: {fileID: 11400000, guid: a7edc81dca37ab841bf608fecde87043, type: 2}
   gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
 --- !u!114 &1240003441511018218
 MonoBehaviour:
@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfa84704252e4d4d9e75b2a7c7bcfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  eAnimator: 1
 --- !u!114 &1317502994822445219
 MonoBehaviour:
   m_ObjectHideFlags: 0
