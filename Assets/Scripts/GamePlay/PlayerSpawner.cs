@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/*
+ *  Questa classe instanzia i character dei player in base alla configurazione di GameSession e alle posizioni di spawn fornite dal MapManager. 
+ */
+
+
 public class PlayerSpawner : MonoBehaviour
 {
     [System.Serializable]
@@ -72,6 +78,13 @@ public class PlayerSpawner : MonoBehaviour
             Vector3 spawnWorldPosition = new Vector3(spawnGridPosition.x, spawnGridPosition.y, 0f);
 
             GameObject spawnedPlayer = Instantiate(prefab, spawnWorldPosition, Quaternion.identity);
+
+            PlayerMove playerMove = spawnedPlayer.GetComponent<PlayerMove>();
+
+            if (playerMove != null)
+            {
+                playerMove.SetSpawnPosition(spawnWorldPosition, Quaternion.identity);
+            }
 
             PlayerController playerController = spawnedPlayer.GetComponent<PlayerController>();
 

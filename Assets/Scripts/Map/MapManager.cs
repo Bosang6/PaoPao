@@ -62,7 +62,8 @@ public class MapManager : MonoBehaviour
 
         return path;
     }
-    
+
+    // Restituisce un array di posizioni di spawn per i giocatori, ottenute dal MapComponent della mappa attuale
     public Vector2Int[] GetPlayerSpawnPositions()
     {
         if (currentMap == null) return null;

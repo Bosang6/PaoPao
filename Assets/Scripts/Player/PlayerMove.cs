@@ -14,6 +14,9 @@ public class PlayerMove : MonoBehaviour
     private Vector2 boxSize;
     private Animator animator;
 
+    private Vector3 runtimeSpawnPosition;
+    private Quaternion runtimeSpawnRotation;
+
     [SerializeField]
     private E_Animator eAnimator;
 
@@ -29,9 +32,13 @@ public class PlayerMove : MonoBehaviour
         pData = playerData;
         gData = gameData;
 
+        // Spawn di fallback, usato solo se enssuno lo sovrascrive 
+        runtimeSpawnPosition = pData.spawnPosition;
+        runtimeSpawnRotation = pData.spawnRotation;
+
         //Allinea la posizione alla griglia
-        transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize);
-        transform.rotation = pData.spawnRotation;
+        transform.position = GridUtils.AdjustPosition(runtimeSpawnPosition, gData.fCellSize);
+        transform.rotation = runtimeSpawnRotation;
         v3TargetPosition = transform.position;
 
         //Usato per il boxCast: proietta un box della stessa dimensione della cella
@@ -127,12 +134,16 @@ public class PlayerMove : MonoBehaviour
         if (hit != null) { TryMove(v2LastDirection); } else { v2LastDirection = Vector2.zero; }
     }
 
-    public void Respawn() {
-        transform.position = GridUtils.AdjustPosition(pData.spawnPosition, gData.fCellSize); 
-        transform.rotation = pData.spawnRotation;
+    // Metodo pubblico per resettare la posizione del giocatore al punto di spawn, usato da PlayerManager
+    public void Respawn()
+    {
+        transform.position = GridUtils.AdjustPosition(runtimeSpawnPosition, gData.fCellSize);
+        transform.rotation = runtimeSpawnRotation;
+
         v3TargetPosition = transform.position;
         bIsMoving = false;
     }
+
 
     void OnDestroy() { PlayerManager.Instance?.Unregister(transform); }
 
@@ -188,6 +199,19 @@ public class PlayerMove : MonoBehaviour
         }
         
         return lastDir;
+    }
+
+    // Metodo pubblico per impostare la posizione di spawn durante il runtime, usato da PlayerSpawner
+    public void SetSpawnPosition(Vector3 spawnPosition, Quaternion spawnRotation)
+    {
+        runtimeSpawnPosition = spawnPosition;
+        runtimeSpawnRotation = spawnRotation;
+
+        transform.position = GridUtils.AdjustPosition(runtimeSpawnPosition, gData.fCellSize);
+        transform.rotation = runtimeSpawnRotation;
+
+        v3TargetPosition = transform.position;
+        bIsMoving = false;
     }
 
     public void SetAnimatorHurtingTrigger()
