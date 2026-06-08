@@ -37,7 +37,7 @@ public class UIMainMenuManager : MonoBehaviour
 
 
     private E_Map? selectedMap = null;
-    private E_Character? selectedCharater = null;
+    private E_Character? selectedCharacter = null;
     private bool isBusy = false;
 
     private void Start()
@@ -110,7 +110,7 @@ public class UIMainMenuManager : MonoBehaviour
 
     public void SelectCharacter(E_Character character)
     {
-        selectedCharater = character;
+        selectedCharacter = character;
 
         if (bombermanGlow != null) bombermanGlow.SetActive(character == E_Character.Bomberman);
         if (penguinGlow != null) penguinGlow.SetActive(character == E_Character.Penguin);
@@ -205,7 +205,7 @@ public class UIMainMenuManager : MonoBehaviour
             yield break;
         }
 
-        if(selectedCharater == null)
+        if(selectedCharacter == null)
         {
             Debug.LogWarning("Nessun character selezionato.");
             isBusy = false;
@@ -214,8 +214,7 @@ public class UIMainMenuManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(buttonDelay);
 
-        GameSession.SelectedMap = selectedMap.Value;
-        GameSession.SelectedCharacter = selectedCharater.Value;
+        GameSession.SetupSinglePlayerMatch(selectedMap.Value, selectedCharacter.Value);
 
         //STOP MUSIC
         if (AudioManager.Instance != null) AudioManager.Instance.StopMusic();
@@ -250,7 +249,7 @@ public class UIMainMenuManager : MonoBehaviour
 
     private void ResetCharacterSelection()
     {
-        selectedCharater = null;
+        selectedCharacter = null;
         if(bombermanGlow != null) bombermanGlow.SetActive(false);
         if(penguinGlow != null) penguinGlow.SetActive(false);
 
@@ -260,6 +259,6 @@ public class UIMainMenuManager : MonoBehaviour
     private void UpdateMatchPlayButton()
     {
         if (matchPlayButton != null)
-            matchPlayButton.interactable = (selectedMap != null && selectedCharater != null);
+            matchPlayButton.interactable = (selectedMap != null && selectedCharacter != null);
     }
 }
