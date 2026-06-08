@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,6 +23,9 @@ public class UIMainMenuManager : MonoBehaviour
     [Header("Map Selection Glow")]
     [SerializeField] private GameObject springGlow;
     [SerializeField] private GameObject winterGlow;
+
+    [Header("Match Preset")]
+    [SerializeField] private SinglePlayerMatchPreset singlePlayerMatchPreset;
 
     [Header("Player Selecion Glow")]
     [SerializeField] private GameObject bombermanGlow;
@@ -214,7 +218,18 @@ public class UIMainMenuManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(buttonDelay);
 
-        GameSession.SetupSinglePlayerMatch(selectedMap.Value, selectedCharacter.Value);
+        // Configura la partita con la mappa ed il character selezionato
+        if (singlePlayerMatchPreset == null)
+        {
+            Debug.LogWarning("SinglePlayerMatchPreset non assegnato.");
+            isBusy = false;
+            yield break;
+        }
+
+        List<PlayerSlotConfig> slots = singlePlayerMatchPreset.BuildSlots(selectedCharacter.Value);
+
+        GameSession.SetMatchConfig(selectedMap.Value, slots);
+
 
         //STOP MUSIC
         if (AudioManager.Instance != null) AudioManager.Instance.StopMusic();

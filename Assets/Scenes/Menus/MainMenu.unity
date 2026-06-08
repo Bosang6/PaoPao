@@ -537,6 +537,7 @@ MonoBehaviour:
   matchSetupPanel: {fileID: 2102437387}
   springGlow: {fileID: 8882328135546967666}
   winterGlow: {fileID: 8882328135546967665}
+  singlePlayerMatchPreset: {fileID: 11400000, guid: 59c38375398780c49b15ee337cdb40d6, type: 2}
   bombermanGlow: {fileID: 8882328135546967668}
   penguinGlow: {fileID: 8882328135546967667}
   matchPlayButton: {fileID: 8882328135546967664}

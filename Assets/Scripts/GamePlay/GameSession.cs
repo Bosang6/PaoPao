@@ -3,23 +3,27 @@ using UnityEngine;
 
 
 // Questa classe serve per ricordare la mappa scelta quando passo dal menu alla GameScene
-// Ricordo anche il player. Bomberman come valore di default
+// Ricorda anche la configurazione dei player slot, che è necessaria per spawnare i player nella scena di gioco
 public static class GameSession
 {
     public static E_Map SelectedMap = E_Map.Spring;
 
-    public static List<PlayerSlotConfig> PlayerSlots = new List<PlayerSlotConfig>();
+    public static List<PlayerSlotConfig> PlayerSlots { get; private set; } = new List<PlayerSlotConfig>();
 
-    public static void SetupSinglePlayerMatch(E_Map selectedMap, E_Character selectedCharacter)
+    // Metodo per impostare la configurazione della partita, inclusa la mappa selezionata e i player slot
+    public static void SetMatchConfig(E_Map selectedMap, List<PlayerSlotConfig> playerSlots)
     {
         SelectedMap = selectedMap;
 
         PlayerSlots.Clear();
 
-        PlayerSlots.Add(new PlayerSlotConfig(0, selectedCharacter, E_PlayerSlotType.LocalHuman));
-        PlayerSlots.Add(new PlayerSlotConfig(1, E_Character.Slime1, E_PlayerSlotType.AI));
-        PlayerSlots.Add(new PlayerSlotConfig(2, E_Character.Slime2, E_PlayerSlotType.AI));
-        PlayerSlots.Add(new PlayerSlotConfig(3, E_Character.Slime3, E_PlayerSlotType.AI));
+        if (playerSlots == null)
+        {
+            Debug.LogWarning("Player slots non validi.");
+            return;
+        }
+
+        PlayerSlots.AddRange(playerSlots);
     }
 
 
