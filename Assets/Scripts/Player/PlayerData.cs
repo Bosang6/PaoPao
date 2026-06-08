@@ -21,8 +21,6 @@ public class PlayerData : ScriptableObject
     public int maxBombs;
     public float moveSpeed;
     public float invincibilityDuration;
-    public Vector3 spawnPosition;
-    public Quaternion spawnRotation;
 
     [Header("Collision")]
     public LayerMask lmCollisionLayer;

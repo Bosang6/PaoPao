@@ -33,8 +33,8 @@ public class PlayerMove : MonoBehaviour
         gData = gameData;
 
         // Spawn di fallback, usato solo se enssuno lo sovrascrive 
-        runtimeSpawnPosition = pData.spawnPosition;
-        runtimeSpawnRotation = pData.spawnRotation;
+        runtimeSpawnPosition = transform.position;
+        runtimeSpawnRotation = transform.rotation;
 
         //Allinea la posizione alla griglia
         transform.position = GridUtils.AdjustPosition(runtimeSpawnPosition, gData.fCellSize);
