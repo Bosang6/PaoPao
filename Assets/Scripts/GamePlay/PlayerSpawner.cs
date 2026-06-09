@@ -20,6 +20,9 @@ public class PlayerSpawner : MonoBehaviour
     [Header("Character Prefab")]
     [SerializeField] private List<CharacterPrefabEntry> characterPrefabs = new List<CharacterPrefabEntry>();
 
+    [Header("HUD")]
+    [SerializeField] private UIPlayerLives[] uiPlayerLives;
+
     [Header("Manager")]
     [SerializeField] private GameManager gameManager;
 
@@ -93,6 +96,8 @@ public class PlayerSpawner : MonoBehaviour
                 gameManager.RegisterPlayer(playerController);
             }
 
+            BindPlayerToHUD(slot.slotIndex, playerController);
+
             Debug.Log("Spawnato slot " + slot.slotIndex + " - " + slot.character + " - " + slot.slotType);
         }
 
@@ -111,6 +116,40 @@ public class PlayerSpawner : MonoBehaviour
         }
 
         return null;
+    }
+
+    // Collega il PlayerController del player appena spawnato all'HUD delle vite corrispondente al suo slot
+    private void BindPlayerToHUD(int slotIndex, PlayerController playerController)
+    {
+        if (playerController == null)
+        {
+            Debug.LogWarning("PlayerSpawner: impossibile collegare HUD, PlayerController nullo.");
+            return;
+        }
+
+        if (uiPlayerLives == null || uiPlayerLives.Length == 0)
+        {
+            Debug.LogWarning("PlayerSpawner: array UIPlayerLives non assegnato.");
+            return;
+        }
+
+        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
+        {
+            Debug.LogWarning("PlayerSpawner: slotIndex HUD non valido: " + slotIndex);
+            return;
+        }
+
+        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
+
+        if (playerLivesUI == null)
+        {
+            Debug.LogWarning("PlayerSpawner: UIPlayerLives mancante per slot " + slotIndex);
+            return;
+        }
+
+        playerLivesUI.Bind(playerController);
+
+        Debug.Log("HUD vite collegato allo slot " + slotIndex + " per player " + playerController.name);
     }
 
 }
