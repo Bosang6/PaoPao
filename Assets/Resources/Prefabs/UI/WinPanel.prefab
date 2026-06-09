@@ -849,7 +849,7 @@ MonoBehaviour:
   rightItem: {fileID: 127477249545106652}
   delayBeforeStart: 2
   animationDuration: 4
-  horizontalOffset: 500
+  horizontalOffset: 1200
 --- !u!1 &4856230163110766719
 GameObject:
   m_ObjectHideFlags: 0

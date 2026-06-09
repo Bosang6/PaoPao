@@ -137,11 +137,13 @@ public class UIMainMenuManager : MonoBehaviour
 
     public void SelectBombermanCharacter()
     {
+        Debug.Log("Bomeberman selzionato");
         SelectCharacter(E_Character.Bomberman);
     }
 
     public void SelectPenguinCharacter()
     {
+        Debug.Log("Penguin selzionato");
         SelectCharacter(E_Character.Penguin);
     }
 
