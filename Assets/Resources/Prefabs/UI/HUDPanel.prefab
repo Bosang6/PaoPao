@@ -168,8 +168,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIHUDMatchInitializer
   hudPlayerImages:
   - {fileID: 8653435508019787943}
-  - {fileID: 3139612369052697048}
   - {fileID: 4006840158239698656}
+  - {fileID: 3139612369052697048}
   - {fileID: 3977936156976748675}
   characterHUDSprites:
   - character: 0
@@ -1309,7 +1309,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54dcb255443647244b05f69f8e286257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
-  playerID: 1
   hearts:
   - {fileID: 1226362174718917432}
   - {fileID: 7890116160741956001}
@@ -1531,7 +1530,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54dcb255443647244b05f69f8e286257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
-  playerID: 0
   hearts:
   - {fileID: 8616946713325479515}
   - {fileID: 6898870051632451643}
@@ -1828,7 +1826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54dcb255443647244b05f69f8e286257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
-  playerID: 0
   hearts:
   - {fileID: 3441910328406925037}
   - {fileID: 5324890548325559792}
@@ -1990,7 +1987,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54dcb255443647244b05f69f8e286257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
-  playerID: 0
   hearts:
   - {fileID: 2044556068102826234}
   - {fileID: 3923397124009863276}
