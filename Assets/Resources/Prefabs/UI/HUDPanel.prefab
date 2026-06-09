@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 6160033888004673334}
   - component: {fileID: 2728006174304415645}
   - component: {fileID: 5152894861574336490}
+  - component: {fileID: 5872262233115957182}
   m_Layer: 5
   m_Name: HUDPanel
   m_TagString: Untagged
@@ -153,6 +154,34 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5872262233115957182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686729755105859089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4054801305c4c8f4d83845019ac12217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIHUDMatchInitializer
+  hudPlayerImages:
+  - {fileID: 8653435508019787943}
+  - {fileID: 3139612369052697048}
+  - {fileID: 4006840158239698656}
+  - {fileID: 3977936156976748675}
+  characterHUDSprites:
+  - character: 0
+    hudSprite: {fileID: -7450552648233043380, guid: b9776bd099743564284bef80cde91744, type: 3}
+  - character: 1
+    hudSprite: {fileID: 2390488926122886534, guid: 70d6c3628f76e0d4db4c1d04de6e9e29, type: 3}
+  - character: 2
+    hudSprite: {fileID: 4606620340343602430, guid: 8d14e1ca034904145837544b5209b214, type: 3}
+  - character: 3
+    hudSprite: {fileID: 298628203721821819, guid: 69ec621ab03696348ab9ff17e11b349a, type: 3}
+  - character: 4
+    hudSprite: {fileID: -6832040384024610128, guid: 29a5faff15cc73f448829c419deb7c2a, type: 3}
 --- !u!1 &764843587997464466
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,7 +419,7 @@ GameObject:
   - component: {fileID: 685538236131411021}
   - component: {fileID: 6209843808988089124}
   m_Layer: 5
-  m_Name: LifeContainer_02
+  m_Name: LifeContainer_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1206,8 +1235,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3177417477004954620}
-  - {fileID: 5834566417329227582}
   - {fileID: 7889901847081383713}
+  - {fileID: 5834566417329227582}
   - {fileID: 8211261691280684925}
   m_Father: {fileID: 6160033888004673334}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2046,7 +2075,7 @@ GameObject:
   - component: {fileID: 7580543365599189952}
   - component: {fileID: 4006840158239698656}
   m_Layer: 5
-  m_Name: Player_03
+  m_Name: Player_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2271,7 +2300,7 @@ GameObject:
   - component: {fileID: 1294657943348520775}
   - component: {fileID: 3139612369052697048}
   m_Layer: 5
-  m_Name: Player_02
+  m_Name: Player_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2560,7 +2589,7 @@ GameObject:
   - component: {fileID: 4925930033960984449}
   - component: {fileID: 362866888019846651}
   m_Layer: 5
-  m_Name: LifeContainer_03
+  m_Name: LifeContainer_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
