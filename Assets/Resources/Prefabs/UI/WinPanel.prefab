@@ -847,7 +847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIWLAnimation
   leftItem: {fileID: 7212658256784067860}
   rightItem: {fileID: 127477249545106652}
-  delayBeforeStart: 2
+  delayBeforeStart: 1
   animationDuration: 4
   horizontalOffset: 1200
 --- !u!1 &4856230163110766719
