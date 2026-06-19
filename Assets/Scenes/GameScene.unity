@@ -264,6 +264,10 @@ PrefabInstance:
       propertyPath: mobileControlsPanel
       value: 
       objectReference: {fileID: 548918180}
+    - target: {fileID: 6882933910029337089, guid: 446af36e02ff285469830c5fd06ff264, type: 3}
+      propertyPath: mobileControlsCanvasGroup
+      value: 
+      objectReference: {fileID: 611207923}
     - target: {fileID: 6940866887454647609, guid: 446af36e02ff285469830c5fd06ff264, type: 3}
       propertyPath: m_LocalPosition.x
       value: 782.2813
@@ -550,26 +554,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 227441004}
-    - target: {fileID: 791664097862303132, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
-      propertyPath: characterHUDSprites.Array.data[0].cData
-      value: 
-      objectReference: {fileID: 11400000, guid: 8e293dad6508e5d4084fd0257b228466, type: 2}
-    - target: {fileID: 791664097862303132, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
-      propertyPath: characterHUDSprites.Array.data[1].cData
-      value: 
-      objectReference: {fileID: 11400000, guid: 131e703265ea14f4cad5e18c841b96c8, type: 2}
-    - target: {fileID: 791664097862303132, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
-      propertyPath: characterHUDSprites.Array.data[2].cData
-      value: 
-      objectReference: {fileID: 11400000, guid: 36ce15d7c7ce870419ffec7208981d24, type: 2}
-    - target: {fileID: 791664097862303132, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
-      propertyPath: characterHUDSprites.Array.data[3].cData
-      value: 
-      objectReference: {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
-    - target: {fileID: 791664097862303132, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
-      propertyPath: characterHUDSprites.Array.data[4].cData
-      value: 
-      objectReference: {fileID: 11400000, guid: dc33e0b106da9984fa697b6f9aa1739e, type: 2}
     - target: {fileID: 1148156944083957133, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -904,6 +888,11 @@ GameObject:
 --- !u!1 &611207922 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3502226077968550397, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
+  m_PrefabInstance: {fileID: 611207919}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &611207923 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 6711184846280799704, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
   m_PrefabInstance: {fileID: 611207919}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &611207924 stripped

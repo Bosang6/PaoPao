@@ -1198,8 +1198,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8148752695237922757, guid: 6fce49b998a629c48a7f6bb4b1aede33, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6711184846280799704}
   m_SourcePrefab: {fileID: 100100000, guid: 6fce49b998a629c48a7f6bb4b1aede33, type: 3}
+--- !u!1 &4762383078259507972 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8148752695237922757, guid: 6fce49b998a629c48a7f6bb4b1aede33, type: 3}
+  m_PrefabInstance: {fileID: 3675303752976600257}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &6711184846280799704
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762383078259507972}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!224 &8835525007945944531 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5305058275692527890, guid: 6fce49b998a629c48a7f6bb4b1aede33, type: 3}
@@ -1217,6 +1237,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUDPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 5872262233115957182, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: characterHUDSprites.Array.data[0].cData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8e293dad6508e5d4084fd0257b228466, type: 2}
+    - target: {fileID: 5872262233115957182, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: characterHUDSprites.Array.data[1].cData
+      value: 
+      objectReference: {fileID: 11400000, guid: 131e703265ea14f4cad5e18c841b96c8, type: 2}
+    - target: {fileID: 5872262233115957182, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: characterHUDSprites.Array.data[2].cData
+      value: 
+      objectReference: {fileID: 11400000, guid: 36ce15d7c7ce870419ffec7208981d24, type: 2}
+    - target: {fileID: 5872262233115957182, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: characterHUDSprites.Array.data[3].cData
+      value: 
+      objectReference: {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
+    - target: {fileID: 5872262233115957182, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+      propertyPath: characterHUDSprites.Array.data[4].cData
+      value: 
+      objectReference: {fileID: 11400000, guid: dc33e0b106da9984fa697b6f9aa1739e, type: 2}
     - target: {fileID: 6160033888004673334, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
