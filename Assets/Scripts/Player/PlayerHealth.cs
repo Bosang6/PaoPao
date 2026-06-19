@@ -38,7 +38,7 @@ public class PlayerHealth : MonoBehaviour
 
         currentHp -= data.iDamage;
         currentHp = Mathf.Clamp(currentHp, 0, MaxHp);
-        Debug.Log($"Player colpito! Danni: {data.iDamage}, Vita: {currentHp}");
+        //Debug.Log($"Player colpito! Danni: {data.iDamage}, Vita: {currentHp}");
 
         OnHpChanged?.Invoke(currentHp, MaxHp);
 

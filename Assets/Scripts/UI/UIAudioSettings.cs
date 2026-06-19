@@ -47,5 +47,4 @@ public class UIAudioSettings : MonoBehaviour
         if (AudioManager.Instance != null) AudioManager.Instance.SaveVolumeSettings();
     }
 
-
 }

@@ -383,6 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfa84704252e4d4d9e75b2a7c7bcfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  eAnimator: 0
 --- !u!212 &274386337
 SpriteRenderer:
   serializedVersion: 2
@@ -651,6 +652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfa84704252e4d4d9e75b2a7c7bcfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  eAnimator: 0
 --- !u!95 &512986712
 Animator:
   serializedVersion: 7
@@ -1593,6 +1595,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Path
+      value: event:/UI/ButtonSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data1
+      value: 667274181
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data2
+      value: 1158969805
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data3
+      value: -307079519
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data4
+      value: -282188281
+      objectReference: {fileID: 0}
     - target: {fileID: 2847601614422981753, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 775.90704

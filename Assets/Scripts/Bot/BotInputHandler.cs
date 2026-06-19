@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class BotInputHandler : MonoBehaviour, IPlayerInput
 {
@@ -21,7 +22,8 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
         }
 
         _botContext = new BotContext
-        {
+        {    
+            status = BotContext.STATUS.EXPLORING,
             LastBombPosition = transform.position,
             LastPosition = transform.position,
             Position = transform.position,
@@ -36,37 +38,55 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
                 break;
 
             case 1:
-                _strategy = new S1NoMapEuristic();
+                _strategy = new S1PlaceAndRun();
                 break;
 
             default:
                 _strategy = new S0RandomStrategy();
                 break;
         }
-}
+        Debug.Log($"[{characterData.name}] Initialized, with difficulty = {_strategy.ToString()} and status {_botContext.status}");
+    }
 
     void Update()
     {
         _botContext.LastPosition = _botContext.Position;
         _botContext.Position = transform.position;
 
+        if (_botContext.LastBombTimer > 0f)
+        {
+            //Decrementa timer, se "scade", si torna in exploring
+            _botContext.LastBombTimer -= Time.deltaTime;
+            if (_botContext.LastBombTimer <= 0f)
+            {
+                _botContext.status = BotContext.STATUS.EXPLORING;
+                Debug.Log($"[{_botContext.CharacterData.name}] status changed to {_botContext.status}");
+            }
+        }
+
         //Strategia di movimento
         _moveTimer += Time.deltaTime;
-        if (_moveTimer >= _botContext.InstanceData.moveChangeCooldown)
+        if (!_botContext.CharacterData.isMoving && _moveTimer >= _botContext.InstanceData.moveChangeCooldown)
         {
             _moveTimer = 0f;
             _currentMove = _strategy.DecideMovement(_botContext);
             _botContext.LastDirection = _currentMove;
+            //_botContext.isMoving = true;
         }
 
         //Strategie di piazzamento della bomba
         _bombTimer += Time.deltaTime;
         if (_bombTimer >= _botContext.InstanceData.bombCooldown)
         {
-            _bombTimer = 0f;
             _bombThisFrame = _strategy.DecideBomb(_botContext);
-            if (_bombThisFrame) { _botContext.LastBombPosition = _botContext.Position; }
+            if (_bombThisFrame) { 
+                _bombTimer = 0f;
+                _botContext.LastBombPosition = _botContext.Position;
+                _botContext.LastBombTimer = _botContext.CharacterData.explosionData.fTimeToExplode;
+            }
         }
+
+        
     }
 
     public Vector2 GetMoveInput() => _currentMove;

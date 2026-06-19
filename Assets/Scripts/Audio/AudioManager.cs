@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
+using FMOD.Studio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -15,17 +18,16 @@ public class AudioManager : MonoBehaviour
     // Singleton 
     public static AudioManager Instance { get; private set; }
 
-    [Header("Audio Source")]
-    [SerializeField] private AudioSource musicSource;
-    [SerializeField] private AudioSource effectsSource;
+    [Header("FMOD Events")]
+    [SerializeField] private List<AudioEventReference> audioEvents = new();
 
-    [Header("Music Clip")]
-    [SerializeField] private AudioClip menuMusic;
+    // Dizionario che collega ogni AudioEvent al sio EventReference FMOD
+    private Dictionary<AudioEvent, EventReference> audioDictionary;
+    
+    private EventInstance currentMusicInstance;
 
-    [Header("Effects Clip")]
-    [SerializeField] private AudioClip buttonSound;
-    [SerializeField] private AudioClip winSound;
-    [SerializeField] private AudioClip loseSound;
+    private Bus musicBus;
+    private Bus sfxBus;
 
     private float musicVolume = 1f;
     private float effectsVolume = 1f;
@@ -44,63 +46,116 @@ public class AudioManager : MonoBehaviour
         
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        musicBus = RuntimeManager.GetBus("bus:/Music");
+        sfxBus = RuntimeManager.GetBus("bus:/SFX");
+
         LoadVolumeSettings();
     }
 
-
-    /* Music */
-
-    public void PlayMenuMusic()
+    // Costruisce il dizionario AudioEvent -> EventReference partendo dalla lista assegnata nell'Inspector
+    private void BuildAudioDictionary()
     {
-        if (musicSource == null || menuMusic == null) return;
+        audioDictionary = new Dictionary<AudioEvent, EventReference>();
 
-        if(musicSource.clip == menuMusic && musicSource.isPlaying) return;
+        foreach (AudioEventReference item in audioEvents)
+        {
+            if (item.eventReference.IsNull)
+            {
+                Debug.LogWarning($"AudioEvent {item.audioEvent} has no FMOD event assigned.");
+                continue;
+            }
 
-        musicSource.clip = menuMusic;
-        musicSource.loop = true;
-        musicSource.volume = musicVolume;
-        musicSource.Play();
+            if (audioDictionary.ContainsKey(item.audioEvent))
+            {
+                Debug.LogWarning($"Duplicate AudioEvent found: {item.audioEvent}");
+                continue;
+            }
+
+            audioDictionary.Add(item.audioEvent, item.eventReference);
+        }
+
+
     }
+
+    // Riproduce un effetto sonoro FMOD
+    public void PlaySFX(AudioEvent audioEvent)
+    {
+        if (!TryGetEvent(audioEvent, out EventReference eventReference))
+            return;
+
+        RuntimeManager.PlayOneShot(eventReference);
+    }
+
+
+    // Riproduce una musica FMOD
+    public void PlayMusic(AudioEvent audioEvent)
+    {
+        if (!TryGetEvent(audioEvent, out EventReference eventReference))
+            return;
+
+        StopMusic();
+
+        currentMusicInstance = RuntimeManager.CreateInstance(eventReference);
+        currentMusicInstance.start();
+    }
+
 
     public void StopMusic()
     {
-        if (musicSource == null) return;
-        musicSource.Stop();
+        currentMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        currentMusicInstance.release();
+        currentMusicInstance.clearHandle();
     }
 
-    
-    /* Effects */
 
-    public void PlayButtonSound()
+    // Cerca un AudioEvent nel dizionario e restituisce il relativo EventReference
+    private bool TryGetEvent(AudioEvent audioEvent, out EventReference eventReference)
     {
-        PlayEffect(buttonSound);
+        if (audioDictionary == null) BuildAudioDictionary();
+
+        if (!audioDictionary.TryGetValue(audioEvent, out eventReference))
+        {
+            Debug.LogWarning($"AudioEvent not found: {audioEvent}");
+            return false;
+        }
+
+        return true;
     }
+
+
+    /* FMOD Events */
+
+
+    public void PlayMenuMusic()
+    {
+        PlayMusic(AudioEvent.MusicMenu);
+    }
+
 
     public void PlayWinSound()
     {
-        PlayEffect(winSound);
+        PlaySFX(AudioEvent.WinSound);
+
     }
 
     public void PlayLoseSound()
     {
-        PlayEffect(loseSound);
+        PlaySFX(AudioEvent.LoseSound);
     }
 
 
-    /* Utility */
-    private void PlayEffect(AudioClip clip)
-    {
-        if(effectsSource == null || clip == null) return;
-        effectsSource.PlayOneShot(clip, effectsVolume);
-    }
+
+
+    /* Volume Settings */
 
     private void LoadVolumeSettings()
     {
         musicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 1f);
         effectsVolume = PlayerPrefs.GetFloat(EffectsVolumeKey, 1f);
 
-        if(musicSource != null) musicSource.volume = musicVolume;
-        if(effectsSource != null) effectsSource.volume = effectsVolume;
+        musicBus.setVolume(musicVolume);
+        sfxBus.setVolume(effectsVolume);
     }
 
     public void SaveVolumeSettings()
@@ -110,22 +165,19 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-
-    /* Volume Control */
     public void SetMusicVolume(float value)
     {
         musicVolume = Mathf.Clamp01(value);
-        if (musicSource != null)
-        {
-            musicSource.volume = musicVolume;
-        }
+        musicBus.setVolume(musicVolume);
     }
+
 
     public void SetEffectsVolume(float value)
     {
         effectsVolume = Mathf.Clamp01(value);
-        if(effectsSource != null) effectsSource.volume = effectsVolume;
+        sfxBus.setVolume(effectsVolume);
     }
+
 
     public float GetMusicVolume()
     {

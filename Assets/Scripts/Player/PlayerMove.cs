@@ -4,13 +4,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-
     private GameData _gameData;
     private CharacterData _characterData;
     private PlayerInstanceData _instanceData;
 
     private bool isInitialized = false;
-    private bool bIsMoving = false;
+    //private bool bIsMoving = false;
     private Vector3 v3TargetPosition;
     private Vector2 v2LastDirection = Vector2.zero;
     private Vector2 boxSize;
@@ -29,6 +28,10 @@ public class PlayerMove : MonoBehaviour
         _characterData = characterData;
         _instanceData = instanceData;
 
+        // Spawn di fallback, usato solo se enssuno lo sovrascrive 
+        _instanceData.spawnPosition = transform.position;
+        _instanceData.spawnRotation = transform.rotation;
+
         //Allinea la posizione alla griglia
         transform.position = GridUtils.AdjustPosition(_instanceData.spawnPosition, _gameData.fCellSize);
         transform.rotation = _instanceData.spawnRotation;
@@ -40,11 +43,11 @@ public class PlayerMove : MonoBehaviour
         isInitialized = true;
     }
 
-    void Update() { if (bIsMoving) { Move(); } }
+    void Update() { if (_characterData.isMoving) { Move(); } }
 
     public void HandleInput(Vector2 input)
     {
-        if (bIsMoving) return;
+        if (_characterData.isMoving) return;
 
         float h = Mathf.RoundToInt(input.x);  //Per avere solo -1, 0 o 1
         float v = Mathf.RoundToInt(input.y);  //Per avere solo -1, 0 o 1
@@ -62,7 +65,7 @@ public class PlayerMove : MonoBehaviour
             {
                 // animator.SetFloat("MoveX", 0);
                 // animator.SetFloat("MoveY", 0);
-                animator.SetBool("IsMoving", false);
+                animator.SetBool("IsMoving", false);  //ERA GIUSTO
             }
         }
     }
@@ -84,7 +87,7 @@ public class PlayerMove : MonoBehaviour
         {
             v3TargetPosition = target;
             v2LastDirection = direction;
-            bIsMoving = true;
+            _characterData.isMoving = true;
             if(animator != null) { animator.SetBool("IsMoving", true); }
         }
         else                //Cella occupata, ci si ferma
@@ -104,8 +107,8 @@ public class PlayerMove : MonoBehaviour
         if (transform.position == end)  //Invocato al termine del movimento (arrivato a destinazione)
         {
             transform.position = GridUtils.AdjustPosition(end, _gameData.fCellSize);   //Doppio controllo sull'accuratezza della posizione
-            bIsMoving = false;
-            if (animator != null) { animator.SetBool("IsMoving", false); }
+            _characterData.isMoving = false;
+            //if (animator != null) { animator.SetBool("IsMoving", false); }
 
             //Todo: invocare solo in mappa di ghiaccio (?)
             if (true)
@@ -131,8 +134,9 @@ public class PlayerMove : MonoBehaviour
         transform.position = GridUtils.AdjustPosition(_instanceData.spawnPosition, _gameData.fCellSize); 
         transform.rotation = _instanceData.spawnRotation;
         v3TargetPosition = transform.position;
-        bIsMoving = false;
+        _characterData.isMoving = false;
     }
+
 
     void OnDestroy() { PlayerManager.Instance?.Unregister(transform); }
 
@@ -188,6 +192,19 @@ public class PlayerMove : MonoBehaviour
         }
         
         return lastDir;
+    }
+
+    // Metodo pubblico per impostare la posizione di spawn durante il runtime, usato da PlayerSpawner
+    public void SetSpawnPosition(Vector3 spawnPosition, Quaternion spawnRotation)
+    {
+        _instanceData.spawnPosition = spawnPosition;
+        _instanceData.spawnRotation = spawnRotation;
+
+        transform.position = GridUtils.AdjustPosition(_instanceData.spawnPosition, _gameData.fCellSize);
+        transform.rotation = _instanceData.spawnRotation;
+
+        v3TargetPosition = transform.position;
+        _characterData.isMoving = false;
     }
 
     public void SetAnimatorHurtingTrigger()

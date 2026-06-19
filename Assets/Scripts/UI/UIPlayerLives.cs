@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+/* 
+ * Questo script gestisce l'HUD delle vite del player, mostrando cuori pieni o vuoti in base alla salute attuale
+*/
+
 public class UIPlayerLives : MonoBehaviour
 {
-
-    [Header("Target Player")]
-    [SerializeField] private int playerID;
 
     [Header("Heart Images")]
     [SerializeField] private Image[] hearts;
@@ -27,115 +28,107 @@ public class UIPlayerLives : MonoBehaviour
 
     private void Start()
     {
-        FindAndBindPlayer();
-    }
-
-
-    // Funzione che viene chiamata solo nell'editor, utile per debug quando cambia qualcosa nell'ispector
-    private void OnValidate()
-    {
-        UpdateHearts(currentLives);
-        SetDead(currentLives <= 0);
+        // Stato iniziale dell'HUD, in attesa di trovare il player da seguire
+        SetDead(false);
     }
 
     private void OnDestroy()
     {
-        if(playerHealth != null)
-        {
-            playerHealth.OnHpChanged -= OnHpChangedHandler;
-        }
+        Unbind();
     }
 
-    // Cerca il playyer in scena con l'ID richiesto 
-    private void FindAndBindPlayer()
+
+    public void Bind(PlayerController player)
     {
-        PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
-
-        Debug.Log($"Trovati {players.Length} player in scena per UI box ID {playerID}", this);
-
-        foreach (PlayerController player in players)
+        if(player == null)
         {
-            Debug.Log($"Player trovato con ID = {player.PlayerID}", player);
-
-            if (player.PlayerID == playerID)
-            {
-                targetPlayer = player;
-                break;
-            }
-        }
-
-        if (targetPlayer == null)
-        {
-            Debug.LogWarning($"UIPlayerLives: No player found with ID {playerID}", this);
+            Debug.LogWarning("UIPlayerLives: impossibile fare Bind, player nullo.", this);
             return;
         }
 
-        // Recupera la playerHealth 
+        // Se questo HUD era già collegato ad un player, prima rimuove il vecchio collegamento
+        Unbind();
+
+        targetPlayer = player;
         playerHealth = targetPlayer.GetComponent<PlayerHealth>();
 
         if (playerHealth == null)
         {
-            Debug.LogError("PlayerHealth non trovato!", targetPlayer);
+            Debug.LogError("UIPlayerLives: PlayerHealth non trovato sul player.", targetPlayer);
             return;
         }
 
-        Initialize(targetPlayer, targetPlayer.MaxHealth);
+        maxLives = targetPlayer.MaxHealth;
+        currentLives = maxLives;
 
-        // Collegamento dell'evento alla UI
+        UpdateHeartsVisual();
+        SetDead(false);
+
+        // Da questo momento, ogni volta che il player perde vita viene aggiornata l'HUD
         playerHealth.OnHpChanged += OnHpChangedHandler;
-
     }
 
-
-    public void Initialize(PlayerController player, int startLives)
+    // Scollega questo HUD dal player attuale. Serve per eveitare eventi pendenti o riferimenti vecchi
+    public void Unbind()
     {
-        targetPlayer = player;
-        maxLives = player.MaxHealth;
-        currentLives = Mathf.Clamp(startLives, 0, maxLives);
+        if (playerHealth != null)
+        {
+            playerHealth.OnHpChanged -= OnHpChangedHandler;
+        }
 
-        UpdateHeartsVisual();
-        SetDead(currentLives <= 0);
-    }
-
-    // Aggiorna le immagini dei cuori in base al numero di vite attuali
-    public void UpdateHearts(int lives)
-    {
-        currentLives = Mathf.Clamp(lives, 0, maxLives);
-        UpdateHeartsVisual();
-        SetDead(currentLives <= 0);
+        targetPlayer = null;
+        playerHealth = null;
     }
 
 
+    // Handler per l'evento di cambio HP del player, aggiorna le vite e lo stato di morte
     private void OnHpChangedHandler(int currentHp, int maxHp)
     {
         maxLives = maxHp;
+        currentLives = Mathf.Clamp(currentHp, 0, maxLives);
 
-        UpdateHearts(currentHp);
+        UpdateHeartsVisual();
+        SetDead(currentLives <= 0);
     }
 
 
+
+    // Aggiorna i cuori in base al numero di vite attuali, se muore rende i cuori più trasparenti
+    public void UpdateHearts(int lives)
+    {
+        
+        currentLives = Mathf.Clamp(lives, 0, maxLives);
+
+        UpdateHeartsVisual();
+        SetDead(currentLives <= 0);
+    }
+
+
+    // Aggiorna le immagini dei cuori in base al num di vite.
     private void UpdateHeartsVisual()
     {
-        for (int i = 0; i < hearts.Length; i++) {
+        if (hearts == null) return;
 
+        for (int i = 0; i < hearts.Length; i++)
+        {
             if (hearts[i] == null) continue;
 
             hearts[i].sprite = i < currentLives ? fullHeart : emptyHeart;
+
+            // Se un personaggio ha meno cuori massimi rispetto alla UI, disabilita i cuori in eccesso
             hearts[i].enabled = i < maxLives;
-        
-        
         }
     }
 
-    // Se il player muore rende i cuori più trasparenti
+    // Se il player è morto, cuori trasparenti 
     public void SetDead(bool isDead)
     {
         if (canvasGroup == null) return;
-        
+
         canvasGroup.alpha = isDead ? 0.3f : 1f;
     }
 
-
-    public PlayerController GetTargetPlayer() { return targetPlayer; }
+    // Handler per l'evento di cambio HP del player
+    public PlayerController GetTargetPlayer(){ return targetPlayer; }
 
 }

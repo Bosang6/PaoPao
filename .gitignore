@@ -106,13 +106,15 @@ InitTestScene*.unity*
 Thumbs.db
 
 #FMOD
-FMOD/Autosave/
-FMOD/.cache/
-FMOD/.unsaved/
-FMOD/.user/
-FMOD/*.tmp
-FMOD/*.log
-FMOD/*.cache
-FMOD/Build/Desktop/.cache/
-FMOD/Build/Mobile/.cache/
+FMOD/**/Autosave/
+FMOD/**/.cache/
+FMOD/**/.unsaved/
+FMOD/**/.user/
+FMOD/**/*.tmp
+FMOD/**/*.log
+FMOD/**/*.cache
 *.fspro.user
+
+# FMOD Unity Integration cache
+/[Aa]ssets/Plugins/FMOD/Cache/
+/[Aa]ssets/Plugins/FMOD/Cache.meta

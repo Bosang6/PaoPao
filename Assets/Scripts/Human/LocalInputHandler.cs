@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class LocalInputHandler : MonoBehaviour, IPlayerInput
 {
-
+    private bool isMoving = false;
     private InputActionAsset _actions;
     private InputAction _move;          
     private InputAction _placeBomb;
@@ -17,7 +17,7 @@ public class LocalInputHandler : MonoBehaviour, IPlayerInput
 
         if (_instanceData == null)
         {
-            Debug.LogError($"[BasicBotInputHandler] Initialize fallito: atteso HumanInstanceData, ricevuto {instanceData?.GetType().Name}", this);
+            Debug.LogError($"[LocalInputHandler] Initialize fallito: atteso HumanInstanceData, ricevuto {instanceData?.GetType().Name}", this);
             return;
         }
 
@@ -34,6 +34,8 @@ public class LocalInputHandler : MonoBehaviour, IPlayerInput
     void OnDisable() { _actions.FindActionMap("Player").Disable(); }
     public Vector2 GetMoveInput() => _move.ReadValue<Vector2>();
     public bool GetBombInput() => _placeBomb.WasPressedThisFrame();
+
+    public void HasMoved() { /*  */ }
 
     /*  Spiegazioni:
      *  1: Instantiate(playerData.inputActionAsset) crea un "clone" dell'actionAsset
