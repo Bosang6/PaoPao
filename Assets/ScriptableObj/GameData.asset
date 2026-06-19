@@ -18,3 +18,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   fCellSize: 1
+  lmCollisionLayer:
+    serializedVersion: 2
+    m_Bits: 960

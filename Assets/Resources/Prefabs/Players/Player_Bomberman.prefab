@@ -111,8 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1739e1e3ec9a729498193348117a22d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerData: {fileID: 11400000, guid: c8f2744d9c3ed564e9d4fd87bfd623b1, type: 2}
-  gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  _gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  _characterData: {fileID: 11400000, guid: 8e293dad6508e5d4084fd0257b228466, type: 2}
+  _instanceData: {fileID: 11400000, guid: edca1c686b7c60246a83e5ffdd44c9a9, type: 2}
 --- !u!114 &1240003441511018218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfa84704252e4d4d9e75b2a7c7bcfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
-  eAnimator: 4
 --- !u!114 &1317502994822445219
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,13 +8,13 @@
 public class PlayerSlotConfig
 {
     public int slotIndex;           // num slot
-    public E_Character character;   // character
-    public E_PlayerSlotType slotType;       // Human / AI
+    public CharacterData.E_Character cType;   // character
+    public PlayerData.E_PlayerSlotType pType;       // Human / AI
 
-    public PlayerSlotConfig(int slotIndex, E_Character character, E_PlayerSlotType slotType)
+    public PlayerSlotConfig(int slotIndex, CharacterData.E_Character cType, PlayerData.E_PlayerSlotType pType)
     {
         this.slotIndex = slotIndex;
-        this.character = character;
-        this.slotType = slotType;
+        this.cType = cType;
+        this.pType = pType;
     }
 }

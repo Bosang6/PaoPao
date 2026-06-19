@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4460567357172676665}
   - component: {fileID: 6274750021995017542}
   - component: {fileID: 7418047975958127747}
-  - component: {fileID: 1240003441511018218}
+  - component: {fileID: -1258666353239835286}
   - component: {fileID: 2060775463785302385}
   - component: {fileID: 1317502994822445219}
   - component: {fileID: 1903433651284525295}
@@ -111,9 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1739e1e3ec9a729498193348117a22d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerData: {fileID: 11400000, guid: a7edc81dca37ab841bf608fecde87043, type: 2}
-  gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
---- !u!114 &1240003441511018218
+  _gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  _characterData: {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
+  _instanceData: {fileID: 11400000, guid: 95debbabfe7047d499c3dafed1387c7b, type: 2}
+--- !u!114 &-1258666353239835286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,9 +123,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5118495651096295261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91049d72afe2d9845ae60d16a3c37acf, type: 3}
+  m_Script: {fileID: 11500000, guid: d485f707acb00e5469de214d7cac9f8a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalInputHandler
+  m_EditorClassIdentifier: Assembly-CSharp::BotInputHandler
 --- !u!114 &2060775463785302385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfa84704252e4d4d9e75b2a7c7bcfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
-  eAnimator: 1
 --- !u!114 &1317502994822445219
 MonoBehaviour:
   m_ObjectHideFlags: 0

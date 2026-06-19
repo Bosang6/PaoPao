@@ -4,11 +4,13 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
 {
     private float invicibilityTimer = 0f;
 
-    [Header("Player Settings")]
-    [SerializeField] private PlayerData playerData;
-
     [Header("Game Settings")]
-    [SerializeField] private GameData gameData;
+    [SerializeField] private GameData _gameData;
+
+    [Header("Player Settings")]
+    [SerializeField] private CharacterData _characterData;
+    [SerializeField] private PlayerInstanceData _instanceData;
+
 
     //Elenco componenti controllati da PlayerController
     private IPlayerInput _pInput;
@@ -16,10 +18,10 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     private PlayerBombHandler _pBombHandler;
     private PlayerHealth _pHealth;
 
-    public int MaxHealth => playerData.maxHp;
-    public int PlayerID => playerData.playerID;
+    public int MaxHealth => _characterData.maxHp;
+    public int PlayerID => _instanceData.playerID;
 
-    public bool IsHuman => playerData.isHuman;
+    public bool IsHuman => _instanceData.isHuman;
 
     //Evento da invocare alla morte 
     public event System.Action<PlayerController> OnPlayerDied;
@@ -33,10 +35,10 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         _pHealth = GetComponent<PlayerHealth>();
 
         //Inizializza i componenti
-        _pInput.Initialize(playerData);
-        _pMove.Initialize(playerData, gameData);
-        _pBombHandler.Initialize(playerData, gameData);
-        _pHealth.Initialize(playerData);
+        _pInput.Initialize(_characterData, _instanceData);
+        _pMove.Initialize(_gameData, _characterData, _instanceData);
+        _pBombHandler.Initialize(_gameData, _characterData);
+        _pHealth.Initialize(_characterData);
     }
 
     public void Update()
@@ -60,7 +62,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
             _pMove.SetAnimatorIsDead();
             Death();
         }
-        invicibilityTimer = playerData.invincibilityDuration;
+        invicibilityTimer = _characterData.invincibilityDuration;
         //_pHealth?.StartBlink(playerData.invincibilityDuration); //Lampeggia durante l'invincibilit�
     }
 

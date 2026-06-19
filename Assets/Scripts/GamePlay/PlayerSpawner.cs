@@ -13,7 +13,7 @@ public class PlayerSpawner : MonoBehaviour
     [System.Serializable]
     private class CharacterPrefabEntry
     {
-        public E_Character character;
+        public CharacterData cData;
         public GameObject prefab;
     }
 
@@ -66,11 +66,11 @@ public class PlayerSpawner : MonoBehaviour
                 continue;
             }
 
-            GameObject prefab = GetPrefabByCharacter(slot.character);
+            GameObject prefab = GetPrefabByCharacter(slot.cType);
 
             if (prefab == null)
             {
-                Debug.LogWarning("Prefab non trovato per il character: " + slot.character);
+                Debug.LogWarning("Prefab non trovato per il character: " + slot.cType);
                 continue;
             }
 
@@ -98,18 +98,18 @@ public class PlayerSpawner : MonoBehaviour
 
             BindPlayerToHUD(slot.slotIndex, playerController);
 
-            Debug.Log("Spawnato slot " + slot.slotIndex + " - " + slot.character + " - " + slot.slotType);
+            //Debug.Log("Spawnato slot " + slot.slotIndex + " - " + slot.character + " - " + slot.slotType);
         }
 
 
     }
 
     // Metodo helper per ottenere il prefab corrispondente a un character
-    private GameObject GetPrefabByCharacter(E_Character character)
+    private GameObject GetPrefabByCharacter(CharacterData.E_Character cType)
     {
         foreach (CharacterPrefabEntry entry in characterPrefabs)
         {
-            if (entry.character == character)
+            if (entry.cData.type == cType)
             {
                 return entry.prefab;
             }
@@ -149,7 +149,7 @@ public class PlayerSpawner : MonoBehaviour
 
         playerLivesUI.Bind(playerController);
 
-        Debug.Log("HUD vite collegato allo slot " + slotIndex + " per player " + playerController.name);
+        //Debug.Log("HUD vite collegato allo slot " + slotIndex + " per player " + playerController.name);
     }
 
 }

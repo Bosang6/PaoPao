@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 357b5910613838e41bcaa03dc572649c, type: 3}
   m_Name: SinglePlayer_Default
   m_EditorClassIdentifier: Assembly-CSharp::SinglePlayerMatchPreset
-  aiEnemies: 020000000300000004000000
+  aiEnemies:
+  - {fileID: 11400000, guid: 36ce15d7c7ce870419ffec7208981d24, type: 2}
+  - {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
+  - {fileID: 11400000, guid: dc33e0b106da9984fa697b6f9aa1739e, type: 2}

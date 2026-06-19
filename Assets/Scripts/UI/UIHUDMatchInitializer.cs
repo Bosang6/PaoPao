@@ -7,7 +7,7 @@ public class UIHUDMatchInitializer : MonoBehaviour
     [System.Serializable]
     private class CharacterHUDSprite
     {
-        public E_Character character;
+        public CharacterData cData;
         public Sprite hudSprite;
     }
 
@@ -49,26 +49,26 @@ public class UIHUDMatchInitializer : MonoBehaviour
                 continue;
             }
 
-            Sprite hudSprite = GetHUDSprite(slot.character);
+            Sprite hudSprite = GetHUDSprite(slot.cType);
 
             if (hudSprite == null)
             {
-                Debug.LogWarning("UIHUDMatchInitializer: sprite HUD non trovata per " + slot.character);
+                Debug.LogWarning("UIHUDMatchInitializer: sprite HUD non trovata per " + slot.cType);
                 continue;
             }
 
             hudImage.sprite = hudSprite;
 
-            Debug.Log("HUD slot " + slot.slotIndex + " aggiornato con " + slot.character + " usando sprite " + hudSprite.name);
+            //Debug.Log("HUD slot " + slot.slotIndex + " aggiornato con " + slot.character + " usando sprite " + hudSprite.name);
         }
     }
 
     // Restituisce lo sprite HUD associato al character specificato
-    private Sprite GetHUDSprite(E_Character character)
+    private Sprite GetHUDSprite(CharacterData.E_Character cDataType)
     {
         foreach (CharacterHUDSprite entry in characterHUDSprites)
         {
-            if (entry.character == character)
+            if (entry.cData.type == cDataType)
             {
                 return entry.hudSprite;
             }

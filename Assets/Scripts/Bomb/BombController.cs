@@ -59,7 +59,7 @@ public class BombController : MonoBehaviour
 
     private void Explode()
     {
-        Debug.Log($"Bomba esplosa in {transform.position}");
+        //Debug.Log($"Bomba esplosa in {transform.position}");
         OnBombReturned?.Invoke();
         OnBombReturned = null;
 

@@ -11,20 +11,20 @@ using UnityEngine;
 public class SinglePlayerMatchPreset : ScriptableObject
 {
     [Header("AI Enemies")]
-    [SerializeField] private List<E_Character> aiEnemies = new List<E_Character>();
+    [SerializeField] private List<CharacterData> aiEnemies = new List<CharacterData>();
 
-    public List<PlayerSlotConfig> BuildSlots(E_Character playerCharacter)
+    public List<PlayerSlotConfig> BuildSlots(CharacterData.E_Character playerCharacterType)
     {
         List<PlayerSlotConfig> slots = new List<PlayerSlotConfig>();
 
         // Slot 0 = player umano scelto dal menu
-        slots.Add(new PlayerSlotConfig(0, playerCharacter, E_PlayerSlotType.LocalHuman));
+        slots.Add(new PlayerSlotConfig(0, playerCharacterType, PlayerData.E_PlayerSlotType.LocalHuman));
 
         // Slot successivi = nemici AI configurati nell'Inspector
         for (int i = 0; i < aiEnemies.Count; i++)
         {
             int slotIndex = i + 1;
-            slots.Add(new PlayerSlotConfig(slotIndex, aiEnemies[i], E_PlayerSlotType.AI));
+            slots.Add(new PlayerSlotConfig(slotIndex, aiEnemies[i].type, PlayerData.E_PlayerSlotType.AI));
         }
 
         return slots;

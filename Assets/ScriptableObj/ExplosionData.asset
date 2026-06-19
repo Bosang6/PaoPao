@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d38778e93ba7c21439c8a1c4f603be8f, type: 3}
   m_Name: ExplosionData
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionData
-  fTimeToExplode: 1
+  fTimeToExplode: 3
   iRange: 3
   fFlameDuration: 0.6
   iDamage: 1

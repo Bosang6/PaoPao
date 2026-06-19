@@ -41,7 +41,7 @@ public class UIMainMenuManager : MonoBehaviour
 
 
     private E_Map? selectedMap = null;
-    private E_Character? selectedCharacter = null;
+    private CharacterData.E_Character? selectedCharacter = null;
     private bool isBusy = false;
 
     private void Start()
@@ -109,19 +109,19 @@ public class UIMainMenuManager : MonoBehaviour
 
         UpdateMatchPlayButton();
 
-        Debug.Log("Mappa selezionata: " + map);
+        //Debug.Log("Mappa selezionata: " + map);
     }
 
-    public void SelectCharacter(E_Character character)
+    public void SelectCharacter(CharacterData.E_Character cType)
     {
-        selectedCharacter = character;
+        selectedCharacter = cType;
 
-        if (bombermanGlow != null) bombermanGlow.SetActive(character == E_Character.Bomberman);
-        if (penguinGlow != null) penguinGlow.SetActive(character == E_Character.Penguin);
+        if (bombermanGlow != null) bombermanGlow.SetActive(cType == CharacterData.E_Character.Bomberman);
+        if (penguinGlow != null) penguinGlow.SetActive(cType == CharacterData.E_Character.Penguin);
 
         UpdateMatchPlayButton();
 
-        Debug.Log("Character selezionato : " + character);
+        //Debug.Log("Character selezionato : " + character);
     }
 
 
@@ -137,14 +137,14 @@ public class UIMainMenuManager : MonoBehaviour
 
     public void SelectBombermanCharacter()
     {
-        Debug.Log("Bomeberman selzionato");
-        SelectCharacter(E_Character.Bomberman);
+        //Debug.Log("Bomeberman selzionato");
+        SelectCharacter(CharacterData.E_Character.Bomberman);
     }
 
     public void SelectPenguinCharacter()
     {
         Debug.Log("Penguin selzionato");
-        SelectCharacter(E_Character.Penguin);
+        SelectCharacter(CharacterData.E_Character.Penguin);
     }
 
     public void OnConfirmPlayPressed()

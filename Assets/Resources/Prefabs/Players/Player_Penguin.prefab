@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4460567357172676665}
   - component: {fileID: 6274750021995017542}
   - component: {fileID: 7418047975958127747}
-  - component: {fileID: 1240003441511018218}
+  - component: {fileID: -7097685367153208011}
   - component: {fileID: 2060775463785302385}
   - component: {fileID: 1317502994822445219}
   - component: {fileID: 1903433651284525295}
@@ -34,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 5118495651096295261}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -111,9 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1739e1e3ec9a729498193348117a22d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerData: {fileID: 11400000, guid: 897c2e4c3bf6a954eb13a01bb3d25f8b, type: 2}
-  gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
---- !u!114 &1240003441511018218
+  _gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  _characterData: {fileID: 11400000, guid: 131e703265ea14f4cad5e18c841b96c8, type: 2}
+  _instanceData: {fileID: 11400000, guid: edca1c686b7c60246a83e5ffdd44c9a9, type: 2}
+--- !u!114 &-7097685367153208011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfa84704252e4d4d9e75b2a7c7bcfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
-  eAnimator: 3
 --- !u!114 &1317502994822445219
 MonoBehaviour:
   m_ObjectHideFlags: 0

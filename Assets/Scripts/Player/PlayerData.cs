@@ -4,7 +4,15 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PaoPaoOBJ/PlayerData")]
 public class PlayerData : ScriptableObject
 {
+    public enum E_PlayerSlotType
+    {
+        LocalHuman,
+        AI,
+        NetworkHuman
+    }
+
     [Header("Identity")]
+    public E_PlayerSlotType type;
     public string playerName;
     public int playerID;
     public bool isHuman;
