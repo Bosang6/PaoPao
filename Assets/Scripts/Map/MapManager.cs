@@ -13,6 +13,8 @@ public class MapManager : MonoBehaviour
     
     private GameObject currentMap = null;
     private MapComponent mapComponent = null;
+    
+    public E_Map cuurEMap { get; private set; }
 
     private void Awake()
     {
@@ -37,6 +39,8 @@ public class MapManager : MonoBehaviour
             Destroy(currentMap);
             currentMap = null;
         }
+
+        cuurEMap = eMap;
 
         GameObject mapPrefab = Resources.Load<GameObject>(GetMapPath(eMap));
 

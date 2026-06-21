@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
         {
             RegisterPlayer(player);
         }
+        
+        AudioManager.Instance.PlayBackgroundMusic(MapManager.Instance.cuurEMap);
     }
 
 
@@ -42,6 +44,9 @@ public class GameManager : MonoBehaviour
 
         bool humanAlive = false;
         int aliveCount = players.Count;
+        
+        if(aliveCount == 2)
+            AudioManager.Instance.PlayFinalBattleMusic();
 
         foreach (PlayerController currentPlayer in players)
         {

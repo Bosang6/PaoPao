@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{20f923c1-f0f8-4a7b-99f2-ef75420ffacd}">
+		<property name="assetPath">
+			<value>BackgroundMusic/Spring.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>93.492244897959182</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466fd388-ce47-4439-b2c3-5dec37ec0af7}</destination>
+		</relationship>
+	</object>
+</objects>

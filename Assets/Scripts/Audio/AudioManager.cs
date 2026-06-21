@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+using UnityEditor;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class AudioManager : MonoBehaviour
      * Questo script gestisce la musica e gli effetti sonori del gioco. 
      * Utilizza il pattern Singleton per garantire un'unica istanza durante l'intero ciclo di vita del gioco.
      * Permette di regolare il volume della musica e degli effetti, e salva queste impostazioni usando PlayerPrefs.
-     * PlayerPrefs è un sistema di Unity per salvare dati semplici in locale. 
+     * PlayerPrefs ï¿½ un sistema di Unity per salvare dati semplici in locale. 
      */
 
 
@@ -130,6 +131,24 @@ public class AudioManager : MonoBehaviour
     public void PlayMenuMusic()
     {
         PlayMusic(AudioEvent.MusicMenu);
+    }
+
+    public void PlayBackgroundMusic(E_Map eMap)
+    {
+        switch (eMap)
+        {
+            case E_Map.Spring:
+                PlayMusic(AudioEvent.BackgroundMusic_Spring);
+                break;
+            case E_Map.Winter:
+                PlayMusic(AudioEvent.BackgroundMusic_Winter);
+                break;
+        }
+    }
+
+    public void PlayFinalBattleMusic()
+    {
+        currentMusicInstance.setParameterByName("FinalBattle", 1);
     }
 
 
