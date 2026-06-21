@@ -261,10 +261,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 611207920}
     - target: {fileID: 6882933910029337089, guid: 446af36e02ff285469830c5fd06ff264, type: 3}
-      propertyPath: mobileControlsPanel
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6882933910029337089, guid: 446af36e02ff285469830c5fd06ff264, type: 3}
       propertyPath: mobileControlsCanvasGroup
       value: 
       objectReference: {fileID: 611207923}
@@ -665,6 +661,10 @@ PrefabInstance:
       value: UICanvas
       objectReference: {fileID: 0}
     - target: {fileID: 2823489955339574623, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 227441004}
+    - target: {fileID: 3154681726593678867, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 227441004}
