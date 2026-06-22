@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
 
     public bool IsHuman => _instanceData.isHuman;
 
+    public E_Footstep eFootstep => _characterData.eFootstep;
+
     //Evento da invocare alla morte 
     public event System.Action<PlayerController> OnPlayerDied;
 

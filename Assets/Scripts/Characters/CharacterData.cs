@@ -27,4 +27,7 @@ public class CharacterData : ScriptableObject
 
     [Header("Animator")]
     public E_Animator animatorType;
+    
+    [Header("Footstep")]
+    public E_Footstep eFootstep;
 }

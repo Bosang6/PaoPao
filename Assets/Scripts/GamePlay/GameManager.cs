@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour
         
         AudioManager.Instance.PlayBackgroundMusic(MapManager.Instance.cuurEMap);
     }
-
+    
 
     public void RegisterPlayer(PlayerController player)
     {
@@ -45,8 +46,10 @@ public class GameManager : MonoBehaviour
         bool humanAlive = false;
         int aliveCount = players.Count;
         
-        if(aliveCount == 2)
+        if (players.Count == 2)
+        {
             AudioManager.Instance.PlayFinalBattleMusic();
+        }
 
         foreach (PlayerController currentPlayer in players)
         {

@@ -12,4 +12,5 @@ public enum AudioEvent
     LoseSound,
     BackgroundMusic_Spring,
     BackgroundMusic_Winter,
+    Footstep
 }

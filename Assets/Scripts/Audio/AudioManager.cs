@@ -26,6 +26,8 @@ public class AudioManager : MonoBehaviour
     private Dictionary<AudioEvent, EventReference> audioDictionary;
     
     private EventInstance currentMusicInstance;
+    
+    private EventReference footstepEvent;
 
     private Bus musicBus;
     private Bus sfxBus;
@@ -87,6 +89,7 @@ public class AudioManager : MonoBehaviour
 
         RuntimeManager.PlayOneShot(eventReference);
     }
+    
 
 
     // Riproduce una musica FMOD
@@ -149,6 +152,32 @@ public class AudioManager : MonoBehaviour
     public void PlayFinalBattleMusic()
     {
         currentMusicInstance.setParameterByName("FinalBattle", 1);
+    }
+
+    public void PlayFootstep(E_Footstep eFootstep)
+    {
+        switch (eFootstep)
+        {
+            case E_Footstep.Normal:
+                PlayFootstep(AudioEvent.Footstep, "Normal");
+                break;
+            case E_Footstep.Jelly:
+                PlayFootstep(AudioEvent.Footstep, "Jelly");
+                break;
+        }
+    }
+    
+    public void PlayFootstep(AudioEvent audioEvent, string footstepType)
+    {
+        if (!TryGetEvent(audioEvent, out EventReference eventReference))
+            return;
+
+        EventInstance instance = RuntimeManager.CreateInstance(eventReference);
+
+        instance.setParameterByNameWithLabel("FootstepType", footstepType);
+
+        instance.start();
+        instance.release();
     }
 
 
