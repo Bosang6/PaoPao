@@ -12,4 +12,7 @@ public enum AudioEvent
     LoseSound,
     BombTimer,
     BombExplosion,
+    BackgroundMusicSpring,
+    BackgroundMusicWinter,
+    Footstep
 }

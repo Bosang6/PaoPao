@@ -19,7 +19,6 @@ GameObject:
   - component: {fileID: 8783822051681364641}
   - component: {fileID: 4666184065354329312}
   - component: {fileID: 1339868068114803448}
-  - component: {fileID: 5185476992286736463}
   m_Layer: 7
   m_Name: Player_Bomberman
   m_TagString: Untagged
@@ -271,15 +270,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &5185476992286736463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bb1bc9ae4e454a86ad084420049a663, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FootstepAudio

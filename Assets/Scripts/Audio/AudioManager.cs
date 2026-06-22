@@ -139,10 +139,10 @@ public class AudioManager : MonoBehaviour
         switch (eMap)
         {
             case E_Map.Spring:
-                PlayMusic(AudioEvent.BackgroundMusic_Spring);
+                PlayMusic(AudioEvent.BackgroundMusicSpring);
                 break;
             case E_Map.Winter:
-                PlayMusic(AudioEvent.BackgroundMusic_Winter);
+                PlayMusic(AudioEvent.BackgroundMusicWinter);
                 break;
         }
     }

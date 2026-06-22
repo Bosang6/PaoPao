@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         _pBombHandler.Initialize(_gameData, _characterData, IsHuman);
         _pHealth.Initialize(_characterData);
         if (IsHuman) { _pAudio.Initialize(_pBombHandler); }
+        else { _pAudio.Initialize(); }
     }
 
     public void Update()
