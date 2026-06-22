@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IExplosionReceiver
 {
-    void OnHitByExplosion(ExplosionData data);
+    void OnHitByExplosion(ExplosionData data, bool PlacedByLocalPlayer);
 }

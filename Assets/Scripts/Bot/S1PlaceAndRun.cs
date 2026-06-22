@@ -12,7 +12,7 @@ public class S1PlaceAndRun : IBotStrategy
             context.LastBombDirection = context.LastDirection;  //Si salva la direzione della bomba
             context.LastDirection = -context.LastDirection;     //Scappa nella direzione opposta a quella da cui viene
             context.status = BotContext.STATUS.ESCAPING;
-            Debug.Log($"[{context.CharacterData.name}] status: [{context.status}] | BombDir = {context.LastBombDirection}, so LastDir = {context.LastDirection}");
+            //Debug.Log($"[{context.CharacterData.name}] status: [{context.status}] | BombDir = {context.LastBombDirection}, so LastDir = {context.LastDirection}");
             return true; 
         }
         
@@ -39,13 +39,13 @@ public class S1PlaceAndRun : IBotStrategy
             {
                 //La direzione non dovrà essere ne LastDirection (è bloccato) ne LastBombDirection (c'è la bomba)
                 while (next == context.LastDirection || next == context.LastBombDirection) { next = Directions[Random.Range(0, Directions.Length)]; };
-                Debug.Log($"I'm locked | Pos({context.Position}) = LastPos({context.LastPosition}) | LastDir = {context.LastDirection}, BombDir = {context.LastBombDirection} -> next = {next}");
+                //Debug.Log($"I'm locked | Pos({context.Position}) = LastPos({context.LastPosition}) | LastDir = {context.LastDirection}, BombDir = {context.LastBombDirection} -> next = {next}");
             }
             else
             {
-                Debug.Log($"I'm Escaping, LastBomb = {context.LastBombDirection}, so I choose {next}");
+                //Debug.Log($"I'm Escaping, LastBomb = {context.LastBombDirection}, so I choose {next}");
             }
-            Debug.Log($"dir = {next}");
+            //Debug.Log($"dir = {next}");
         }
 
         return next;
