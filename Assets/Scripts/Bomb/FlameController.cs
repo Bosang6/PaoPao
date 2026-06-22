@@ -27,7 +27,7 @@ public class FlameController : MonoBehaviour
 
     void Awake() { animator = GetComponent<Animator>(); }
 
-    public void Initialize(ExplosionData data, FlameType type = FlameType.Center)
+    public void Initialize(ExplosionData data, bool PlacedByLocalPlayer, FlameType type = FlameType.Center)
     {
         if(data == null) { Debug.LogError("FlameController: ExplosionData == null"); }
         this.data = data;
@@ -59,7 +59,7 @@ public class FlameController : MonoBehaviour
         }
 
         if(flameCoroutine != null) { StopCoroutine(flameCoroutine); }
-        flameCoroutine = StartCoroutine(Flame());
+        flameCoroutine = StartCoroutine(Flame(PlacedByLocalPlayer));
 
         //Se l'esplosione � verticale, ruota lo sprite
         if(type == FlameType.VerticalTopMid || type == FlameType.VerticalTopEnd) { 
@@ -77,14 +77,14 @@ public class FlameController : MonoBehaviour
         else { transform.rotation = Quaternion.identity; } //Reset per il pool
     }
 
-    private IEnumerator Flame()
+    private IEnumerator Flame(bool PlacedByLocalPlayer)
     {
         float fElapsedTime = 0f;
         float fTimeToCall = 0.1f;   //Ogni quanto controlla e chiama i receiver
 
         while(fElapsedTime < data.fFlameDuration)
         {
-            NotifyReceivers();      //Notifica gli oggetti nella cella
+            NotifyReceivers(PlacedByLocalPlayer);      //Notifica gli oggetti nella cella
             yield return new WaitForSeconds(fTimeToCall);   //Attende un tot (evita chiamata ad ogni fraem)
             fElapsedTime += fTimeToCall;
 
@@ -94,7 +94,7 @@ public class FlameController : MonoBehaviour
         FlamePool.Instance.ReturnToPool(this);
     }
 
-    private void NotifyReceivers()
+    private void NotifyReceivers(bool PlacedByLocalPlayer)
     {
         //Dimensione tile (leggermente ridotta per evitare di toccare tile adiacenti)
         Vector2 v2BoxSize = new Vector2(gameData.fCellSize * 0.9f, gameData.fCellSize * 0.9f);
@@ -106,7 +106,7 @@ public class FlameController : MonoBehaviour
         foreach(Collider2D hit in hits)
         {
             IExplosionReceiver receiver = hit.GetComponent<IExplosionReceiver>();
-            receiver?.OnHitByExplosion(data);
+            receiver?.OnHitByExplosion(data, PlacedByLocalPlayer);
             //?. serve per evitare che vada in crash se non ci sono player che hanno subito la fiamma
         }
     }

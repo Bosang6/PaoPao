@@ -45,7 +45,7 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
                 _strategy = new S0RandomStrategy();
                 break;
         }
-        Debug.Log($"[{characterData.name}] Initialized, with difficulty = {_strategy.ToString()} and status {_botContext.status}");
+        //Debug.Log($"[{characterData.name}] Initialized, with difficulty = {_strategy.ToString()} and status {_botContext.status}");
     }
 
     void Update()
@@ -60,7 +60,7 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
             if (_botContext.LastBombTimer <= 0f)
             {
                 _botContext.status = BotContext.STATUS.EXPLORING;
-                Debug.Log($"[{_botContext.CharacterData.name}] status changed to {_botContext.status}");
+                //Debug.Log($"[{_botContext.CharacterData.name}] status changed to {_botContext.status}");
             }
         }
 

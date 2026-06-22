@@ -75,10 +75,12 @@ public class BombController : MonoBehaviour
          *  La sintassi = null permette di chiudere il canale di comunicazione coi listener
          */
 
-        if (IsHuman) { AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion); }
+        if (IsHuman) { 
+            AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion); 
+        }
 
         //Delega l'esplosione all'ExplosionManager
-        ExplosionManager.Instance.OnExplode(transform.position, explosionData);
+        ExplosionManager.Instance.OnExplode(transform.position, explosionData, IsHuman);
         BombPool.Instance.ReturnToPool(this);
     }
 
