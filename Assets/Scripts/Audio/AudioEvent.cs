@@ -12,4 +12,7 @@ public enum AudioEvent
     LoseSound,
     BombTimer,
     BombExplosion,
+    BrickBreakSound,
+    IceBreakSound,
+    RockBreakSound,
 }

@@ -353,3 +353,11 @@ MonoBehaviour:
         Data3: 1663109554
         Data4: -1728291896
       Path: event:/InGameEffect/BombExplosion
+  - audioEvent: 6
+    eventReference:
+      Guid:
+        Data1: 1908604068
+        Data2: 1149500698
+        Data3: 1663109554
+        Data4: -1728291896
+      Path: event:/InGameEffect/BombExplosion
