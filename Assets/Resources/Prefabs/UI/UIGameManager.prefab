@@ -49,4 +49,7 @@ MonoBehaviour:
   winPanel: {fileID: 0}
   losePanel: {fileID: 0}
   quitDialogPanel: {fileID: 0}
+  mobileControlsCanvasGroup: {fileID: 0}
+  winTimeText: {fileID: 0}
+  loseTimeText: {fileID: 0}
   mainMenuSceneName: MainMenu

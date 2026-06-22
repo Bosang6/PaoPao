@@ -337,3 +337,19 @@ MonoBehaviour:
         Data3: -307079519
         Data4: -282188281
       Path: event:/UI/ButtonSound
+  - audioEvent: 4
+    eventReference:
+      Guid:
+        Data1: -2057964023
+        Data2: 1151954268
+        Data3: -367206218
+        Data4: 1068192087
+      Path: event:/InGameEffect/BombTimer
+  - audioEvent: 5
+    eventReference:
+      Guid:
+        Data1: 1908604068
+        Data2: 1149500698
+        Data3: 1663109554
+        Data4: -1728291896
+      Path: event:/InGameEffect/BombExplosion

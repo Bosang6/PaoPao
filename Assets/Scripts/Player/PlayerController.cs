@@ -17,11 +17,12 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     private PlayerMove _pMove;
     private PlayerBombHandler _pBombHandler;
     private PlayerHealth _pHealth;
+    private PlayerAudio _pAudio;
 
     public int MaxHealth => _characterData.maxHp;
     public int PlayerID => _instanceData.playerID;
 
-    public bool IsHuman => _instanceData.isHuman;
+    public bool IsHuman => _instanceData.type == PlayerInstanceData.E_PlayerSlotType.LocalHuman;
 
     public E_Footstep eFootstep => _characterData.eFootstep;
 
@@ -35,12 +36,14 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         _pMove = GetComponent<PlayerMove>();
         _pBombHandler = GetComponent<PlayerBombHandler>();
         _pHealth = GetComponent<PlayerHealth>();
+        _pAudio = GetComponent<PlayerAudio>();
 
         //Inizializza i componenti
         _pInput.Initialize(_characterData, _instanceData);
         _pMove.Initialize(_gameData, _characterData, _instanceData);
-        _pBombHandler.Initialize(_gameData, _characterData);
+        _pBombHandler.Initialize(_gameData, _characterData, IsHuman);
         _pHealth.Initialize(_characterData);
+        if (IsHuman) { _pAudio.Initialize(_pBombHandler); }
     }
 
     public void Update()

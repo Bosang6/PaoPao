@@ -3,15 +3,20 @@ using UnityEngine;
 
 public class PlayerBombHandler : MonoBehaviour
 {
+    public event System.Action OnBombPlaced;
+
     private CharacterData _characterData;
     private GameData _gameData;
 
     private int currentBombs = 0;
 
-    public void Initialize(GameData gameData, CharacterData characterData)
+    private bool IsHuman = false;
+
+    public void Initialize(GameData gameData, CharacterData characterData, bool IsHuman)
     {
         _gameData = gameData;
         _characterData = characterData;
+        this.IsHuman = IsHuman;
     }
 
     public void TryPlaceBomb()
@@ -24,7 +29,7 @@ public class PlayerBombHandler : MonoBehaviour
         BombController bomb = BombPool.Instance.Get(bombPos);
         if(bomb == null) return;
 
-        bomb.Initialize(PlayerManager.Instance.GetAllPlayers());
+        bomb.Initialize(PlayerManager.Instance.GetAllPlayers(), IsHuman);
 
         // Sottoscrivi l'evento di ritorno al pool per decrementare il contatore
         bomb.OnBombReturned += ReleaseBomb;
@@ -35,6 +40,7 @@ public class PlayerBombHandler : MonoBehaviour
          *  invocherà automaticamente la funzione ReleaseBomb() di questo player.
          *  La sintassi += permette di aprire il canale di comunicazione coi listener */
 
+        OnBombPlaced?.Invoke();
         currentBombs++;
     }
 

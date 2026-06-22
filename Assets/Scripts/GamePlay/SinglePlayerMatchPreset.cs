@@ -18,13 +18,13 @@ public class SinglePlayerMatchPreset : ScriptableObject
         List<PlayerSlotConfig> slots = new List<PlayerSlotConfig>();
 
         // Slot 0 = player umano scelto dal menu
-        slots.Add(new PlayerSlotConfig(0, playerCharacterType, PlayerData.E_PlayerSlotType.LocalHuman));
+        slots.Add(new PlayerSlotConfig(0, playerCharacterType, PlayerInstanceData.E_PlayerSlotType.LocalHuman));
 
         // Slot successivi = nemici AI configurati nell'Inspector
         for (int i = 0; i < aiEnemies.Count; i++)
         {
             int slotIndex = i + 1;
-            slots.Add(new PlayerSlotConfig(slotIndex, aiEnemies[i].type, PlayerData.E_PlayerSlotType.AI));
+            slots.Add(new PlayerSlotConfig(slotIndex, aiEnemies[i].type, PlayerInstanceData.E_PlayerSlotType.AI));
         }
 
         return slots;

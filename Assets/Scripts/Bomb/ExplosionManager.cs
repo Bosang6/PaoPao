@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class ExplosionManager : MonoBehaviour
 {
-
     [Header("Game Settings")]
     [SerializeField] private GameData gameData;
     public static ExplosionManager Instance { get; private set; }

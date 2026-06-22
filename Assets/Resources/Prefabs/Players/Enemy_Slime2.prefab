@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2060775463785302385}
   - component: {fileID: 1317502994822445219}
   - component: {fileID: 1903433651284525295}
+  - component: {fileID: -1533925464762217076}
   - component: {fileID: 8783822051681364641}
   - component: {fileID: 4666184065354329312}
   - component: {fileID: 1339868068114803448}
@@ -114,7 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
   _characterData: {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
-  _instanceData: {fileID: 11400000, guid: 95debbabfe7047d499c3dafed1387c7b, type: 2}
+  _instanceData: {fileID: 11400000, guid: ca8b11e88c41c504a8bcbf3bd7a72120, type: 2}
 --- !u!114 &-1258666353239835286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +164,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9e07eaa0be3ee4ea0dcad9f622fdf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+--- !u!114 &-1533925464762217076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118495651096295261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72201b7f7ce75974ebd1f9014eb52ea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAudio
 --- !u!95 &8783822051681364641
 Animator:
   serializedVersion: 7

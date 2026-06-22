@@ -10,7 +10,6 @@ public enum AudioEvent
     MusicMenu,
     WinSound,
     LoseSound,
-    BackgroundMusic_Spring,
-    BackgroundMusic_Winter,
-    Footstep
+    BombTimer,
+    BombExplosion,
 }
