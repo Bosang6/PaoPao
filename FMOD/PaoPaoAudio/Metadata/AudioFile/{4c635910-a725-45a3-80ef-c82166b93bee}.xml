@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{4c635910-a725-45a3-80ef-c82166b93bee}">
+		<property name="assetPath">
+			<value>Footstep/Normal/StepNormal5.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.28799999999999998</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466fd388-ce47-4439-b2c3-5dec37ec0af7}</destination>
+		</relationship>
+	</object>
+</objects>

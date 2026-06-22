@@ -171,6 +171,58 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].audioEvent
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[5].audioEvent
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Path
+      value: event:/BackgroundMusic/Spring
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[5].eventReference.Path
+      value: event:/BackgroundMusic/Winter
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data1
+      value: 770368395
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data2
+      value: 1262538272
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data3
+      value: -1369325889
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[4].eventReference.Guid.Data4
+      value: -1514063633
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[5].eventReference.Guid.Data1
+      value: 759757995
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[5].eventReference.Guid.Data2
+      value: 1180523423
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[5].eventReference.Guid.Data3
+      value: 836514724
+      objectReference: {fileID: 0}
+    - target: {fileID: 242028984753402793, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
+      propertyPath: audioEvents.Array.data[5].eventReference.Guid.Data4
+      value: -132397169
+      objectReference: {fileID: 0}
     - target: {fileID: 2847601614422981753, guid: 45a0d18eef20b2142a3c4ba080009ccc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 910.4231
@@ -408,37 +460,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54dcb255443647244b05f69f8e286257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPlayerLives
---- !u!1 &331863641
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 331863642}
-  m_Layer: 0
-  m_Name: Background
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &331863642
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331863641}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.26543, y: -0.23999, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &431029518 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7620388143109683292, guid: 21e9b18b97b8d9c41bc22d7d07a12638, type: 3}
@@ -1379,4 +1400,3 @@ SceneRoots:
   - {fileID: 1667906522}
   - {fileID: 225808102}
   - {fileID: 1734881863}
-  - {fileID: 331863642}

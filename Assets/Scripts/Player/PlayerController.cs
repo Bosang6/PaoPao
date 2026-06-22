@@ -24,11 +24,15 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
 
     public bool IsHuman => _instanceData.type == PlayerInstanceData.E_PlayerSlotType.LocalHuman;
 
+    public E_Footstep eFootstep => _characterData.eFootstep;
+
     //Evento da invocare alla morte 
     public event System.Action<PlayerController> OnPlayerDied;
 
     private void Awake()
     {
+        _gameData.localPlayerKill = 0;
+
         //Recupera i componenti
         _pInput = GetComponent<IPlayerInput>();
         _pMove = GetComponent<PlayerMove>();
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         _pBombHandler.Initialize(_gameData, _characterData, IsHuman);
         _pHealth.Initialize(_characterData);
         if (IsHuman) { _pAudio.Initialize(_pBombHandler); }
+        else { _pAudio.Initialize(); }
     }
 
     public void Update()
@@ -51,7 +56,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         if(invicibilityTimer > 0) { invicibilityTimer -= Time.deltaTime; }  //Se in fase invincibile
     }
 
-    public void OnHitByExplosion(ExplosionData data)
+    public void OnHitByExplosion(ExplosionData data, bool PlacedByLocalPlayer)
     {
         if (invicibilityTimer > 0) { return; }  //Ancora in fase di invincibilit�
         //_pHealth.Hitted(data) restituisce il numero di hp rimanenti
@@ -64,6 +69,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         {
             _pMove.SetAnimatorIsDead();
             Death();
+            if (PlacedByLocalPlayer && !IsHuman) { _gameData.localPlayerKill++; }
         }
         invicibilityTimer = _characterData.invincibilityDuration;
         //_pHealth?.StartBlink(playerData.invincibilityDuration); //Lampeggia durante l'invincibilit�

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{1bb3b2f9-1a06-4ba4-b15b-bede11ee3def}">
+		<property name="assetPath">
+			<value>Footstep/Jelly/Step3.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.35999999999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466fd388-ce47-4439-b2c3-5dec37ec0af7}</destination>
+		</relationship>
+	</object>
+</objects>

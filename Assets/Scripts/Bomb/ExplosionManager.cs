@@ -13,18 +13,17 @@ public class ExplosionManager : MonoBehaviour
         Instance = this;
     }
 
-    public void OnExplode(Vector3 v3Origin, ExplosionData data)
+    public void OnExplode(Vector3 v3Origin, ExplosionData data, bool PlacedByLocalPlayer)
     {
         //Invoca le esplosioni al posto della bomba e ai lati
-        SpawnFlame(v3Origin, data, FlameType.Center);
-
-        VerifyFlammable(v3Origin, Vector2.up, data);
-        VerifyFlammable(v3Origin, Vector2.down, data);
-        VerifyFlammable(v3Origin, Vector2.left, data);
-        VerifyFlammable(v3Origin, Vector2.right, data);
+        SpawnFlame(v3Origin, data, PlacedByLocalPlayer, FlameType.Center);
+        VerifyFlammable(v3Origin, Vector2.up, data, PlacedByLocalPlayer);
+        VerifyFlammable(v3Origin, Vector2.down, data, PlacedByLocalPlayer);
+        VerifyFlammable(v3Origin, Vector2.left, data, PlacedByLocalPlayer);
+        VerifyFlammable(v3Origin, Vector2.right, data, PlacedByLocalPlayer);
     }
 
-    private void VerifyFlammable(Vector3 v3Origin, Vector2 v2Direction, ExplosionData data)
+    private void VerifyFlammable(Vector3 v3Origin, Vector2 v2Direction, ExplosionData data, bool PlacedByLocalPlayer)
     {
         //bool isHor = v2Direction.x != 0;
         int dirToInt = 0; // 0: Up, 1: Right, 2: Down, 3: Left
@@ -77,7 +76,7 @@ public class ExplosionManager : MonoBehaviour
                 {
                     type = FlameType.HorizontalLeftEnd;
                 }
-                SpawnFlame(v3CellCenter, data, type);
+                SpawnFlame(v3CellCenter, data, PlacedByLocalPlayer, type);
                 return;
             }
 
@@ -124,14 +123,14 @@ public class ExplosionManager : MonoBehaviour
                 }
             }
             
-            SpawnFlame(v3CellCenter, data, type);
+            SpawnFlame(v3CellCenter, data, PlacedByLocalPlayer, type);
         }
     }
 
-    private void SpawnFlame(Vector3 v3Pos, ExplosionData data, FlameType type = FlameType.Center)
+    private void SpawnFlame(Vector3 v3Pos, ExplosionData data, bool PlacedByLocalPlayer, FlameType type = FlameType.Center)
     {
         FlameController flame = FlamePool.Instance.Get(v3Pos);
         if (flame == null) return;
-        flame.Initialize(data, type);
+        flame.Initialize(data, PlacedByLocalPlayer, type);
     }
 }

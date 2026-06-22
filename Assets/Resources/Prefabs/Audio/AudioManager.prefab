@@ -356,8 +356,24 @@ MonoBehaviour:
   - audioEvent: 6
     eventReference:
       Guid:
-        Data1: 1908604068
-        Data2: 1149500698
-        Data3: 1663109554
-        Data4: -1728291896
-      Path: event:/InGameEffect/BombExplosion
+        Data1: 770368395
+        Data2: 1262538272
+        Data3: -1369325889
+        Data4: -1514063633
+      Path: event:/BackgroundMusic/Spring
+  - audioEvent: 7
+    eventReference:
+      Guid:
+        Data1: 759757995
+        Data2: 1180523423
+        Data3: 836514724
+        Data4: -132397169
+      Path: event:/BackgroundMusic/Winter
+  - audioEvent: 8
+    eventReference:
+      Guid:
+        Data1: 50611173
+        Data2: 1158638624
+        Data3: -2020882021
+        Data4: 173121605
+      Path: event:/Character/Footstep

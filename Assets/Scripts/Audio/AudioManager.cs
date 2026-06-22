@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+using UnityEditor;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class AudioManager : MonoBehaviour
      * Questo script gestisce la musica e gli effetti sonori del gioco. 
      * Utilizza il pattern Singleton per garantire un'unica istanza durante l'intero ciclo di vita del gioco.
      * Permette di regolare il volume della musica e degli effetti, e salva queste impostazioni usando PlayerPrefs.
-     * PlayerPrefs è un sistema di Unity per salvare dati semplici in locale. 
+     * PlayerPrefs ï¿½ un sistema di Unity per salvare dati semplici in locale. 
      */
 
     // Singleton 
@@ -23,6 +24,8 @@ public class AudioManager : MonoBehaviour
     private Dictionary<AudioEvent, EventReference> audioDictionary;
     
     private EventInstance currentMusicInstance;
+    
+    private EventReference footstepEvent;
 
     private Bus musicBus;
     private Bus sfxBus;
@@ -84,6 +87,7 @@ public class AudioManager : MonoBehaviour
 
         RuntimeManager.PlayOneShot(eventReference);
     }
+    
 
 
     // Riproduce una musica FMOD
@@ -128,6 +132,50 @@ public class AudioManager : MonoBehaviour
     public void PlayMenuMusic()
     {
         PlayMusic(AudioEvent.MusicMenu);
+    }
+
+    public void PlayBackgroundMusic(E_Map eMap)
+    {
+        switch (eMap)
+        {
+            case E_Map.Spring:
+                PlayMusic(AudioEvent.BackgroundMusicSpring);
+                break;
+            case E_Map.Winter:
+                PlayMusic(AudioEvent.BackgroundMusicWinter);
+                break;
+        }
+    }
+
+    public void PlayFinalBattleMusic()
+    {
+        currentMusicInstance.setParameterByName("FinalBattle", 1);
+    }
+
+    public void PlayFootstep(E_Footstep eFootstep)
+    {
+        switch (eFootstep)
+        {
+            case E_Footstep.Normal:
+                PlayFootstep(AudioEvent.Footstep, "Normal");
+                break;
+            case E_Footstep.Jelly:
+                PlayFootstep(AudioEvent.Footstep, "Jelly");
+                break;
+        }
+    }
+    
+    public void PlayFootstep(AudioEvent audioEvent, string footstepType)
+    {
+        if (!TryGetEvent(audioEvent, out EventReference eventReference))
+            return;
+
+        EventInstance instance = RuntimeManager.CreateInstance(eventReference);
+
+        instance.setParameterByNameWithLabel("FootstepType", footstepType);
+
+        instance.start();
+        instance.release();
     }
 
 
