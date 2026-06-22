@@ -111,10 +111,7 @@ public class PlayerMove : MonoBehaviour
             //if (animator != null) { animator.SetBool("IsMoving", false); }
 
             //Todo: invocare solo in mappa di ghiaccio (?)
-            if (true)
-            {
-                CheckIcePlate();    //Controlla se si può proseguire col movimento
-            }
+            if (true) { CheckIcePlate(); }    //Controlla se si può proseguire col movimento
         }
 
         
