@@ -3,15 +3,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerInstanceData : ScriptableObject
 {
+    public enum E_PlayerSlotType { LocalHuman, AI, NetworkHuman }
+
     [Header("Identity")]
+    public E_PlayerSlotType type;
     public string playerName;
     public int playerID;
-    public Color playerColor;
 
     [Header("Spawn")]
     public Vector3 spawnPosition;
     public Quaternion spawnRotation;
 
-    [Header("TODO:isHuman")]
-    public bool isHuman;
 }

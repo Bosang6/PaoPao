@@ -4,12 +4,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    public event System.Action OnStartSliding;
+
     private GameData _gameData;
     private CharacterData _characterData;
     private PlayerInstanceData _instanceData;
 
     private bool isInitialized = false;
-    //private bool bIsMoving = false;
     private Vector3 v3TargetPosition;
     private Vector2 v2LastDirection = Vector2.zero;
     private Vector2 boxSize;
@@ -124,16 +125,9 @@ public class PlayerMove : MonoBehaviour
         //Controlla se la cella corrente è una IcePlate, in caso prosegue il movimento ("scivola")
         Collider2D hit = Physics2D.OverlapBox(transform.position, boxSize, 0f, _gameData.lmIcePlate);
 
-        if (hit != null) { TryMove(v2LastDirection); } else { v2LastDirection = Vector2.zero; }
+        if (hit != null) { OnStartSliding?.Invoke(); TryMove(v2LastDirection); } 
+        else { v2LastDirection = Vector2.zero; }
     }
-
-    public void Respawn() {
-        transform.position = GridUtils.AdjustPosition(_instanceData.spawnPosition, _gameData.fCellSize); 
-        transform.rotation = _instanceData.spawnRotation;
-        v3TargetPosition = transform.position;
-        _characterData.isMoving = false;
-    }
-
 
     void OnDestroy() { PlayerManager.Instance?.Unregister(transform); }
 

@@ -9,5 +9,7 @@ public enum AudioEvent
     ButtonSound,
     MusicMenu,
     WinSound,
-    LoseSound
+    LoseSound,
+    BombTimer,
+    BombExplosion,
 }

@@ -17,11 +17,14 @@ public class BombController : MonoBehaviour
     private List<Transform> playersTransforms;
     private Collider2D bombCollider;
 
+    public bool IsHuman = false;
+
     private void Awake() { bombCollider = GetComponent<Collider2D>(); }
 
-    public void Initialize(List<Transform> players)    //Chiamato da BombPool.Get() ad ogni utilizzo della bomba
+    public void Initialize(List<Transform> players, bool IsHuman)    //Chiamato da BombPool.Get() ad ogni utilizzo della bomba
     {
         this.playersTransforms = players;
+        this.IsHuman = IsHuman;
 
         if (explodingCoroutine != null) { StopCoroutine(explodingCoroutine); }
         explodingCoroutine = StartCoroutine(Exploding());
@@ -59,6 +62,7 @@ public class BombController : MonoBehaviour
 
     private void Explode()
     {
+        //AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion, transform.position);
         //Debug.Log($"Bomba esplosa in {transform.position}");
         OnBombReturned?.Invoke();
         OnBombReturned = null;
@@ -70,6 +74,8 @@ public class BombController : MonoBehaviour
          *  un nuovo listener
          *  La sintassi = null permette di chiudere il canale di comunicazione coi listener
          */
+
+        if (IsHuman) { AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion); }
 
         //Delega l'esplosione all'ExplosionManager
         ExplosionManager.Instance.OnExplode(transform.position, explosionData);

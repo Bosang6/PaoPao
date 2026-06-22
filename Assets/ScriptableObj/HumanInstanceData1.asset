@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13caf1210f1722c4d9caf801bfaaeac7, type: 3}
+  m_Script: {fileID: 11500000, guid: 7df0a561ef5e06d469490271aac7be27, type: 3}
   m_Name: HumanInstanceData1
   m_EditorClassIdentifier: Assembly-CSharp::HumanInstanceData
-  playerName: Goku
+  type: 0
+  playerName: Human1
   playerID: 1
-  playerColor: {r: 1, g: 0.5098561, b: 0, a: 0}
   spawnPosition: {x: -6, y: 5, z: 0}
-  spawnRotation: {x: 0, y: 0, z: 0, w: 0}
-  isHuman: 1
+  spawnRotation: {x: 0, y: 0, z: 0, w: 1}
   inputActionAsset: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   controlScheme: Player1

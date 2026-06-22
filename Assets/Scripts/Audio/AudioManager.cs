@@ -13,8 +13,6 @@ public class AudioManager : MonoBehaviour
      * PlayerPrefs è un sistema di Unity per salvare dati semplici in locale. 
      */
 
-
-
     // Singleton 
     public static AudioManager Instance { get; private set; }
 
