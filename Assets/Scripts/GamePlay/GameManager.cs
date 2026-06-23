@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UITimer uiTimer;
 
     [Header("End Game Delay")]
-    [SerializeField] private float endPanelDelay = 2f;
+    [SerializeField] private float endPanelDelay = 1f;
 
     [Header("GameData")]
     [SerializeField] private GameData _gameData;
