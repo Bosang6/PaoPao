@@ -1,6 +1,5 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.Multiplayer.PlayMode;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,6 +9,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] private UITimer uiTimer;
+
+    [Header("End Game Delay")]
+    [SerializeField] private float endPanelDelay = 2f;
 
     [Header("GameData")]
     [SerializeField] private GameData _gameData;
@@ -92,12 +94,25 @@ public class GameManager : MonoBehaviour
 
         string localKillCounter = _gameData.localPlayerKill.ToString();
 
+        StartCoroutine(ShowEndPanelAfterDelay(isWin, finalTime, localKillCounter));
+    }
+
+
+    // Coroutine per ritardarare il Win/Lose Panel
+    private IEnumerator ShowEndPanelAfterDelay(bool isWin, string finalTime, string localKillCounter)
+    {
+        yield return new WaitForSecondsRealtime(endPanelDelay);
+
         if (uiGameManager != null)
         {
-            if (isWin)
+            if (isWin) 
+            {
                 uiGameManager.ShowWinPanel(finalTime, localKillCounter);
+            }
             else
+            {
                 uiGameManager.ShowLosePanel(finalTime, localKillCounter);
+            }
         }
     }
 }
