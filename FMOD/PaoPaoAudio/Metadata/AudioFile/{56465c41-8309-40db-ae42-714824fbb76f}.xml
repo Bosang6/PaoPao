@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.03.00">
-	<object class="AudioFile" id="{50acdc19-4f66-4c89-b38d-fa6e875406ad}">
+	<object class="AudioFile" id="{56465c41-8309-40db-ae42-714824fbb76f}">
 		<property name="assetPath">
-			<value>Wall/BrickBreakSound.wav</value>
+			<value>BombermanDeathSound.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

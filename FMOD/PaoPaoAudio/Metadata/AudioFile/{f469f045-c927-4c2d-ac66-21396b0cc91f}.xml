@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{f469f045-c927-4c2d-ac66-21396b0cc91f}">
 		<property name="assetPath">
-			<value>RockBreakSound.wav</value>
+			<value>Wall/RockBreakSound.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

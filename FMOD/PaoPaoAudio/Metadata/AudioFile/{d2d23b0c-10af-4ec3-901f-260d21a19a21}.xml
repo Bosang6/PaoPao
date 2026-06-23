@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{d2d23b0c-10af-4ec3-901f-260d21a19a21}">
 		<property name="assetPath">
-			<value>IceBreakSound.wav</value>
+			<value>Wall/IceBreakSound.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

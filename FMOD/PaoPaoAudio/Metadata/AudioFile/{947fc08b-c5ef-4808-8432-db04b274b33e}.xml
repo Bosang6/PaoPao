@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.03.00">
-	<object class="AudioFile" id="{50acdc19-4f66-4c89-b38d-fa6e875406ad}">
+	<object class="AudioFile" id="{947fc08b-c5ef-4808-8432-db04b274b33e}">
 		<property name="assetPath">
-			<value>Wall/BrickBreakSound.wav</value>
+			<value>SlimeDeathSound.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
@@ -11,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.68000000000000005</value>
+			<value>1</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{466fd388-ce47-4439-b2c3-5dec37ec0af7}</destination>
