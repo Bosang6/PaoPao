@@ -38,7 +38,6 @@ The next step will be:
 
 - link: https://youtu.be/7MZSeV5ZUPU?si=mRJhvmgd11EUn49Z
 
-- 
 <p align="center">
   <img src="Docs/Images/MatchSetup.jpg" width="30%">
   <img src="Docs/Images/MapSpring.jpg" width="30%">
