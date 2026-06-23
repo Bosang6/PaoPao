@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Multiplayer.PlayMode;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,6 +10,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] private UITimer uiTimer;
+
+    [Header("GameData")]
+    [SerializeField] private GameData _gameData;
 
     private List<PlayerController> players = new List<PlayerController>();
     private bool isMatchEnded = false;
@@ -86,12 +90,14 @@ public class GameManager : MonoBehaviour
 
         string finalTime = uiTimer != null ? uiTimer.GetFormattedTime() : "00:00";
 
+        string localKillCounter = _gameData.localPlayerKill.ToString();
+
         if (uiGameManager != null)
         {
             if (isWin)
-                uiGameManager.ShowWinPanel(finalTime);
+                uiGameManager.ShowWinPanel(finalTime, localKillCounter);
             else
-                uiGameManager.ShowLosePanel(finalTime);
+                uiGameManager.ShowLosePanel(finalTime, localKillCounter);
         }
     }
 }

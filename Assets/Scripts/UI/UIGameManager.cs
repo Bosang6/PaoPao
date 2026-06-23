@@ -16,6 +16,10 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI winTimeText;
     [SerializeField] private TextMeshProUGUI loseTimeText;
 
+    [Header("Final Kills Text")]
+    [SerializeField] private TextMeshProUGUI winKillText;
+    [SerializeField] private TextMeshProUGUI loseKillText;
+
     [Header("Scene")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
@@ -114,24 +118,26 @@ public class UIGameManager : MonoBehaviour
 
     // WIN / LOSE
 
-    public void ShowWinPanel(string finalTime)
+    public void ShowWinPanel(string finalTime, string localKillCounter)
     {
         HideAllPanels();
         SetMobileControlsVisible(false);
         Time.timeScale = 0f;
         isPaused = false;
         if (winTimeText != null) winTimeText.text = finalTime;
-        if(AudioManager.Instance != null) AudioManager.Instance.PlayWinSound();
+        if (winKillText != null) winKillText.text = localKillCounter;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayWinSound();
         winPanel.SetActive(true);
     }
 
-    public void ShowLosePanel(string finalTime)
+    public void ShowLosePanel(string finalTime, string localKillCounter)
     {
         HideAllPanels();
         SetMobileControlsVisible(false);
         Time.timeScale = 0f;
         isPaused = false;
         if (loseTimeText != null) loseTimeText.text = finalTime;
+        if (loseKillText != null) loseKillText.text = localKillCounter;
         if (AudioManager.Instance != null) AudioManager.Instance.PlayLoseSound();
         losePanel.SetActive(true);
     }
