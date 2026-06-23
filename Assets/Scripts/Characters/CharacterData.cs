@@ -30,4 +30,9 @@ public class CharacterData : ScriptableObject
     
     [Header("Footstep")]
     public E_Footstep eFootstep;
+
+    [Header("DeathSound")]
+    [SerializeField] private AudioEvent deathSound;
+    public AudioEvent DeathSound => deathSound;
+
 }

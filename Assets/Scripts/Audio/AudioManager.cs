@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
-using UnityEditor;
 
 public class AudioManager : MonoBehaviour
 {
@@ -152,6 +151,7 @@ public class AudioManager : MonoBehaviour
         currentMusicInstance.setParameterByName("FinalBattle", 1);
     }
 
+
     public void PlayFootstep(E_Footstep eFootstep)
     {
         switch (eFootstep)
@@ -176,6 +176,13 @@ public class AudioManager : MonoBehaviour
 
         instance.start();
         instance.release();
+    }
+
+
+    // Evento Death
+    public void PlayDeath(AudioEvent deathSound) 
+    {
+        PlaySFX(deathSound);
     }
 
 

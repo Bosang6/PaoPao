@@ -9,23 +9,39 @@ public enum E_Footstep
 public class PlayerAudio : MonoBehaviour
 {
     private bool muted = false;
+    private AudioEvent deathSound;
 
-    public void Initialize() { muted = true; }
 
-    public void Initialize(PlayerBombHandler bombHandler)
+    public void Initialize(CharacterData characterData)
     {
-        //Altri eventi (es morte)
+        muted = true;
+        deathSound = characterData.DeathSound;
+    }
+
+    public void Initialize(CharacterData characterData, PlayerBombHandler bombHandler)
+    {
+        muted = false;
+        deathSound = characterData.DeathSound;
         bombHandler.OnBombPlaced += PlayBombPlaced;
     }
 
-    private void PlayBombPlaced() { if (!muted) { AudioManager.Instance.PlaySFX(AudioEvent.BombTimer); } }
+    private void PlayBombPlaced() 
+    { 
+        if (!muted) AudioManager.Instance.PlaySFX(AudioEvent.BombTimer);  
+    }
     
     public void PlayFootstep()
     {
-        if(!muted)
-            AudioManager.Instance.PlayFootstep(GetComponent<PlayerController>().eFootstep);
+        if(!muted) AudioManager.Instance.PlayFootstep(GetComponent<PlayerController>().eFootstep);
+    }
+
+    public void PlayDeath()
+    {
+        AudioManager.Instance.PlayDeath(deathSound);
     }
 
     //Per interrompere eventuali suoni looppati o altro
     private void OnDestroy() { }
+
+    
 }

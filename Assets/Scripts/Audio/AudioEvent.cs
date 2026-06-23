@@ -17,5 +17,8 @@ public enum AudioEvent
     Footstep,
     BrickBreakSound,
     IceBreakSound,
-    RockBreakSound
+    RockBreakSound,
+    BombermanDeathSound,
+    PenguinDeathSound,
+    SlimeDeathSound
 }

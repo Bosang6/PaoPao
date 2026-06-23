@@ -45,8 +45,8 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         _pMove.Initialize(_gameData, _characterData, _instanceData);
         _pBombHandler.Initialize(_gameData, _characterData, IsHuman);
         _pHealth.Initialize(_characterData);
-        if (IsHuman) { _pAudio.Initialize(_pBombHandler); }
-        else { _pAudio.Initialize(); }
+        if (IsHuman) { _pAudio.Initialize(_characterData, _pBombHandler); }
+        else { _pAudio.Initialize(_characterData); }
     }
 
     public void Update()
@@ -68,8 +68,10 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         else
         {
             _pMove.SetAnimatorIsDead();
-            Death();
             if (PlacedByLocalPlayer && !IsHuman) { _gameData.localPlayerKill++; }
+            _pAudio.PlayDeath();
+            Death();
+
         }
         invicibilityTimer = _characterData.invincibilityDuration;
         //_pHealth?.StartBlink(playerData.invincibilityDuration); //Lampeggia durante l'invincibilit�

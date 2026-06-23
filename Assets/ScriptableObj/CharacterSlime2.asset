@@ -22,3 +22,4 @@ MonoBehaviour:
   explosionData: {fileID: 11400000, guid: 68d54f3ddabe4544ab9c942acfa56466, type: 2}
   animatorType: 1
   eFootstep: 1
+  deathSound: 14

@@ -377,3 +377,51 @@ MonoBehaviour:
         Data3: -2020882021
         Data4: 173121605
       Path: event:/Character/Footstep
+  - audioEvent: 9
+    eventReference:
+      Guid:
+        Data1: 1532109408
+        Data2: 1201283973
+        Data3: -434484593
+        Data4: -1809914898
+      Path: event:/InGameEffect/BrickBreakSound
+  - audioEvent: 10
+    eventReference:
+      Guid:
+        Data1: 222327494
+        Data2: 1110530470
+        Data3: 922105748
+        Data4: -131856027
+      Path: event:/InGameEffect/IceBreakSound
+  - audioEvent: 11
+    eventReference:
+      Guid:
+        Data1: -1667423752
+        Data2: 1157090796
+        Data3: -467242356
+        Data4: 499961159
+      Path: event:/InGameEffect/RockBreakSound
+  - audioEvent: 12
+    eventReference:
+      Guid:
+        Data1: 278156479
+        Data2: 1269324929
+        Data3: -1480165733
+        Data4: 1986702477
+      Path: event:/Character/BombermanDeathSound
+  - audioEvent: 13
+    eventReference:
+      Guid:
+        Data1: -1632199463
+        Data2: 1191814616
+        Data3: -803499886
+        Data4: 641847100
+      Path: event:/Character/PenguinDeathSound
+  - audioEvent: 14
+    eventReference:
+      Guid:
+        Data1: -148698285
+        Data2: 1324192614
+        Data3: -1593269314
+        Data4: -1083382796
+      Path: event:/Character/SlimeDeathSound
