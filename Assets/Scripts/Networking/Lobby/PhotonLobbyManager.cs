@@ -18,8 +18,7 @@ public sealed class PhotonLobbyManager : MonoBehaviourPunCallbacks
     [Header("Lobby Settings")]
 
     [Tooltip("Se attivo, il client entra automaticamente nella Lobby " + "quando raggiunge il Master Server.")]
-    [SerializeField]
-    private bool joinLobbyAutomatically = true;
+    [SerializeField] private bool joinLobbyAutomatically = true;
 
     // Indica se il client si trova attualmente nella Lobby Photon
     public bool IsInLobby => PhotonNetwork.InLobby;

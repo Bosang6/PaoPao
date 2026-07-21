@@ -22,8 +22,7 @@ public sealed class PhotonRoomListManager : MonoBehaviourPunCallbacks
     [Header("Debug")]
 
     [Tooltip("Scrive nella Console la lista delle Room a ogni aggiornamento.")]
-    [SerializeField]
-    private bool logRoomListUpdates = true;
+    [SerializeField] private bool logRoomListUpdates = true;
 
     // Snapshot aggiornato delle Room attualmente presenti nella cache
     public IReadOnlyList<RoomInfo> CurrentRooms => currentRooms;

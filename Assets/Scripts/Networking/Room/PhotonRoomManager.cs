@@ -17,12 +17,10 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
     [Header("Room Settings")]
 
     [Tooltip("Numero massimo di giocatori umani ammessi nella Room.")]
-    [SerializeField]
-    private byte maxPlayers = 4;
+    [SerializeField] private byte maxPlayers = 4;
 
     [Tooltip("Prefisso utilizzato per creare Room temporanee di test.")]
-    [SerializeField]
-    private string testRoomNamePrefix = "PaoPao-Test";
+    [SerializeField] private string testRoomNamePrefix = "PaoPao-Test";
 
     // Indica se il client locale si trova attualmente in una Room Photon
     public bool IsInRoom => PhotonNetwork.InRoom;
@@ -127,6 +125,44 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
     {
         Debug.Log( "[PhotonRoomManager] Il client ha lasciato la Room." );
     }
+
+    // Entra in una Room esistente tramite il suo nome
+    public void JoinRoom(string roomName)
+    {
+        if (!PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.LogWarning( "[PhotonRoomManager] Impossibile entrare nella Room: " + "il client non è connesso al Master Server.");
+
+            return;
+        }
+
+        if (PhotonNetwork.InRoom)
+        {
+            Debug.LogWarning("[PhotonRoomManager] Il client si trova già dentro una Room.");
+
+            return;
+        }
+
+        string validatedRoomName = roomName?.Trim();
+
+        if (string.IsNullOrWhiteSpace(validatedRoomName))
+        {
+            Debug.LogWarning("[PhotonRoomManager] Il nome della Room non è valido.");
+
+            return;
+        }
+
+        Debug.Log($"[PhotonRoomManager] Tentativo di ingresso nella Room " + $"'{validatedRoomName}'...");
+
+        bool requestSent = PhotonNetwork.JoinRoom(validatedRoomName);
+
+        if (!requestSent)
+        {
+            Debug.LogError("[PhotonRoomManager] Photon non ha accettato " + "la richiesta di ingresso nella Room.");
+        }
+    }
+
+
 
 
 }

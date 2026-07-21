@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5255860662726818628}
   - component: {fileID: 4590504863587882590}
   - component: {fileID: 2607807880541948624}
+  - component: {fileID: 2507207828868479585}
   m_Layer: 5
   m_Name: RoomListItem
   m_TagString: Untagged
@@ -63,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.99215686, g: 0.93333334, b: 0.84705883, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -99,6 +100,22 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
+--- !u!114 &2507207828868479585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155684215474271216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d426d2270a821649a982bbf5019c190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomListItemUI
+  roomNameText: {fileID: 7401255734837067613}
+  playerCountText: {fileID: 5703952000246677343}
+  joinButtonText: {fileID: 6888327299174013845}
+  joinButton: {fileID: 4544004304849533738}
 --- !u!1 &4098610755066007930
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -416,7 +433,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

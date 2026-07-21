@@ -19,12 +19,10 @@ public sealed class PhotonConnectionManager : MonoBehaviourPunCallbacks
     [Header("Connection Settings")]
 
     [Tooltip("Client con versioni differenti non verranno inseriti nelle stesse Room.")]
-    [SerializeField]
-    private string gameVersion = "0.1";
+    [SerializeField] private string gameVersion = "0.1";
 
     [Tooltip("Avvia automaticamente la connessione quando viene caricata la scena.")]
-    [SerializeField]
-    private bool connectOnStart = true;
+    [SerializeField] private bool connectOnStart = true;
 
     // Indica se il client è collegato e pronto per usare il matchmaking
     public bool IsConnectedAndReady => PhotonNetwork.IsConnectedAndReady;
