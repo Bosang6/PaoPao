@@ -60,9 +60,12 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
             MaxPlayers = maxPlayers,
             IsOpen = true,
             IsVisible = true,
-
             // Quando un player lascia la Room, gli evente e gli oggetti memorizzati nella sua cache vengono rimossi.
-            CleanupCacheOnLeave = true
+            CleanupCacheOnLeave = true,
+
+            // Creiamo le 4 proprietà degli slot. 
+            CustomRoomProperties = PhotonRoomSlotManager.CreateInitialRoomProperties()
+
         };
 
         Debug.Log( $"[PhotonRoomManager] Creazione Room '{validatedRoomName}' " + $"con massimo {maxPlayers} giocatori..." );
