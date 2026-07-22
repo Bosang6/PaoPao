@@ -163,6 +163,27 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
     }
 
 
+    // Chiamata su tutti i client già presenti nella Room
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        string playerName = string.IsNullOrWhiteSpace(newPlayer.NickName) ? $"Player {newPlayer.ActorNumber}" : newPlayer.NickName;
+
+        Debug.Log($"[PhotonRoomManager] {playerName} è entrato nella Room. " + $"Giocatori: {PhotonNetwork.CurrentRoom.PlayerCount}/" + 
+            $"{PhotonNetwork.CurrentRoom.MaxPlayers}."
+        );
+    }
+
+
+    // Chiamata sui client rimasti nella Room quando un giocatore la abbandona
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        string playerName = string.IsNullOrWhiteSpace(otherPlayer.NickName) ? $"Player {otherPlayer.ActorNumber}" : otherPlayer.NickName;
+
+        Debug.Log($"[PhotonRoomManager] {playerName} ha lasciato la Room. " + $"Giocatori: {PhotonNetwork.CurrentRoom.PlayerCount}/" +
+            $"{PhotonNetwork.CurrentRoom.MaxPlayers}."
+        );
+    }
+
 
 
 }
