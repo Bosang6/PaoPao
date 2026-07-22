@@ -52,7 +52,7 @@ public class UIMainMenuManager : MonoBehaviour
         if(matchSetupPanel != null) matchSetupPanel.SetActive(false);
 
         //Per il tasto Multiplayer (da togliere in futuro)
-        if (multiPlayButton != null) multiPlayButton.interactable = false;
+        //if (multiPlayButton != null) multiPlayButton.interactable = false;
 
         // MenuMusic
         if (AudioManager.Instance != null) AudioManager.Instance.PlayMenuMusic();
