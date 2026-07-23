@@ -1,7 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 /*
  * Collega i 4 slot grafici del RoomLobbyPanel agli slot sincronizzati dal PhotonRoomSlotManager
@@ -22,12 +22,25 @@ public sealed class UIRoomPlayerSlotsManager : MonoBehaviourPunCallbacks
     [Tooltip("I quattro PlayerSlot ordinati dallo Slot 0 allo Slot 3.")]
     [SerializeField] private RoomPlayerSlotUI[] playerSlots;
 
+    [Header("Character Sprites")]
+    [Tooltip("Sprite ordinati secondo i Character ID: " + "Bomberman, Penguin, Slime1, Slime2, Slime3.")]
+    [SerializeField] private Sprite[] characterSprites;
+
+    [Tooltip("Personaggio mostrato quando un player non possiede " + "ancora una proprietà Character ID valida." )]
+    [SerializeField] [Min(0)] private int fallbackCharacterId = 0;
+
     private PhotonRoomSlotManager roomSlotManager;
 
     // Viene eseguito quando la PlayerSection o il RoomLobbyPanel vengono attivati
     public override void OnEnable()
     {
         base.OnEnable();
+
+        if (!ValidateCharacterSprites())
+        {
+            ClearSlots();
+            return;
+        }
 
         if (!ResolveRoomSlotManager())
         {
@@ -134,9 +147,39 @@ public sealed class UIRoomPlayerSlotsManager : MonoBehaviourPunCallbacks
                 continue;
             }
 
-            slotUI.ShowOccupied(player.IsLocal, player.IsMasterClient);
+            int characterId = GetCharacterId(player);
+
+            Sprite characterSprite = characterSprites[characterId];
+
+            slotUI.ShowOccupied(player.IsLocal, player.IsMasterClient, characterSprite);
         }
     }
+
+
+
+    // Restituisce il Character ID valido associato al Player Photon
+    private int GetCharacterId(Player player)
+    {
+        if (PhotonPlayerProperties.TryGetCharacterId(player, out int characterId) && IsValidCharacterId(characterId)
+        )
+        {
+            return characterId;
+        }
+
+        return fallbackCharacterId;
+    }
+
+
+    // Verifica che il Character ID corrisponde ad uno sprite configurato nell'Inspector
+    private bool IsValidCharacterId(int characterId)
+    {
+        return
+            characterSprites != null &&
+            characterId >= 0 &&
+            characterId < characterSprites.Length &&
+            characterSprites[characterId] != null;
+    }
+
 
     // Ripristina tutti gli slot allo stato libero
     private void ClearSlots()
@@ -172,6 +215,57 @@ public sealed class UIRoomPlayerSlotsManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         ClearSlots();
+    }
+
+
+    // Viene chiamato quando cambiano le Player Custom Properties di un giocatore
+    // Se è cambiato il Char ID, aggiorna tutti gli slot
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
+    {
+        if (targetPlayer == null || changedProperties == null)
+        {
+            return;
+        }
+
+        if (!changedProperties.ContainsKey(PhotonPlayerProperties.CharacterIdKey))
+        {
+            return;
+        }
+
+        RefreshSlots();
+    }
+
+
+    // Controlla che gli sprite dei personaggi siano stati configurati correttamente
+    private bool ValidateCharacterSprites()
+    {
+        if (characterSprites == null || characterSprites.Length == 0)
+        {
+            Debug.LogError("[UIRoomPlayerSlotsManager] " + "Nessuno sprite dei personaggi assegnato.", this);
+
+            return false;
+        }
+
+        if (!IsValidCharacterId(fallbackCharacterId))
+        {
+            Debug.LogError("[UIRoomPlayerSlotsManager] " + $"Fallback Character ID non valido: " + $"{fallbackCharacterId}.", this);
+
+            return false;
+        }
+
+        for (int characterId = 0; characterId < characterSprites.Length; characterId++)
+        {
+            if (characterSprites[characterId] != null)
+            {
+                continue;
+            }
+
+            Debug.LogError("[UIRoomPlayerSlotsManager] " + $"Sprite mancante per Character ID " + $"{characterId}.",this);
+
+            return false;
+        }
+
+        return true;
     }
 
 

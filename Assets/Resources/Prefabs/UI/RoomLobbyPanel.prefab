@@ -327,6 +327,13 @@ MonoBehaviour:
   - {fileID: 8744234194581726125}
   - {fileID: 7233942703968668778}
   - {fileID: 3291796330554616523}
+  characterSprites:
+  - {fileID: -8937289766202042846, guid: 23a5a731978914e49a1ba52d27a9632f, type: 3}
+  - {fileID: -3289575033469672952, guid: a456651e1f68e3f4c9ef9c58e63c2257, type: 3}
+  - {fileID: -3635838840894485798, guid: 646ee902fcb45df4599973b2a91f28b6, type: 3}
+  - {fileID: 7860893253022973495, guid: 40ae422af2430af4da119ff3c5140e85, type: 3}
+  - {fileID: 127761303507571002, guid: f2f9f1339d2ca4f4db0465c9484cced4, type: 3}
+  fallbackCharacterId: 0
 --- !u!1 &601499202686159834
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,6 +1540,7 @@ GameObject:
   - component: {fileID: 7646312552643298615}
   - component: {fileID: 6858007874600722253}
   - component: {fileID: 4502987134121854007}
+  - component: {fileID: 7070152595756655723}
   m_Layer: 5
   m_Name: CharacterSelection
   m_TagString: Untagged
@@ -1599,6 +1607,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7070152595756655723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430210163214083030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd33b7e0c41675d498bcadf7d6b7e518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIRoomCharacterSelectionManager
+  characterButtons:
+  - {fileID: 2780682793905496222}
+  - {fileID: 6250660803693756391}
+  - {fileID: 6115950130936939392}
+  - {fileID: 8814929430856352572}
+  - {fileID: 2285226526794124268}
+  selectionGlows:
+  - {fileID: 2588925926803080237}
+  - {fileID: 1393033639196737548}
+  - {fileID: 4972669708356160444}
+  - {fileID: 2239938458904557064}
+  - {fileID: 6532602667153834730}
+  defaultCharacterId: 0
 --- !u!1 &2511315108555771278
 GameObject:
   m_ObjectHideFlags: 0

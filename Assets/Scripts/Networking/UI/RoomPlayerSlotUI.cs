@@ -34,11 +34,12 @@ public sealed class RoomPlayerSlotUI : MonoBehaviour
     // Mostra lo slot come occupato
     // is LocalPlayer: indica se il giocatore locale è quello nello slot
     // is MasterClient: indica se il giocatore nello slot è il Master Client
-    public void ShowOccupied(bool isLocalPlayer, bool isMasterClient)
+    public void ShowOccupied(bool isLocalPlayer, bool isMasterClient, Sprite characterSprite)
     {
         if (characterImage != null)
         {
-            characterImage.gameObject.SetActive(true);
+            characterImage.sprite = characterSprite;
+            characterImage.gameObject.SetActive(characterSprite != null);
         }
 
         if (localPlayerGlow != null)
@@ -51,6 +52,7 @@ public sealed class RoomPlayerSlotUI : MonoBehaviour
             hostIcon.SetActive(isMasterClient);
         }
 
+        // Il Ready verrà implementato successivamente.
         if (readyIndicator != null)
         {
             readyIndicator.SetActive(false);
