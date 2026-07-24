@@ -31,7 +31,22 @@ public class LocalInputHandler : MonoBehaviour, IPlayerInput
         _actions.bindingMask = InputBinding.MaskByGroup(_instanceData.controlScheme);
     }
 
-    void OnDisable() { _actions.FindActionMap("Player").Disable(); }
+    private void OnDisable()
+    {
+        if (_actions == null) return;
+        InputActionMap playerActionMap = _actions.FindActionMap("Player");
+        playerActionMap?.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        if (_actions != null)
+        {
+            Destroy(_actions);
+            _actions = null;
+        }
+    }
+
     public Vector2 GetMoveInput() => _move.ReadValue<Vector2>();
     public bool GetBombInput() => _placeBomb.WasPressedThisFrame();
 
