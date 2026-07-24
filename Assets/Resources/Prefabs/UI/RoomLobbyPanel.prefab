@@ -1303,6 +1303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIRoomPlayManager
   playButton: {fileID: 4626782482667052505}
+  gameSceneName: GameSceneMultiplayer
 --- !u!1 &1946250914204672882
 GameObject:
   m_ObjectHideFlags: 0
