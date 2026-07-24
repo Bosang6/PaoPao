@@ -5,15 +5,17 @@ using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
-
 /*
- * Gestisce il pulsante PLAY nel RoomLobbyPanel
+ * Gestisce il pulsante PLAY nel RoomLobbyPanel.
  *
  * Responsabilità:
- * - permettere l'avvio soltanto al Master Client
- * - controllare che tutti i giocatori umani siano Ready
- * - aggiornarsi quando un player entra, esce o cambia Ready
- * - aggiornarsi quando cambia il Master Client
+ * - permettere l'avvio soltanto al Master Client;
+ * - controllare che tutti i giocatori umani siano Ready;
+ * - disabilitare il pulsante sui Client;
+ * - chiudere la Room prima dell'avvio;
+ * - caricare la scena di gioco in maniera sincronizzata;
+ * - aggiornarsi quando un player entra, esce o cambia Ready;
+ * - aggiornarsi quando cambia il Master Client.
  */
 
 
@@ -22,8 +24,16 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
 {
 
     [Header("Play Button")]
-    [Tooltip("Pulsante utilizzato dal Master Client per avviare la partita.")]
+    [Tooltip("Pulsante utilizzato dal Master Client " + "per avviare la partita.")]
     [SerializeField] private Button playButton;
+
+    [Header("Game Scene")]
+    [Tooltip("Nome della scena di gioco che verrà caricata dal Master Client.")]
+    [SerializeField] private string gameSceneName = "GameScene";
+
+
+    // Impedisce richieste di avvio multiple
+    private bool isStartingGame;
 
     // 
     public override void OnEnable()
@@ -34,6 +44,8 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
         {
             playButton.onClick.AddListener(HandlePlayButtonClicked);
         }
+
+        isStartingGame = false;
 
         RefreshPlayButton();
     }
@@ -49,10 +61,11 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
         base.OnDisable();
     }
 
+
     // Il Play può essere utilizzato soltanto dal Master Client quando tutti i giocatori presenti sono Ready
     private void RefreshPlayButton()
     {
-        bool canStartGame = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient && AreAllPlayersReady();
+        bool canStartGame = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient && AreAllPlayersReady() && !isStartingGame;
 
         if (playButton != null)
         {
@@ -92,10 +105,15 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
     // Per ora verifica solamente le condizioni. L'avvio sincro verrà implementeato succ
     private void HandlePlayButtonClicked()
     {
-        if (!PhotonNetwork.InRoom)
-        {
-            Debug.LogWarning("[UIRoomPlayManager] " + "Impossibile avviare la partita: " + "il client non è dentro una Room.", this);
 
+        if (isStartingGame)
+        {
+            return;
+        }
+
+        if (!PhotonNetwork.InRoom || PhotonNetwork.CurrentRoom == null)
+        {
+            Debug.LogWarning("[UIRoomPlayManager] " + "Impossibile avviare la partita: il client non è dentro una Room.", this);
             return;
         }
 
@@ -114,8 +132,29 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        Debug.Log("[UIRoomPlayManager] " + "Tutti i giocatori sono Ready. " + "La partita può essere avviata."
-        );
+        if (string.IsNullOrWhiteSpace(gameSceneName))
+        {
+            Debug.LogError("[UIRoomPlayManager] " + "Il nome della scena di gioco non è valido.", this);
+            return;
+        }
+
+        isStartingGame = true;
+
+        if (playButton != null)
+        {
+            playButton.interactable = false;
+        }
+
+
+        // Impedisce l'ingresso di nuovi giocatori durante il caricamento della partita.
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        
+        Debug.Log("[UIRoomPlayManager] " + $"Avvio sincronizzato della scena " + $"'{gameSceneName}'.");
+
+        // Deve essere chiamato soltanto dal Master Client.
+        // Con AutomaticallySyncScene attivo, tutti gli altri giocatori verranno portati nella stessa scena
+        PhotonNetwork.LoadLevel(gameSceneName);
     }
 
 
@@ -131,7 +170,7 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Aggiorna il pulsante quando un nuovo player entra.
+    // Aggiorna il pulsante quando un nuovo player entra. Il player entra sempre NOT READY
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         RefreshPlayButton();
@@ -149,18 +188,22 @@ public sealed class UIRoomPlayManager : MonoBehaviourPunCallbacks
     // Aggiorna il pulsante quando cambia il Master Client.
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        isStartingGame = false;
         RefreshPlayButton();
     }
 
 
     public override void OnJoinedRoom()
     {
+        isStartingGame = false;
         RefreshPlayButton();
     }
 
 
     public override void OnLeftRoom()
     {
+        isStartingGame = false;
+
         if (playButton != null)
         {
             playButton.interactable = false;
