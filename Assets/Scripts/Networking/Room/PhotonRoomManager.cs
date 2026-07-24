@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 /*
  * Gestisce la creazione, l'ingresso e l'uscita dalle Room Photon.
@@ -55,6 +56,10 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        Hashtable initialRoomProperties = PhotonRoomSlotManager.CreateInitialRoomProperties();
+
+        PhotonRoomProperties.AddInitialMapProperty(initialRoomProperties);
+
         RoomOptions roomOptions = new RoomOptions
         {
             MaxPlayers = maxPlayers,
@@ -63,8 +68,8 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
             // Quando un player lascia la Room, gli evente e gli oggetti memorizzati nella sua cache vengono rimossi.
             CleanupCacheOnLeave = true,
 
-            // Creiamo le 4 proprietà degli slot. 
-            CustomRoomProperties = PhotonRoomSlotManager.CreateInitialRoomProperties()
+            // Creiamo le proprietà degli slot. 
+            CustomRoomProperties = initialRoomProperties
 
         };
 
