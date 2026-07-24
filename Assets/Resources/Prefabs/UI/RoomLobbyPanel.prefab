@@ -1182,6 +1182,7 @@ GameObject:
   - component: {fileID: 4051140801004840196}
   - component: {fileID: 3639351989952828086}
   - component: {fileID: 1827191847106875778}
+  - component: {fileID: 8319468205583376574}
   m_Layer: 5
   m_Name: RoomLobbyPanel
   m_TagString: Untagged
@@ -1289,6 +1290,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIRoomLobbyManager
   roomNameText: {fileID: 6726904827852900875}
   playerCountText: {fileID: 5802607503191420625}
+--- !u!114 &8319468205583376574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856846542927254890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683b771f087307e4c9838faa537367ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIRoomPlayManager
+  playButton: {fileID: 4626782482667052505}
 --- !u!1 &1946250914204672882
 GameObject:
   m_ObjectHideFlags: 0
