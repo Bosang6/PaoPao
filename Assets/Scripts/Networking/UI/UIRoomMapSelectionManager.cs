@@ -129,6 +129,12 @@ public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        if (IsLocalPlayerReady())
+        {
+            Debug.LogWarning("[UIRoomMapSelectionManager] " + "Impossibile cambiare mappa mentre il Master Client è Ready.", this);
+            return;
+        }
+
         if (!IsValidMapId(mapId))
         {
             Debug.LogWarning("[UIRoomMapSelectionManager] " + $"Map ID non valido: {mapId}.", this);
@@ -212,11 +218,10 @@ public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Aggiorna l'interazione dei pulsanti
-    // Il Master può cliccare le mappe, e gli altri client vedolo la selezione
+    // La mappa può essere selezionata soltanto dal Master Client quando il suo stato Ready è disattivato.
     private void RefreshInteractionState()
     {
-        bool canSelectMap = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient;
+        bool canSelectMap = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient && !IsLocalPlayerReady();
 
         if (mapButtons == null)
         {
@@ -230,6 +235,14 @@ public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
                 mapButton.interactable = canSelectMap;
             }
         }
+    }
+
+
+    // Restituisce true quando il giocatore locale possiede lo stato Ready attivo
+    private bool IsLocalPlayerReady()
+    {
+        return
+            PhotonNetwork.LocalPlayer != null && PhotonPlayerProperties.TryGetReady(PhotonNetwork.LocalPlayer, out bool isReady) && isReady;
     }
 
 
@@ -317,6 +330,22 @@ public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
         return true;
     }
 
+
+
+    // Aggiorna l'interazione della Map Selection quando cambia lo stato Ready del giocatore locale
+    // È importante soprattutto per il Master Client:
+    // READY blocca le mappe, CANCEL READY le riabilita.
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
+    {
+        if (targetPlayer == null || !targetPlayer.IsLocal || changedProperties == null || !changedProperties.ContainsKey(PhotonPlayerProperties.ReadyKey))
+        {
+            return;
+        }
+
+        RefreshInteractionState();
+
+        Debug.Log("[UIRoomMapSelectionManager] " + $"Selezione mappa " + $"{(IsLocalPlayerReady() ? "bloccata" : "riabilitata")}.");
+    }
 
 
 

@@ -5,18 +5,16 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-
 /*
  * Gestisce la selezione del personaggio locale all'interno del RoomLobbyPanel
- * 
+ *
  * Responsabilità:
  * - collegare i pulsanti dei personaggi
  * - salvare la scelta nelle Player Custom Properties
  * - mostrare il glow sul personaggio locale selezionato
  * - aggiornarsi quando Photon sincronizza la proprietà
- * 
+ * - bloccare la selezione quando il giocatore locale è Ready
  */
-
 
 public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
 {
@@ -27,13 +25,13 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject[] selectionGlows;
 
     [Header("Default Selection")]
-    [Tooltip("Personaggio assegnato quando il player " + "non possiede ancora una selezione.")]
+    [Tooltip("Personaggio assegnato quando il player " + "non possiede ancora una selezione." )]
     [SerializeField] [Min(0)] private int defaultCharacterId = 0;
 
     private UnityAction[] buttonActions;
 
-    // Quando il pannello viene attivato, registra le callback Photon
-    // collega i pulsanti e carica o assegan la selezione locale
+
+    // Registra le callback Photon, collega i pulsanti e inizializza la selezione locale
     public override void OnEnable()
     {
         base.OnEnable();
@@ -49,8 +47,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Quando il pannello viene disattivato, rimuove i listener dai pulsanti
-    // e rimuove il componente dalle callback Photon
+    // Rimuove i listener e deregistra le callback Photon
     public override void OnDisable()
     {
         UnbindButtons();
@@ -59,7 +56,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Collega ogni pulsante al proprio CharacterID
+    // Collega ogni pulsante al relativo Character ID
     private void BindButtons()
     {
         buttonActions = new UnityAction[characterButtons.Length];
@@ -78,12 +75,13 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
             UnityAction action = () => HandleCharacterClicked(capturedCharacterId);
 
             buttonActions[characterId] = action;
+
             characterButton.onClick.AddListener(action);
         }
     }
 
 
-    // Rimuove dai pulsanti i listener aggiunti precedentemente da BindButtons
+    // Rimuove i listener aggiunti da BindButtons
     private void UnbindButtons()
     {
         if (characterButtons == null || buttonActions == null)
@@ -109,7 +107,8 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Legge la selezione già presente sul Player locale
+    // Legge la selezione già presente sul giocatore locale.
+    // Se manca, assegna il personaggio predefinito.
     private void InitializeLocalSelection()
     {
         if (!PhotonNetwork.InRoom || PhotonNetwork.LocalPlayer == null)
@@ -118,8 +117,6 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
             SetButtonsInteractable(false);
             return;
         }
-
-        SetButtonsInteractable(true);
 
         if (PhotonPlayerProperties.TryGetCharacterId(PhotonNetwork.LocalPlayer, out int storedCharacterId) && IsValidCharacterId(storedCharacterId))
         {
@@ -139,27 +136,24 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Viene eseguito quando il player clicca l'immagine di un personaggio
+    // Gestisce il click su un personaggio.
     private void HandleCharacterClicked(int characterId)
     {
         if (!PhotonNetwork.InRoom || PhotonNetwork.LocalPlayer == null)
         {
             Debug.LogWarning("[UIRoomCharacterSelectionManager] " + "Impossibile selezionare il personaggio: " + "il client non è dentro una Room.", this);
-
             return;
         }
 
         if (IsLocalPlayerReady())
         {
-            Debug.LogWarning("[UIRoomCharacterSelectionManager] " + "Impossibile cambiare personaggio mentre il player è Ready.", this);
-
+            Debug.LogWarning("[UIRoomCharacterSelectionManager] " + "Impossibile cambiare personaggio " + "mentre il player è Ready.", this);
             return;
         }
 
         if (!IsValidCharacterId(characterId))
         {
-            Debug.LogWarning($"[UIRoomCharacterSelectionManager] " + $"Character ID non valido: {characterId}.", this);
-
+            Debug.LogWarning("[UIRoomCharacterSelectionManager] " + $"Character ID non valido: {characterId}.", this);
             return;
         }
 
@@ -167,25 +161,26 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Salva il personaggio nelle Player Custom Propieties
+    // Salva il personaggio nelle Player Custom Properties.
     private void SetLocalCharacter(int characterId)
     {
-        bool requestAccepted = PhotonPlayerProperties.SetCharacterId(PhotonNetwork.LocalPlayer, characterId);
+        bool requestAccepted = PhotonPlayerProperties.SetCharacterId( PhotonNetwork.LocalPlayer, characterId);
 
         if (!requestAccepted)
         {
-            Debug.LogError("[UIRoomCharacterSelectionManager] " + "Photon non ha accettato l'aggiornamento " + "del personaggio locale.", this);
+            Debug.LogError("[UIRoomCharacterSelectionManager] " + "Photon non ha accettato l'aggiornamento del personaggio locale.", this);
 
             return;
         }
 
+        // Aggiornamento immediato del glow locale.
         SetSelectionVisible(characterId);
 
         Debug.Log("[UIRoomCharacterSelectionManager] " + $"Actor {PhotonNetwork.LocalPlayer.ActorNumber} " + $"ha selezionato il Character {characterId}.");
     }
 
 
-    // Aggiorna la selezione e l'interazione quando cambiano le Custom Properties del giocatore locale
+    // Reagisce al cambiamento del personaggio e dello stato Ready del giocatore locale
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
     {
         if (targetPlayer == null || !targetPlayer.IsLocal || changedProperties == null)
@@ -214,7 +209,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Se il pannello fosse già attivo durante l'ingresso nella Room, inizilizza la selezione
+    // Inizializza la selezione quando il client entra nella Room.
     public override void OnJoinedRoom()
     {
         InitializeLocalSelection();
@@ -222,7 +217,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Pulisce il glow e disabilita i pulsanti quando il client lascia la Room
+    // Pulisce la selezione quando il client lascia la Room.
     public override void OnLeftRoom()
     {
         SetSelectionVisible(-1);
@@ -230,8 +225,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Accende soltatanto il glow corrispondente al personaggio selezionato
-    // -1 spengono tutti i glow
+    // Accende soltanto il glow del personaggio selezionato, con -1 spegne tutti i glow.
     private void SetSelectionVisible(int selectedCharacterId)
     {
         if (selectionGlows == null)
@@ -251,7 +245,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Abilita o disabilita tutti i pulsanti della Character Selection
+    // Abilita o disabilita tutti i pulsanti dei personaggi
     private void SetButtonsInteractable(bool interactable)
     {
         if (characterButtons == null)
@@ -269,7 +263,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Restituisce true se il giocatore locale possiede lo stato Ready attivo
+    // Restituisce true se il giocatore locale è Ready.
     private bool IsLocalPlayerReady()
     {
         return
@@ -278,7 +272,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Abilita la selezione del personaggio soltanto quando il client è dentro una Room e non è Ready
+    // Consente di cambiare personaggio a qualsiasi giocatore presente nella Room, purché non sia Ready
     private void RefreshInteractionState()
     {
         bool canSelectCharacter = PhotonNetwork.InRoom && PhotonNetwork.LocalPlayer != null && !IsLocalPlayerReady();
@@ -287,8 +281,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-
-    // Controlla che l'ID appartenga agli elementi configurati nell'inspector
+    // Controlla che il Character ID sia valido.
     private bool IsValidCharacterId(int characterId)
     {
         return
@@ -298,15 +291,12 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-
-    // Controlla pulsanti e glow siano assegnati e abbiano la stessa lunghezza
+    // Controlla che pulsanti e glow siano configurati.
     private bool ValidateReferences()
     {
-        if (characterButtons == null || selectionGlows == null
-        )
+        if (characterButtons == null || selectionGlows == null)
         {
             Debug.LogError("[UIRoomCharacterSelectionManager] " + "Array dei pulsanti o dei glow non assegnato.", this);
-
             return false;
         }
 
@@ -326,8 +316,4 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
 
         return true;
     }
-
-
-
-
 }
