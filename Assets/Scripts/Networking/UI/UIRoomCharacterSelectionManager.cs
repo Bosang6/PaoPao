@@ -45,6 +45,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
 
         BindButtons();
         InitializeLocalSelection();
+        RefreshInteractionState();
     }
 
 
@@ -148,6 +149,13 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        if (IsLocalPlayerReady())
+        {
+            Debug.LogWarning("[UIRoomCharacterSelectionManager] " + "Impossibile cambiare personaggio mentre il player è Ready.", this);
+
+            return;
+        }
+
         if (!IsValidCharacterId(characterId))
         {
             Debug.LogWarning($"[UIRoomCharacterSelectionManager] " + $"Character ID non valido: {characterId}.", this);
@@ -177,26 +185,31 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     }
 
 
-    // Callback eseguita quando cambiano le PlayerCustom Propieties di un giocatore
+    // Aggiorna la selezione e l'interazione quando cambiano le Custom Properties del giocatore locale
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
     {
-        if (targetPlayer == null || changedProperties == null || !changedProperties.ContainsKey(PhotonPlayerProperties.CharacterIdKey))
+        if (targetPlayer == null || !targetPlayer.IsLocal || changedProperties == null)
         {
             return;
         }
 
-        if (!PhotonPlayerProperties.TryGetCharacterId(targetPlayer, out int characterId))
+        bool characterChanged = changedProperties.ContainsKey(PhotonPlayerProperties.CharacterIdKey);
+
+        bool readyChanged = changedProperties.ContainsKey(PhotonPlayerProperties.ReadyKey);
+
+        if (characterChanged)
         {
-            return;
+            if (PhotonPlayerProperties.TryGetCharacterId(targetPlayer, out int characterId) && IsValidCharacterId(characterId))
+            {
+                SetSelectionVisible(characterId);
+            }
         }
 
-        Debug.Log("[UIRoomCharacterSelectionManager] " + $"Character sincronizzato: " + $"Actor {targetPlayer.ActorNumber} -> " + $"Character {characterId}.");
-
-
-        // Il glow della lista riguarda soltanto la scelta del client locale
-        if (targetPlayer.IsLocal)
+        if (readyChanged)
         {
-            SetSelectionVisible(characterId);
+            RefreshInteractionState();
+
+            Debug.Log("[UIRoomCharacterSelectionManager] " + $"Selezione personaggio " + $"{(IsLocalPlayerReady() ? "bloccata" : "riabilitata")}.");
         }
     }
 
@@ -205,6 +218,7 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         InitializeLocalSelection();
+        RefreshInteractionState();
     }
 
 
@@ -253,6 +267,26 @@ public sealed class UIRoomCharacterSelectionManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
+
+    // Restituisce true se il giocatore locale possiede lo stato Ready attivo
+    private bool IsLocalPlayerReady()
+    {
+        return
+            PhotonNetwork.LocalPlayer != null &&
+            PhotonPlayerProperties.TryGetReady(PhotonNetwork.LocalPlayer, out bool isReady) && isReady;
+    }
+
+
+    // Abilita la selezione del personaggio soltanto quando il client è dentro una Room e non è Ready
+    private void RefreshInteractionState()
+    {
+        bool canSelectCharacter = PhotonNetwork.InRoom && PhotonNetwork.LocalPlayer != null && !IsLocalPlayerReady();
+
+        SetButtonsInteractable(canSelectCharacter);
+    }
+
+
 
     // Controlla che l'ID appartenga agli elementi configurati nell'inspector
     private bool IsValidCharacterId(int characterId)
