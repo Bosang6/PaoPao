@@ -26,19 +26,42 @@ public sealed class RoomPlayerSlotUI : MonoBehaviour
     [Tooltip("Testo che descrive lo stato temporaneo dello slot.")]
     [SerializeField] private TMP_Text statusText;
 
-    [Header("Temporary Labels")]
-    [SerializeField] private string occupiedLabel = "CONNECTED";
+    [Header("Status Sprites")]
+    [Tooltip("Indicatore verde mostrato quando il player è pronto.")]
+    [SerializeField] private Sprite readySprite;
+    [Tooltip("Indicatore arancione mostrato quando il player non è pronto.")]
+    [SerializeField] private Sprite notReadySprite;
+    [Tooltip("Indicatore blu utilizzato per gli slot controllati dalla AI.")]
+    [SerializeField] private Sprite aiSprite;
+
+    [Header("Ready Labels")]
+    [SerializeField] private string readyLabel = "READY";
+    [SerializeField] private string notReadyLabel = "NOT READY";
     [SerializeField] private string emptyLabel = "WAITING";
+
+    private Image readyIndicatorImage;
+
+    [SerializeField] private string aiLabel = "AI";
+
+
+
+    // Recupera il componente Image presente sull'indicatore Ready
+    private void Awake()
+    {
+        if (readyIndicator != null)
+        {
+            readyIndicatorImage = readyIndicator.GetComponent<Image>();
+        }
+    }
 
 
     // Mostra lo slot come occupato
-    // is LocalPlayer: indica se il giocatore locale è quello nello slot
-    // is MasterClient: indica se il giocatore nello slot è il Master Client
-    public void ShowOccupied(bool isLocalPlayer, bool isMasterClient, Sprite characterSprite)
+    public void ShowOccupied(bool isLocalPlayer, bool isMasterClient, Sprite characterSprite, bool isReady)
     {
         if (characterImage != null)
         {
             characterImage.sprite = characterSprite;
+
             characterImage.gameObject.SetActive(characterSprite != null);
         }
 
@@ -52,16 +75,24 @@ public sealed class RoomPlayerSlotUI : MonoBehaviour
             hostIcon.SetActive(isMasterClient);
         }
 
-        // Il Ready verrà implementato successivamente.
         if (readyIndicator != null)
         {
-            readyIndicator.SetActive(false);
+            readyIndicator.SetActive(true);
         }
 
+        // Indicator image
+        if (readyIndicatorImage != null)
+        {
+            readyIndicatorImage.sprite = isReady ? readySprite : notReadySprite;
+            readyIndicatorImage.color = Color.white;
+        }
+
+        // Status
         if (statusText != null)
         {
             statusText.gameObject.SetActive(true);
-            statusText.text = occupiedLabel;
+
+            statusText.text = isReady ? readyLabel : notReadyLabel;
         }
     }
 
@@ -93,6 +124,44 @@ public sealed class RoomPlayerSlotUI : MonoBehaviour
         {
             statusText.gameObject.SetActive(true);
             statusText.text = emptyLabel;
+        }
+    }
+
+
+    // Mostra lo slot come controllato dalla AI
+    public void ShowAI(Sprite characterSprite)
+    {
+        if (characterImage != null)
+        {
+            characterImage.sprite = characterSprite;
+            characterImage.gameObject.SetActive(characterSprite != null);
+        }
+
+        if (localPlayerGlow != null)
+        {
+            localPlayerGlow.SetActive(false);
+        }
+
+        if (hostIcon != null)
+        {
+            hostIcon.SetActive(false);
+        }
+
+        if (readyIndicator != null)
+        {
+            readyIndicator.SetActive(true);
+        }
+
+        if (readyIndicatorImage != null)
+        {
+            readyIndicatorImage.sprite = aiSprite;
+            readyIndicatorImage.color = Color.white;
+        }
+
+        if (statusText != null)
+        {
+            statusText.gameObject.SetActive(true);
+            statusText.text = aiLabel;
         }
     }
 

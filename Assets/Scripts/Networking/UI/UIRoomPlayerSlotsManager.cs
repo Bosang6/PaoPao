@@ -151,7 +151,9 @@ public sealed class UIRoomPlayerSlotsManager : MonoBehaviourPunCallbacks
 
             Sprite characterSprite = characterSprites[characterId];
 
-            slotUI.ShowOccupied(player.IsLocal, player.IsMasterClient, characterSprite);
+            bool isReady = PhotonPlayerProperties.TryGetReady(player, out bool storedReadyState) && storedReadyState;
+
+            slotUI.ShowOccupied(player.IsLocal, player.IsMasterClient, characterSprite, isReady );
         }
     }
 
@@ -227,7 +229,11 @@ public sealed class UIRoomPlayerSlotsManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (!changedProperties.ContainsKey(PhotonPlayerProperties.CharacterIdKey))
+        bool characterChanged = changedProperties.ContainsKey(PhotonPlayerProperties.CharacterIdKey);
+
+        bool readyChanged = changedProperties.ContainsKey(PhotonPlayerProperties.ReadyKey);
+
+        if (!characterChanged && !readyChanged)
         {
             return;
         }

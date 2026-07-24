@@ -283,8 +283,13 @@ MonoBehaviour:
   characterImage: {fileID: 5091900224945409791}
   readyIndicator: {fileID: 3495991168016139231}
   statusText: {fileID: 6625107666472435746}
-  occupiedLabel: CONNECTED
+  readySprite: {fileID: 1992887452, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  notReadySprite: {fileID: -1456206552, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  aiSprite: {fileID: -464870043, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+  readyLabel: READY
+  notReadyLabel: NOT READY
   emptyLabel: WAITING
+  aiLabel: AI
 --- !u!1 &8742918245831959208
 GameObject:
   m_ObjectHideFlags: 0

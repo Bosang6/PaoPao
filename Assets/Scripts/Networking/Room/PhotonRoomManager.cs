@@ -105,6 +105,13 @@ public sealed class PhotonRoomManager : MonoBehaviourPunCallbacks
     // Chiamata quando il client entra correttamente nella Room
     public override void OnJoinedRoom()
     {
+        bool readyResetAccepted = PhotonPlayerProperties.SetReady(PhotonNetwork.LocalPlayer, false);
+
+        if (!readyResetAccepted)
+        {
+            Debug.LogWarning("[PhotonRoomManager] Photon non ha accettato " + "il reset dello stato Ready locale.");
+        }
+
         Debug.Log(
             $"[PhotonRoomManager] Entrato nella Room " +
             $"'{PhotonNetwork.CurrentRoom.Name}'. " +

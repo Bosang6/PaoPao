@@ -15,6 +15,9 @@ public static class PhotonPlayerProperties
 {
     public const string CharacterIdKey = "character_id";
 
+    // Chiave per memorizzare lo stato Ready del player
+    public const string ReadyKey = "is_ready";
+
     // Prova a leggere il personaggio selezionato dalle Custom Properties di un Player Photon
     // Restituisce true se il valore esiste ed è valido
     public static bool TryGetCharacterId(Player player, out int characterId)
@@ -61,6 +64,53 @@ public static class PhotonPlayerProperties
         {
             { CharacterIdKey, characterId }
         };
+
+        return player.SetCustomProperties(properties);
+    }
+
+
+    // Legge lo stato Ready dalle Player Custom Propertis
+    public static bool TryGetReady(Player player, out bool isReady)
+    {
+        isReady = false;
+
+        if (player == null)
+        {
+            return false;
+        }
+
+        if (!player.CustomProperties.TryGetValue(ReadyKey, out object storedValue))
+        {
+            return false;
+        }
+
+        if (storedValue == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            isReady = Convert.ToBoolean(storedValue);
+            return true;
+        }
+        catch
+        {
+            isReady = false;
+            return false;
+        }
+    }
+
+
+    // Imposta e sincronizza lo stato Ready di uno specifico Player
+    public static bool SetReady(Player player, bool isReady)
+    {
+        if (player == null)
+        {
+            return false;
+        }
+
+        Hashtable properties = new Hashtable{{ ReadyKey, isReady }};
 
         return player.SetCustomProperties(properties);
     }
