@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 1403502864686304216}
   - component: {fileID: 6719842213003806602}
   - component: {fileID: 4991836051681169792}
+  - component: {fileID: 1482403862593415754}
   m_Layer: 7
   m_Name: NetwokPlayer_Bomberman
   m_TagString: Untagged
@@ -287,7 +288,7 @@ MonoBehaviour:
   characterDataTemplate: {fileID: 11400000, guid: 8e293dad6508e5d4084fd0257b228466, type: 2}
   humanInstanceDataTemplate: {fileID: 11400000, guid: edca1c686b7c60246a83e5ffdd44c9a9, type: 2}
   botInstanceDataTemplate: {fileID: 11400000, guid: ca8b11e88c41c504a8bcbf3bd7a72120, type: 2}
-  enableBombPlacement: 0
+  enableBombPlacement: 1
 --- !u!114 &1403502864686304216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,3 +376,16 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &1482403862593415754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118495651096295261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92ef7679dfa422f48afff531bf55ca36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhotonBombHandler
+  networkBombPrefab: {fileID: 3814818534713039899, guid: f44f91193e16d9441bd190a55d0ca4c6, type: 3}

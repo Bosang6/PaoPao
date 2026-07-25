@@ -55,6 +55,8 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
     private IPlayerInput activeInput;
 
+    private PhotonBombHandler photonBombHandler;
+
     private bool isInitialized;
     private bool isAI;
     private int slotIndex = -1;
@@ -73,6 +75,8 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     public PlayerHealth Health => playerHealth;
 
 
+
+    // Recupera tutti i componenti necessari alla gestione del personaggio multiplayer e delle bombe sincronizzate
     private void Awake()
     {
         localInputHandler = GetComponent<LocalInputHandler>();
@@ -86,6 +90,8 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         playerHealth = GetComponent<PlayerHealth>();
 
         playerAudio = GetComponent<PlayerAudio>();
+
+        photonBombHandler = GetComponent<PhotonBombHandler>();
     }
 
 
@@ -157,6 +163,8 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         playerBombHandler.Initialize(gameData, runtimeCharacterData, IsLocalHuman);
 
         playerHealth.Initialize(runtimeCharacterData);
+
+        photonBombHandler.Initialize(gameData, runtimeCharacterData);
 
         ConfigureInput();
 
@@ -297,7 +305,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
         if (enableBombPlacement && bombRequested)
         {
-            playerBombHandler.TryPlaceBomb();
+            photonBombHandler.TryRequestBomb();
         }
     }
 
@@ -307,35 +315,36 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         if (gameData == null)
         {
             Debug.LogError("[PhotonPlayerController] " + "GameData non assegnato.", this);
-
             return false;
         }
 
         if (characterDataTemplate == null)
         {
             Debug.LogError("[PhotonPlayerController] " + "CharacterData Template non assegnato.", this);
-
             return false;
         }
 
         if (playerMove == null)
         {
             Debug.LogError("[PhotonPlayerController] " + "PlayerMove non trovato.", this);
-
             return false;
         }
 
         if (playerBombHandler == null)
         {
             Debug.LogError("[PhotonPlayerController] " + "PlayerBombHandler non trovato.", this);
-
             return false;
         }
 
         if (playerHealth == null)
         {
             Debug.LogError("[PhotonPlayerController] " + "PlayerHealth non trovato.", this);
+            return false;
+        }
 
+        if (photonBombHandler == null)
+        {
+            Debug.LogError("[PhotonPlayerController] " + "PhotonBombHandler non trovato.", this);
             return false;
         }
 
