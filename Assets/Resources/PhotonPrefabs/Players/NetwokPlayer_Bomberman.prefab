@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 6719842213003806602}
   - component: {fileID: 4991836051681169792}
   m_Layer: 7
-  m_Name: NetwokPlayer_Bomberman 1
+  m_Name: NetwokPlayer_Bomberman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
