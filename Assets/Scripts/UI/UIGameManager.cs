@@ -156,4 +156,65 @@ public class UIGameManager : MonoBehaviour
     }
 
 
+
+    // MULTIPLAYER
+
+  
+    // Mostra la vittoria multiplayer senza impostare Time.timeScale a zero.
+    // La rete deve continuare a processare messaggi, uscita dalla Room e cambi di scena
+    public void ShowMultiplayerWinPanel(string finalTime, string localKillCounter)
+    {
+        HideAllPanels();
+
+        SetMobileControlsVisible(false);
+
+        isPaused = false;
+
+        if (winTimeText != null)
+        {
+            winTimeText.text = finalTime;
+        }
+
+        if (winKillText != null)
+        {
+            winKillText.text = localKillCounter;
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayWinSound();
+        }
+
+        winPanel.SetActive(true);
+    }
+
+
+    // Mostra la sconfitta multiplayer senza fermare localmente il tempo della simulazione
+    public void ShowMultiplayerLosePanel(string finalTime, string localKillCounter)
+    {
+        HideAllPanels();
+
+        SetMobileControlsVisible(false);
+
+        isPaused = false;
+
+        if (loseTimeText != null)
+        {
+            loseTimeText.text = finalTime;
+        }
+
+        if (loseKillText != null)
+        {
+            loseKillText.text = localKillCounter;
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLoseSound();
+        }
+
+        losePanel.SetActive(true);
+    }
+
+
 }

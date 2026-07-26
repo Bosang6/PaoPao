@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
@@ -30,15 +31,11 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     [Header("Instance Data Templates")]
     [Tooltip( "Dati utilizzati quando il personaggio è controllato da un giocatore umano.")]
     [SerializeField] private HumanInstanceData humanInstanceDataTemplate;
-
     [Tooltip("Dati utilizzati quando il personaggio è controllato dalla AI.")]
     [SerializeField] private BotInstanceData botInstanceDataTemplate;
 
-
     [Header("Temporary Networking Settings")]
-    [Tooltip( "Le bombe restano disattivate finché non implementiamo " +
-        "lo spawn sincronizzato delle bombe."
-    )]
+    [Tooltip( "Le bombe restano disattivate finché non implementiamo lo spawn sincronizzato delle bombe.")]
     [SerializeField] private bool enableBombPlacement;
 
 
@@ -76,6 +73,15 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     public int MaxHealth => runtimeCharacterData != null ? runtimeCharacterData.maxHp : 0;
 
     public PlayerHealth Health => playerHealth;
+
+    private bool isMatchEnded;
+
+    private Coroutine destroyAfterDeathCoroutine;
+
+    public int ViewId => photonView.ViewID;
+
+    // Evento autoritativo invocato esclusivamente sul Master quando il personaggio muore
+    public event Action<PhotonPlayerController, int> OnNetworkPlayerDied;
 
 
 
@@ -174,6 +180,15 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         ConfigureAudio();
 
         isInitialized = true;
+
+        if (PhotonGameManager.Instance != null)
+        {
+            PhotonGameManager.Instance.RegisterPlayer(this);
+        }
+        else
+        {
+            Debug.LogError("[PhotonPlayerController] PhotonGameManager non presente nella scena.", this);
+        }
 
         Debug.Log(
             "[PhotonPlayerController] " +
@@ -303,7 +318,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             invincibilityTimer -= Time.deltaTime;
         }
 
-        if (!isInitialized || isDead || !photonView.IsMine || activeInput == null)
+        if (!isInitialized || isDead || isMatchEnded || !photonView.IsMine || activeInput == null)
         {
             return;
         }
@@ -356,6 +371,13 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             died,
             attackerPlayerViewId
         );
+
+        if (died)
+        {
+            // Viene eseguito esclusivametne sul Master, quindi anche l'evento di morte è authoritative
+            OnNetworkPlayerDied?.Invoke(this, attackerPlayerViewId);
+            ScheduleOwnedPlayerDestruction();
+        }
     }
 
 
@@ -371,6 +393,11 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         playerHealth.SetCurrentHp(remainingHp);
 
         ApplyExplosionHitFeedback(died);
+
+        if (died)
+        {
+            ScheduleOwnedPlayerDestruction();
+        }
 
         // Verrà utilizzato nel prossimo passaggio
         // per attribuire uccisioni e punteggi.
@@ -438,6 +465,52 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         return true;
     }
 
+    // Avvia la distruzione soltanto sul client che possiede realmente questo PhotonView
+    private void ScheduleOwnedPlayerDestruction()
+    {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        if (destroyAfterDeathCoroutine != null)
+        {
+            return;
+        }
+
+        destroyAfterDeathCoroutine = StartCoroutine(DestroyOwnedPlayerAfterDeath());
+    }
+
+
+    // Lascia trascorrere il tempo necessario all'animazione di morte, poi distrugge il personaggio su tutta la rete.
+    private IEnumerator DestroyOwnedPlayerAfterDeath()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        destroyAfterDeathCoroutine = null;
+
+        if (!PhotonNetwork.InRoom)
+        {
+            yield break;
+        }
+
+        if (!photonView.IsMine)
+        {
+            yield break;
+        }
+
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+
+    // Disabilita definitivamente il controllo del personaggio quando il Master dichiara conclusa la partita
+    public void SetMatchEnded()
+    {
+        isMatchEnded = true;
+
+        DisableInputHandlers();
+    }
+
 
     private void OnDestroy()
     {
@@ -450,5 +523,19 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         {
             Destroy(runtimeInstanceData);
         }
+
+        if (destroyAfterDeathCoroutine != null)
+        {
+            StopCoroutine(destroyAfterDeathCoroutine);
+            destroyAfterDeathCoroutine = null;
+        }
+
+        if (PhotonGameManager.Instance != null)
+        {
+            PhotonGameManager.Instance.UnregisterPlayer(this);
+        }
+
+        OnNetworkPlayerDied = null;
     }
+
 }
