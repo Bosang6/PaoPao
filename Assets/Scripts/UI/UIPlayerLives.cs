@@ -22,6 +22,8 @@ public class UIPlayerLives : MonoBehaviour
     private PlayerController targetPlayer;
     private PlayerHealth playerHealth;
 
+    private PhotonPlayerController targetPhotonPlayer;
+
     private int maxLives;
     private int currentLives;
 
@@ -38,37 +40,67 @@ public class UIPlayerLives : MonoBehaviour
     }
 
 
+    // Collega l'HUD a un personaggio single player
     public void Bind(PlayerController player)
     {
-        if(player == null)
+        if (player == null)
         {
-            Debug.LogWarning("UIPlayerLives: impossibile fare Bind, player nullo.", this);
+            Debug.LogWarning("UIPlayerLives: impossibile fare Bind, player nullo.",this);
             return;
         }
 
-        // Se questo HUD era già collegato ad un player, prima rimuove il vecchio collegamento
         Unbind();
 
         targetPlayer = player;
-        playerHealth = targetPlayer.GetComponent<PlayerHealth>();
 
-        if (playerHealth == null)
+        BindHealth(player.GetComponent<PlayerHealth>(), player.MaxHealth, player);
+    }
+
+    // Collega l'HUD a un personaggio multiplayer
+    public void Bind(PhotonPlayerController player)
+    {
+        if (player == null)
         {
-            Debug.LogError("UIPlayerLives: PlayerHealth non trovato sul player.", targetPlayer);
+            Debug.LogWarning("UIPlayerLives: impossibile fare Bind, PhotonPlayer nullo.", this);
             return;
         }
 
-        maxLives = targetPlayer.MaxHealth;
-        currentLives = maxLives;
+        Unbind();
+
+        targetPhotonPlayer = player;
+
+        BindHealth(player.Health, player.MaxHealth, player);
+    }
+
+
+    // Collega l'HUD al componente PlayerHealth
+    // Il metodo viene condiviso tra Single Player e Multiplayer
+    private void BindHealth(PlayerHealth health, int maximumHealth, UnityEngine.Object context)
+    {
+        playerHealth = health;
+
+        if (playerHealth == null)
+        {
+            Debug.LogError("UIPlayerLives: PlayerHealth non trovato sul player.", context);
+
+            targetPlayer = null;
+            targetPhotonPlayer = null;
+
+            return;
+        }
+
+        maxLives = Mathf.Max(0, maximumHealth);
+
+        currentLives = Mathf.Clamp(playerHealth.CurrentHp, 0, maxLives);
 
         UpdateHeartsVisual();
-        SetDead(false);
+        SetDead(currentLives <= 0);
 
-        // Da questo momento, ogni volta che il player perde vita viene aggiornata l'HUD
         playerHealth.OnHpChanged += OnHpChangedHandler;
     }
 
-    // Scollega questo HUD dal player attuale. Serve per eveitare eventi pendenti o riferimenti vecchi
+
+    // Scollega questo HUD dal personaggio attualmente seguito.
     public void Unbind()
     {
         if (playerHealth != null)
@@ -77,9 +109,9 @@ public class UIPlayerLives : MonoBehaviour
         }
 
         targetPlayer = null;
+        targetPhotonPlayer = null;
         playerHealth = null;
     }
-
 
     // Handler per l'evento di cambio HP del player, aggiorna le vite e lo stato di morte
     private void OnHpChangedHandler(int currentHp, int maxHp)
@@ -130,5 +162,8 @@ public class UIPlayerLives : MonoBehaviour
 
     // Handler per l'evento di cambio HP del player
     public PlayerController GetTargetPlayer(){ return targetPlayer; }
+
+    // Restituisce il personaggio multiplayer seguito dall'HUD
+    public PhotonPlayerController GetTargetPhotonPlayer(){ return targetPhotonPlayer; }
 
 }

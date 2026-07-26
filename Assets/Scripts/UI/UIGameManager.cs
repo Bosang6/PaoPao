@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
-public class UIGameManager : MonoBehaviour
+public class UIGameManager : MonoBehaviourPunCallbacks
 {
     [Header("Panels")]
     [SerializeField] private GameObject pausePanel;
@@ -24,6 +25,9 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     private bool isPaused = false;
+
+    // Impedisce di inviare più richieste di uscita mentre Photon sta lasciando la Room
+    private bool isLeavingRoom;
 
 
     private void Start()
@@ -58,21 +62,30 @@ public class UIGameManager : MonoBehaviour
 
 
     // PAUSE
+    // Single Player: ferma il gioco tramite Time.timeScale
+    // Multiplayer: apre soltatno il menu locale, gli altri player continuano a giocare
     public void OnPausePressed()
     {
-        if(isPaused) return;
+        if (isPaused || isLeavingRoom) return;
 
         isPaused = true;
-        Time.timeScale = 0f;
+
+        if (!PhotonNetwork.InRoom) Time.timeScale = 0f;
 
         SetMobileControlsVisible(false);
         pausePanel.SetActive(true);
     }
 
+    // RESUME
+    // SinglePlayer: viene riattivato il timer
+    // Multiplayer: continua 
     public void OnResumePressed()
     {
+        if (!isPaused) return;
+
         isPaused = false;
-        Time.timeScale = 1f;
+
+        if (!PhotonNetwork.InRoom) Time.timeScale = 1f;
 
         SetMobileControlsVisible(true);
         pausePanel.SetActive(false);
@@ -109,10 +122,11 @@ public class UIGameManager : MonoBehaviour
         pausePanel.SetActive(true);
     }
 
+    // Single Player: carica direttamente il menu
+    // Multiplayer: lascia la Room di Photon poi carica il menu
     public void OnConfirmQuitPressed()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        ReturnToMainMenu();
     }
 
 
@@ -142,24 +156,40 @@ public class UIGameManager : MonoBehaviour
         losePanel.SetActive(true);
     }
 
+
+    // Single Player: ricarica la partita
+    // Multiplayer: se è il Master, ricarica la partita per tutti. Se client invia la richiesta
     public void OnReplayPressed()
     {
         Time.timeScale = 1f;
+
+        if (PhotonNetwork.InRoom)
+        {
+            if (PhotonGameManager.Instance == null)
+            {
+                Debug.LogError("[UIGameManager] PhotonGameManager non presente nella scena.", this);
+                return;
+            }
+
+            PhotonGameManager.Instance.RequestReplay();
+            return;
+        }
+
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.name);
     }
 
+
     public void OnMainMenuPressed()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        ReturnToMainMenu();
     }
 
 
 
     // MULTIPLAYER
 
-  
+
     // Mostra la vittoria multiplayer senza impostare Time.timeScale a zero.
     // La rete deve continuare a processare messaggi, uscita dalla Room e cambi di scena
     public void ShowMultiplayerWinPanel(string finalTime, string localKillCounter)
@@ -214,6 +244,63 @@ public class UIGameManager : MonoBehaviour
         }
 
         losePanel.SetActive(true);
+    }
+
+
+   
+    // Avvia il ritorno al Menu
+    // Se il client si trova in una Room, invia una richiesta di uscita, aspetta OnLeftRoom,
+    // altrimenti carica direttamente il Main Menu 
+    private void ReturnToMainMenu()
+    {
+        if (isLeavingRoom)
+        {
+            return;
+        }
+
+        Time.timeScale = 1f;
+
+        isPaused = false;
+
+        SetMobileControlsVisible(false);
+
+        HideAllPanels();
+
+        if (!PhotonNetwork.InRoom)
+        {
+            LoadMainMenu();
+            return;
+        }
+
+        isLeavingRoom = true;
+
+        // false indica che il player deve lasciare definitivamente la Room e non restare inattivo
+        bool requestStarted = PhotonNetwork.LeaveRoom(false);
+
+        if (!requestStarted)
+        {
+            Debug.LogError("[UIGameManager] " + "Photon non ha accettato la richiesta LeaveRoom.", this);
+            isLeavingRoom = false;
+            LoadMainMenu();
+        }
+    }
+
+
+    // Photon richiama questo metodo quando il client ha completato l'uscita dalla Room
+    public override void OnLeftRoom()
+    {
+        if (!isLeavingRoom) return;
+
+        isLeavingRoom = false;
+        LoadMainMenu();
+    }
+
+
+    // Carica localmente il Main Menu quando il client non appartiene più alla partita Multiplayer
+    private void LoadMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
 

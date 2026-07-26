@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 /*
@@ -31,12 +32,14 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     [Header("UI")]
     [SerializeField] private UIGameManager uiGameManager;
 
+    [Header("Player HUD")]
+    [SerializeField] private UIPlayerLives[] uiPlayerLives;
+
     [Header("Timer")]
     [SerializeField] private UITimer uiTimer;
 
     [Header("End Game")]
     [SerializeField] [Min(0f)] private float endPanelDelay = 1f;
-
 
     private readonly List<PhotonPlayerController> alivePlayers = new List<PhotonPlayerController>();
 
@@ -47,6 +50,10 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     private bool finalBattleMusicStarted;
 
     private bool isMatchEnded;
+
+    // Impedisce di avviare più ricaricamenti contemporaneamente.
+    private bool isReplayStarting;
+
 
     private void Awake()
     {
@@ -90,6 +97,8 @@ public sealed class PhotonGameManager : MonoBehaviourPun
 
         alivePlayers.Add(player);
 
+        BindPlayerToHUD(player);
+
         if (!killCounts.ContainsKey(player.ViewId))
         {
             killCounts.Add(player.ViewId, 0);
@@ -109,7 +118,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
-
+    // 
     public void UnregisterPlayer(PhotonPlayerController player)
     {
         if (player == null)
@@ -119,6 +128,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
 
         player.OnNetworkPlayerDied -= HandleNetworkPlayerDeath;
 
+        UnbindPlayerFromHUD(player);
         bool wasRemoved = alivePlayers.Remove(player);
 
         // Se il player era già stato rimosso dalla morte, non valutiamo nuovamente il risultato
@@ -262,7 +272,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
         StartCoroutine(ShowEndPanelAfterDelay(localPlayerWon, finalTime, localKillCount.ToString()));
     }
 
-
+    //
     private int GetKillCount(int playerViewId, int[] playerViewIds, int[] playerKillCounts)
     {
         if (playerViewIds == null || playerKillCounts == null)
@@ -283,7 +293,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
         return 0;
     }
 
-
+    //
     private IEnumerator ShowEndPanelAfterDelay(bool isWin, string finalTime, string localKillCounter)
     {
         yield return new WaitForSecondsRealtime(endPanelDelay);
@@ -303,7 +313,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
         }
     }
 
-
+    //
     private void OnDestroy()
     {
         foreach (PhotonPlayerController player in alivePlayers)
@@ -321,6 +331,161 @@ public sealed class PhotonGameManager : MonoBehaviourPun
             Instance = null;
         }
     }
+
+
+    // Collega un PhotonPlayerController al pannello delle vita corrispondente al suo SlotIndex
+    // Questo metodo viene eseguito su ogni client, compresi i personaggi ricevuti automaticamente dalla rete
+    private void BindPlayerToHUD(PhotonPlayerController player)
+    {
+        if (player == null) return;
+
+        if (uiPlayerLives == null || uiPlayerLives.Length == 0)
+        {
+            Debug.LogWarning("[PhotonGameManager] Array UIPlayerLives non assegnato.", this);
+            return;
+        }
+
+        int slotIndex = player.SlotIndex;
+
+        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
+        {
+            Debug.LogWarning("[PhotonGameManager] " + $"SlotIndex HUD non valido: {slotIndex}.", player);
+            return;
+        }
+
+        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
+
+        if (playerLivesUI == null)
+        {
+            Debug.LogWarning("[PhotonGameManager] " + $"UIPlayerLives mancante per lo Slot {slotIndex}.", this);
+            return;
+        }
+
+        playerLivesUI.Bind(player);
+
+        Debug.Log("[PhotonGameManager] " + $"HUD vite collegato allo Slot {slotIndex}, " + $"ViewID {player.ViewId}.");
+    }
+
+
+    // Scollega il personaggio dal relativo HUD
+    // Se il personaggio lascia la partita senza morire, il suo pannello viene comunque mostrato come eliminato
+    private void UnbindPlayerFromHUD(PhotonPlayerController player)
+    {
+        if (player == null || uiPlayerLives == null)
+        {
+            return;
+        }
+
+        int slotIndex = player.SlotIndex;
+
+        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
+        {
+            return;
+        }
+
+        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
+
+        if (playerLivesUI == null)
+        {
+            return;
+        }
+
+        if (playerLivesUI.GetTargetPhotonPlayer() != player)
+        {
+            return;
+        }
+
+        playerLivesUI.UpdateHearts(0);
+
+        playerLivesUI.Unbind();
+    }
+
+
+    // Riceva la richiesta di Replay dalla UI locale
+    // Il Master può avviare direttamente il caricamento
+    // Un client invece invia la richiesta al Master.
+    public void RequestReplay()
+    {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogError("[PhotonGameManager] Replay impossibile: il client non è dentro una Room.", this);
+            return;
+        }
+
+        if (!isMatchEnded)
+        {
+            Debug.LogWarning("[PhotonGameManager] Replay richiesto prima della fine della partita.", this);
+            return;
+        }
+
+        if (isReplayStarting)
+        {
+            return;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartReplayAsMaster();
+            return;
+        }
+
+        photonView.RPC(
+            nameof(RPC_RequestReplay),
+            RpcTarget.MasterClient
+        );
+    }
+
+
+    // Riceve sul Master la richiesta inviata da un altro giocatore
+    [PunRPC]
+    private void RPC_RequestReplay(PhotonMessageInfo messageInfo)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        if (!isMatchEnded || isReplayStarting)
+        {
+            return;
+        }
+
+        Debug.Log("[PhotonGameManager] " + $"Replay richiesto dall'Actor {messageInfo.Sender.ActorNumber}.");
+
+        StartReplayAsMaster();
+    }
+
+
+    // Avvia una nuova partita mantenendo la stessa Room, gli stessi player e la stessa configurazione
+    private void StartReplayAsMaster()
+    {
+        if (!PhotonNetwork.IsMasterClient || isReplayStarting)
+        {
+            return;
+        }
+
+        isReplayStarting = true;
+        StartCoroutine(ReloadMatchRoutine());
+    }
+
+
+    // Rimuove gli oggetti Photon dalla partita terminata
+    private IEnumerator ReloadMatchRoutine()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        // Elimina player, bombe, e altri oggetti creati tramite Photon
+        // Evita che gli eventi di istanziazione della vecchia partita rimangono memorizzati nella Room
+        PhotonNetwork.DestroyAll();
+
+        PhotonNetwork.SendAllOutgoingCommands();
+
+        yield return null;
+
+        // Il cambio scena viene replicato automaticamente a tutti i Client
+        PhotonNetwork.LoadLevel(currentSceneName);
+    }
+
 
 
 
