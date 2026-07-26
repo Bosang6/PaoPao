@@ -35,6 +35,9 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
 
     private bool isInitialized;
 
+    // Restituisce l'ExplosionData utilizzato dal personaggio che ha piazzato la bomba
+    public ExplosionData ExplosionData => characterData != null ? characterData.explosionData : null;
+
     // Registra il prefab della bomba nella cache del DefaultPool, così Photon può recuperarlo usando il suo nome.
     private void Awake()
     {

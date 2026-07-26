@@ -48,6 +48,23 @@ public class PlayerHealth : MonoBehaviour
     }
 
 
+    // Imposta gli HP ricevuti dall'autorità multiplayer.
+    // Non calcola il danno, applica direttamente il valore deciso dal Master Client e aggiorna l'interfaccia tramite 
+    // OnHpChanged
+    public void SetCurrentHp(int newHp)
+    {
+        if (_characterData == null)
+        {
+            Debug.LogError("[PlayerHealth] CharacterData non inizializzato.", this);
+            return;
+        }
+
+        currentHp = Mathf.Clamp(newHp, 0, MaxHp);
+        OnHpChanged?.Invoke(currentHp, MaxHp);
+    }
+
+
+
     //IA, il player dovrebbe lampeggiare mentre è invincibile, da testare dopo aver impostato l'animator
     public void StartBlink(float duration)
     {

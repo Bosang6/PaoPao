@@ -61,6 +61,9 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     private bool isAI;
     private int slotIndex = -1;
 
+    // L'invincibilità viene controllata dal Master Client, che possiede l'autorità sul danno
+    private float invincibilityTimer;
+    private bool isDead;
 
     public int SlotIndex => slotIndex;
 
@@ -294,12 +297,18 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
     private void Update()
     {
-        if (!isInitialized || !photonView.IsMine || activeInput == null)
+        // Il Master aggiorna il timer di invincibilità per tutte le copie autoritative dei personaggi
+        if (PhotonNetwork.IsMasterClient && invincibilityTimer > 0f)
+        {
+            invincibilityTimer -= Time.deltaTime;
+        }
+
+        if (!isInitialized || isDead || !photonView.IsMine || activeInput == null)
         {
             return;
         }
 
-        playerMove.HandleInput( activeInput.GetMoveInput());
+        playerMove.HandleInput(activeInput.GetMoveInput());
 
         bool bombRequested = activeInput.GetBombInput();
 
@@ -308,6 +317,84 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             photonBombHandler.TryRequestBomb();
         }
     }
+
+    // Viene chiamato dal PhotonExplosionManager esclusivamente sul Master Client quando una fiamma raggiunge il personaggio
+    public void TryApplyExplosionDamage( ExplosionData explosionData, int attackerPlayerViewId)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        if (!isInitialized || isDead || explosionData == null)
+        {
+            return;
+        }
+
+        if (invincibilityTimer > 0f)
+        {
+            return;
+        }
+
+        if (playerHealth.CurrentHp <= 0)
+        {
+            return;
+        }
+
+        int remainingHp = playerHealth.Hitted(explosionData);
+
+        invincibilityTimer = runtimeCharacterData.invincibilityDuration;
+
+        bool died = remainingHp <= 0;
+
+        ApplyExplosionHitFeedback(died);
+
+        photonView.RPC(
+            nameof(RPC_ApplyExplosionHitResult),
+            RpcTarget.Others,
+            remainingHp,
+            died,
+            attackerPlayerViewId
+        );
+    }
+
+
+    [PunRPC]
+    private void RPC_ApplyExplosionHitResult(int remainingHp, bool died, int attackerPlayerViewId)
+    {
+        if (!isInitialized)
+        {
+            Debug.LogError("[PhotonPlayerController] " + "Risultato del danno ricevuto prima dell'inizializzazione.", this);
+            return;
+        }
+
+        playerHealth.SetCurrentHp(remainingHp);
+
+        ApplyExplosionHitFeedback(died);
+
+        // Verrà utilizzato nel prossimo passaggio
+        // per attribuire uccisioni e punteggi.
+        _ = attackerPlayerViewId;
+    }
+
+    // Riproduce localmente la  stessa reazione grafica utilizzata dal PlayerController single Player
+    private void ApplyExplosionHitFeedback(bool died)
+    {
+        if (died)
+        {
+            isDead = true;
+
+            DisableInputHandlers();
+
+            playerMove.SetAnimatorIsDead();
+            playerAudio?.PlayDeath();
+
+            return;
+        }
+
+        playerMove.SetAnimatorHurtingTrigger();
+    }
+
 
 
     private bool ValidateReferences()

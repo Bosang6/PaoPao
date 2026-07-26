@@ -41,6 +41,9 @@ MonoBehaviour:
   - RespawnSpaceship
   - RPC_RequestPlaceBomb
   - RPC_SetColliderEnabled
+  - RPC_ShowFlame
+  - RPC_DestroyBreakableTile
+  - RPC_ApplyExplosionHitResult
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

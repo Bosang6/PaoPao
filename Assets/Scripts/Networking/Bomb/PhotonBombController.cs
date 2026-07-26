@@ -171,7 +171,7 @@ public sealed class PhotonBombController : MonoBehaviourPun, IPunInstantiateMagi
     }
 
 
-    // Notifica il player che la bomba è terminata e la distrugge in maniera sincronizzata
+    // Avvia l'esplosione grafica, notifica il proprietario e distrugge la bomba in maniera sincronizzata
     private void FinishBomb()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -181,11 +181,31 @@ public sealed class PhotonBombController : MonoBehaviourPun, IPunInstantiateMagi
 
         PhotonView ownerPlayerView = PhotonView.Find(ownerPlayerViewId);
 
+        PhotonBombHandler bombHandler = null;
+
         if (ownerPlayerView != null)
         {
-            PhotonBombHandler bombHandler = ownerPlayerView.GetComponent<PhotonBombHandler>();
-            bombHandler?.NotifyBombFinished();
+            bombHandler = ownerPlayerView.GetComponent<PhotonBombHandler>();
         }
+
+        if (bombHandler == null)
+        {
+            Debug.LogError("[PhotonBombController] " + $"PhotonBombHandler non trovato per il " + $"Player ViewID {ownerPlayerViewId}.", this);
+        }
+        else if (bombHandler.ExplosionData == null)
+        {
+            Debug.LogError("[PhotonBombController] " + "ExplosionData del proprietario non disponibile.", this);
+        }
+        else if (PhotonExplosionManager.Instance == null)
+        {
+            Debug.LogError("[PhotonBombController] " + "PhotonExplosionManager non presente nella scena.", this);
+        }
+        else
+        {
+            PhotonExplosionManager.Instance.Explode(transform.position, bombHandler.ExplosionData, ownerPlayerViewId);
+        }
+
+        bombHandler?.NotifyBombFinished();
 
         PhotonNetwork.Destroy(gameObject);
     }
