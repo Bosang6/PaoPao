@@ -41,6 +41,9 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     [Header("End Game")]
     [SerializeField] [Min(0f)] private float endPanelDelay = 1f;
 
+    [Header("Multiplayer Result Panel")]
+    [SerializeField] private MultiplayerResultPanelController multiplayerResultPanel;
+
     private readonly List<PhotonPlayerController> alivePlayers = new List<PhotonPlayerController>();
 
     private readonly Dictionary<int, int> killCounts = new Dictionary<int, int>();
@@ -298,20 +301,16 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     {
         yield return new WaitForSecondsRealtime(endPanelDelay);
 
-        if (uiGameManager == null)
+        if (multiplayerResultPanel == null)
         {
+            Debug.LogError("[PhotonGameManager] " + "MultiplayerResultPanel non assegnato.", this);
             yield break;
         }
 
-        if (isWin)
-        {
-            uiGameManager.ShowMultiplayerWinPanel(finalTime, localKillCounter);
-        }
-        else
-        {
-            uiGameManager.ShowMultiplayerLosePanel(finalTime, localKillCounter);
-        }
+        multiplayerResultPanel.ShowResult(isWin, finalTime, localKillCounter);
     }
+
+   
 
     //
     private void OnDestroy()
