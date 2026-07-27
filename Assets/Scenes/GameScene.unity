@@ -2089,6 +2089,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4582168375428597098, guid: 243d4f495fee8fc44b7eb2777fd1a431, type: 3}
   m_PrefabInstance: {fileID: 979521711}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1027522430 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7872742794730829980, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
+  m_PrefabInstance: {fileID: 917723571}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &1055302622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2421,7 +2432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55386e4720b6fcc43a99d96f1d3d333d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITimer
-  timerText: {fileID: 0}
+  timerText: {fileID: 1027522430}
 --- !u!4 &1667906522
 Transform:
   m_ObjectHideFlags: 0

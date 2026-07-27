@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 257796649036301593}
   - component: {fileID: 7569200503526132852}
   - component: {fileID: 2345060826736137830}
+  - component: {fileID: 7931101756803766592}
   m_Layer: 5
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -266,9 +267,9 @@ RectTransform:
   - {fileID: 8792464531901823344}
   m_Father: {fileID: 5888854562144158010}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350, y: -175}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4381423796717767704
@@ -354,8 +355,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PauseMenuManager, Assembly-CSharp
-        m_MethodName: ResumeGame
+        m_TargetAssemblyTypeName: UIGameManager, Assembly-CSharp
+        m_MethodName: OnResumePressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -379,6 +380,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 4296901749157400403}
   pressedScale: 0.9
+--- !u!114 &7931101756803766592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732664719401707531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  buttonAudioEvent: 0
 --- !u!1 &3056939586205424452
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,6 +406,7 @@ GameObject:
   - component: {fileID: 8098518164369448516}
   - component: {fileID: 331118353619654342}
   - component: {fileID: 9103550838008061918}
+  - component: {fileID: 4860311706947776508}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -414,9 +429,9 @@ RectTransform:
   - {fileID: 5131761717526637201}
   m_Father: {fileID: 5888854562144158010}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350, y: -315}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6228794641032085128
@@ -502,7 +517,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TestManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: UIGameManager, Assembly-CSharp
         m_MethodName: OnSettingsPressed
         m_Mode: 1
         m_Arguments:
@@ -527,6 +542,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 8191655562139055264}
   pressedScale: 0.9
+--- !u!114 &4860311706947776508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3056939586205424452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  buttonAudioEvent: 0
 --- !u!1 &3632161413627161686
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,6 +863,7 @@ GameObject:
   - component: {fileID: 8661711658877075875}
   - component: {fileID: 4469447231278952185}
   - component: {fileID: 609211121160911552}
+  - component: {fileID: 687753339377013116}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -857,9 +886,9 @@ RectTransform:
   - {fileID: 711812644975735287}
   m_Father: {fileID: 5888854562144158010}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350, y: -455}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6591434382661049615
@@ -945,8 +974,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TestManager, Assembly-CSharp
-        m_MethodName: OnQuitPressed
+        m_TargetAssemblyTypeName: UIGameManager, Assembly-CSharp
+        m_MethodName: OnQuitGamePressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -970,6 +999,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimation
   target: {fileID: 9083070739070573179}
   pressedScale: 0.9
+--- !u!114 &687753339377013116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7559125738362098287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e567b87ec6e9f22499f5d25f5ba78864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  buttonAudioEvent: 0
 --- !u!1 &7568572074827151064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2803016925420560311
 RectTransform:
   m_ObjectHideFlags: 0

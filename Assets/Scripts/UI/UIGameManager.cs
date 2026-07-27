@@ -42,11 +42,11 @@ public class UIGameManager : MonoBehaviourPunCallbacks
     // UTILITY
     private void HideAllPanels()
     {
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
-        winPanel.SetActive(false);
-        losePanel.SetActive(false);
-        quitDialogPanel.SetActive(false);
+        if (pausePanel != null) pausePanel.SetActive(false);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (winPanel != null) winPanel.SetActive(false);
+        if (losePanel != null) losePanel.SetActive(false);
+        if (quitDialogPanel != null) quitDialogPanel.SetActive(false);
     }
 
     private void SetMobileControlsVisible(bool visible)
@@ -132,8 +132,15 @@ public class UIGameManager : MonoBehaviourPunCallbacks
 
     // WIN / LOSE
 
+    // Mostra la vittoria nella modalità single player.
     public void ShowWinPanel(string finalTime, string localKillCounter)
     {
+        if (winPanel == null)
+        {
+            Debug.LogWarning("[UIGameManager] WinPanel non presente nella scena.", this);
+            return;
+        }
+
         HideAllPanels();
         SetMobileControlsVisible(false);
         Time.timeScale = 0f;
@@ -144,8 +151,15 @@ public class UIGameManager : MonoBehaviourPunCallbacks
         winPanel.SetActive(true);
     }
 
+    // Mostra la sconfitta nella modalità single player.
     public void ShowLosePanel(string finalTime, string localKillCounter)
     {
+        if (losePanel == null)
+        {
+            Debug.LogWarning("[UIGameManager] LosePanel non presente nella scena.", this);
+            return;
+        }
+
         HideAllPanels();
         SetMobileControlsVisible(false);
         Time.timeScale = 0f;
@@ -188,65 +202,6 @@ public class UIGameManager : MonoBehaviourPunCallbacks
 
 
     // MULTIPLAYER
-
-
-    // Mostra la vittoria multiplayer senza impostare Time.timeScale a zero.
-    // La rete deve continuare a processare messaggi, uscita dalla Room e cambi di scena
-    public void ShowMultiplayerWinPanel(string finalTime, string localKillCounter)
-    {
-        HideAllPanels();
-
-        SetMobileControlsVisible(false);
-
-        isPaused = false;
-
-        if (winTimeText != null)
-        {
-            winTimeText.text = finalTime;
-        }
-
-        if (winKillText != null)
-        {
-            winKillText.text = localKillCounter;
-        }
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayWinSound();
-        }
-
-        winPanel.SetActive(true);
-    }
-
-
-    // Mostra la sconfitta multiplayer senza fermare localmente il tempo della simulazione
-    public void ShowMultiplayerLosePanel(string finalTime, string localKillCounter)
-    {
-        HideAllPanels();
-
-        SetMobileControlsVisible(false);
-
-        isPaused = false;
-
-        if (loseTimeText != null)
-        {
-            loseTimeText.text = finalTime;
-        }
-
-        if (loseKillText != null)
-        {
-            loseKillText.text = localKillCounter;
-        }
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayLoseSound();
-        }
-
-        losePanel.SetActive(true);
-    }
-
-
    
     // Avvia il ritorno al Menu
     // Se il client si trova in una Room, invia una richiesta di uscita, aspetta OnLeftRoom,
