@@ -6,31 +6,17 @@ using UnityEngine.SceneManagement;
 
 
 /*
- * Gestisce lo stato autoritativo della partita multiplayer
- * 
- * Responsabilità:
- * - registrare tutti i PhotonPlayerController
- * - ricevere gli eventi di morte sul Master Client
- * - mantenere il numero dei personaggi ancora vivi
- * - attribuire le uccisioni
- * - avviare la musica dello scontro finale
- * - stabilire il vincitore
- * - mostrare Win/Lose su ogni client
+ * Gestisce lo stato autoritativo della partita multiplayer.
+ *
+ * Il Master registra le morti, attribuisce le uccisioni,
+ * determina il vincitore e sincronizza il risultato finale.
  */
-
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(PhotonView))]
 public sealed class PhotonGameManager : MonoBehaviourPun
 {
-    public static PhotonGameManager Instance
-    {
-        get;
-        private set;
-    }
-
-    [Header("UI")]
-    [SerializeField] private UIGameManager uiGameManager;
+    public static PhotonGameManager Instance { get; private set; }
 
     [Header("Player HUD")]
     [SerializeField] private UIPlayerLives[] uiPlayerLives;
@@ -47,20 +33,17 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     [Header("Rematch")]
     [SerializeField] private PhotonRematchManager photonRematchManager;
 
-    private readonly List<PhotonPlayerController> alivePlayers = new List<PhotonPlayerController>();
-
-    private readonly Dictionary<int, int> killCounts = new Dictionary<int, int>();
+    private readonly List<PhotonPlayerController> alivePlayers = new();
+    private readonly Dictionary<int, int> killCounts = new();
 
     private int localHumanViewId = -1;
 
     private bool finalBattleMusicStarted;
-
     private bool isMatchEnded;
-
-    // Impedisce di avviare più ricaricamenti contemporaneamente.
     private bool isReplayStarting;
 
 
+    // Inizializza il Singleton presente nella scena multiplayer.
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -73,12 +56,11 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
+    // Recupera eventuali giocatori inizializzati prima del Manager e avvia la musica relativa alla mappa
     private void Start()
     {
         Time.timeScale = 1f;
 
-        // Normalmente i personaggi si registrano da soli.
-        // Questa ricerca copre anche il caso in cui un player sia stato inizializzato prima dello Start del Manager
         PhotonPlayerController[] existingPlayers = FindObjectsByType<PhotonPlayerController>(FindObjectsSortMode.None);
 
         foreach (PhotonPlayerController player in existingPlayers)
@@ -93,7 +75,9 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
-    // Regista un personaggio su ogni client. Soltanto il Maste si iscrive all'evento authoritative di morte
+
+    // Registra un personaggio tra quelli ancora vivi
+    // Su ogni Client collega il realtivo HUD, mentre soltatnto il Master ascolta l'evento autoritativo di morte
     public void RegisterPlayer(PhotonPlayerController player)
     {
         if (player == null || alivePlayers.Contains(player))
@@ -119,12 +103,11 @@ public sealed class PhotonGameManager : MonoBehaviourPun
         {
             player.OnNetworkPlayerDied += HandleNetworkPlayerDeath;
         }
-
-        Debug.Log("[PhotonGameManager] " + $"Registrato Player ViewID {player.ViewId}. " + $"Giocatori vivi: {alivePlayers.Count}.");
     }
 
 
-    // 
+
+    // Rimuove un personaggio morto o disconnesso
     public void UnregisterPlayer(PhotonPlayerController player)
     {
         if (player == null)
@@ -135,9 +118,9 @@ public sealed class PhotonGameManager : MonoBehaviourPun
         player.OnNetworkPlayerDied -= HandleNetworkPlayerDeath;
 
         UnbindPlayerFromHUD(player);
+
         bool wasRemoved = alivePlayers.Remove(player);
 
-        // Se il player era già stato rimosso dalla morte, non valutiamo nuovamente il risultato
         if (!wasRemoved)
         {
             return;
@@ -150,7 +133,8 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
-    // Riceve sul Master la morte ufficiale del personaggio 
+    // Riceve sul Master la morte ufficiale di un personaggio, aggiorna le kills 
+    // e rivaluta lo stato della partita
     private void HandleNetworkPlayerDeath(PhotonPlayerController deadPlayer, int attackerPlayerViewId)
     {
         if (!PhotonNetwork.IsMasterClient || isMatchEnded || deadPlayer == null)
@@ -162,24 +146,21 @@ public sealed class PhotonGameManager : MonoBehaviourPun
 
         alivePlayers.Remove(deadPlayer);
 
-        // Non assgniamo una kill qunado un giocatore viene eliminato dalla propria bomba
-        if (attackerPlayerViewId > 0 && attackerPlayerViewId != deadPlayer.ViewId)
+        bool validKill = attackerPlayerViewId > 0 && attackerPlayerViewId != deadPlayer.ViewId;
+
+        if (validKill)
         {
-            if (!killCounts.ContainsKey(attackerPlayerViewId))
-            {
-                killCounts.Add(attackerPlayerViewId,0);
-            }
-
-            killCounts[attackerPlayerViewId]++;
+            killCounts.TryGetValue(attackerPlayerViewId, out int currentKillCount);
+            killCounts[attackerPlayerViewId] = currentKillCount + 1;
         }
-
-        Debug.Log("[PhotonGameManager] " + $"Player ViewID {deadPlayer.ViewId} eliminato. " + $"Attaccante ViewID: {attackerPlayerViewId}. " + $"Rimasti: {alivePlayers.Count}.");
 
         EvaluateMatchState();
     }
 
 
-    // Controlla musica finale e condizione di vittoria
+
+    // Avvia la musica dello scontro finale quando restano due personaggi e 
+    // termina il match quando ne resta uno
     private void EvaluateMatchState()
     {
         alivePlayers.RemoveAll(player => player == null);
@@ -198,7 +179,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
-    // Il Master costruisce il risultato ufficiale e lo invia a tutti i client
+    // Costruisce sul Master il risultato ufficiale e lo invia a tutti i Client presenti nell Room
     private void EndMatch()
     {
         if (!PhotonNetwork.IsMasterClient || isMatchEnded)
@@ -221,7 +202,6 @@ public sealed class PhotonGameManager : MonoBehaviourPun
         foreach (KeyValuePair<int, int> entry in killCounts)
         {
             playerViewIds[index] = entry.Key;
-
             playerKillCounts[index] = entry.Value;
 
             index++;
@@ -238,6 +218,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
+    // Avvia localmente la musica utilizzata per lo scontro finale.
     [PunRPC]
     private void RPC_PlayFinalBattleMusic()
     {
@@ -248,27 +229,16 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     }
 
 
-    // Applica localmente il risultato deciso dal Master
+    // Applica su ogni Client il risultato stabilito dal Master 
+    // e disabilita definitivamente i personaggi della partita
     [PunRPC]
     private void RPC_EndMatch(int winnerViewId, float finalTimeSeconds, int[] playerViewIds, int[] playerKillCounts)
     {
         isMatchEnded = true;
 
-        string finalTime = "00:00";
+        string finalTime = GetFormattedFinalTime(finalTimeSeconds);
 
-        if (uiTimer != null)
-        {
-            uiTimer.StopTimerAt(finalTimeSeconds);
-            finalTime = uiTimer.GetFormattedTime();
-        }
-        else
-        {
-            int minutes = Mathf.FloorToInt(finalTimeSeconds / 60f);
-            int seconds = Mathf.FloorToInt(finalTimeSeconds % 60f);
-            finalTime = $"{minutes:00}:{seconds:00}";
-        }
-
-PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(FindObjectsSortMode.None);
+        PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(FindObjectsSortMode.None);
 
         foreach (PhotonPlayerController player in players)
         {
@@ -280,14 +250,32 @@ PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(Fin
             }
         }
 
-        int localKillCount =  GetKillCount(localHumanViewId, playerViewIds, playerKillCounts);
+        int localKillCount = GetKillCount(localHumanViewId, playerViewIds, playerKillCounts);
 
         bool localPlayerWon = localHumanViewId > 0 && localHumanViewId == winnerViewId;
 
-        StartCoroutine(ShowEndPanelAfterDelay(localPlayerWon, finalTime, localKillCount.ToString()));
+        StartCoroutine(ShowEndPanelAfterDelay(localPlayerWon, finalTime, localKillCount));
     }
 
-    //
+    // Arresta il timer sul valore ufficiale ricevuto dal Master e restituisce il tempo già formattato
+    private string GetFormattedFinalTime(float finalTimeSeconds)
+    {
+        if (uiTimer != null)
+        {
+            uiTimer.StopTimerAt(finalTimeSeconds);
+
+            return uiTimer.GetFormattedTime();
+        }
+
+        int minutes = Mathf.FloorToInt(finalTimeSeconds / 60f);
+
+        int seconds = Mathf.FloorToInt(finalTimeSeconds % 60f);
+
+        return $"{minutes:00}:{seconds:00}";
+    }
+
+
+    // Cerca il numero di uccisioni associato a uno specifico ViewID.
     private int GetKillCount(int playerViewId, int[] playerViewIds, int[] playerKillCounts)
     {
         if (playerViewIds == null || playerKillCounts == null)
@@ -297,43 +285,177 @@ PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(Fin
 
         int count = Mathf.Min(playerViewIds.Length, playerKillCounts.Length);
 
-        for (int i = 0; i < count; i++)
+        for (int index = 0; index < count; index++)
         {
-            if (playerViewIds[i] == playerViewId)
+            if (playerViewIds[index] == playerViewId)
             {
-                return playerKillCounts[i];
+                return playerKillCounts[index];
             }
         }
 
         return 0;
     }
 
-    //
-    private IEnumerator ShowEndPanelAfterDelay(bool isWin, string finalTime, string localKillCounter)
+
+
+    // Mostra il risultato dopo il ritardo configurato e attiva la gestione Ready della rivincita
+    private IEnumerator ShowEndPanelAfterDelay(bool isWin, string finalTime, int localKillCount)
     {
         yield return new WaitForSecondsRealtime(endPanelDelay);
 
         if (multiplayerResultPanel == null)
         {
-            Debug.LogError("[PhotonGameManager] " + "MultiplayerResultPanel non assegnato.", this);
+            Debug.LogError("[PhotonGameManager] MultiplayerResultPanel non assegnato.", this);
             yield break;
         }
 
-        multiplayerResultPanel.ShowResult(isWin, finalTime, localKillCounter);
+        multiplayerResultPanel.ShowResult(isWin, finalTime, localKillCount.ToString());
 
-        if (photonRematchManager != null)
-        {
-            photonRematchManager.BeginPostMatch();
-        }
-        else
+        if (photonRematchManager == null)
         {
             Debug.LogError("[PhotonGameManager] PhotonRematchManager non assegnato.", this);
+            yield break;
         }
+
+        photonRematchManager.BeginPostMatch();
     }
 
-   
 
-    //
+    // Collega un personaggio al pannello delle vite corrispondeten al suo SlotIndex
+    private void BindPlayerToHUD(PhotonPlayerController player)
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        if (uiPlayerLives == null || uiPlayerLives.Length == 0)
+        {
+            Debug.LogWarning("[PhotonGameManager] Array UIPlayerLives non assegnato.", this);
+            return;
+        }
+
+        int slotIndex = player.SlotIndex;
+
+        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
+        {
+            Debug.LogWarning("[PhotonGameManager]" + $"SlotIndex HUD non valido: {slotIndex}.", player);
+            return;
+        }
+
+        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
+
+        if (playerLivesUI == null)
+        {
+            Debug.LogWarning( "[PhotonGameManager] " + $"UIPlayerLives mancante per lo Slot {slotIndex}.", this);
+            return;
+        }
+
+        playerLivesUI.Bind(player);
+    }
+
+
+
+    // Scollega il personaggio dal relativo HUD
+    // Quando un plaer abbandona senza morire, il suo indicatore verra indicato come morto
+    private void UnbindPlayerFromHUD(PhotonPlayerController player)
+    {
+        if (player == null || uiPlayerLives == null)
+        {
+            return;
+        }
+
+        int slotIndex = player.SlotIndex;
+
+        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
+        {
+            return;
+        }
+
+        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
+
+        if (playerLivesUI == null || playerLivesUI.GetTargetPhotonPlayer() != player)
+        {
+            return;
+        }
+
+        playerLivesUI.UpdateHearts(0);
+        playerLivesUI.Unbind();
+    }
+
+
+    // Avvia la rivincita sul Master
+    // Il controllo Ready viene eseguito prima da PhotonRematchManager
+    public void RequestReplay()
+    {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogError("[PhotonGameManager] Replay impossibile: il Client non è dentro una Room.", this);
+            return;
+        }
+
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogWarning("[PhotonGameManager] Soltanto il Master può avviare la rivincita.", this);
+            return;
+        }
+
+        if (!isMatchEnded)
+        {
+            Debug.LogWarning("[PhotonGameManager] Replay richiesto prima della fine della partita.", this);
+            return;
+        }
+
+        StartReplayAsMaster();
+    }
+
+
+    // Avvia una nuova partita mantenendo la stesso Room e la configurazione corrente dei players
+    private void StartReplayAsMaster()
+    {
+        if (!PhotonNetwork.IsMasterClient || isReplayStarting)
+        {
+            return;
+        }
+
+        isReplayStarting = true;
+
+        StartCoroutine(ReloadMatchRoutine());
+    }
+
+
+    // Rimuove gli oggetti Photon della partita terminata e richiede ad ogni Client di ricaricare la scena
+    private IEnumerator ReloadMatchRoutine()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        PhotonNetwork.DestroyAll();
+        PhotonNetwork.SendAllOutgoingCommands();
+
+        yield return null;
+
+        photonView.RPC( nameof(RPC_ReloadMatchScene), RpcTarget.AllViaServer, currentSceneName);
+
+        PhotonNetwork.SendAllOutgoingCommands();
+    }
+
+
+
+    // Ricarica localmente la scena multiplayer mantenendo il Client connesso alla stessa Room Photon
+    [PunRPC]
+    private void RPC_ReloadMatchScene(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            Debug.LogError("[PhotonGameManager] Nome della scena di Replay non valido.", this);
+            return;
+        }
+
+        PhotonNetwork.LoadLevel(sceneName);
+    }
+
+
+    // Rimuove le iscrizioni agli eventi e libera il Singleton.
     private void OnDestroy()
     {
         foreach (PhotonPlayerController player in alivePlayers)
@@ -351,183 +473,4 @@ PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(Fin
             Instance = null;
         }
     }
-
-
-    // Collega un PhotonPlayerController al pannello delle vita corrispondente al suo SlotIndex
-    // Questo metodo viene eseguito su ogni client, compresi i personaggi ricevuti automaticamente dalla rete
-    private void BindPlayerToHUD(PhotonPlayerController player)
-    {
-        if (player == null) return;
-
-        if (uiPlayerLives == null || uiPlayerLives.Length == 0)
-        {
-            Debug.LogWarning("[PhotonGameManager] Array UIPlayerLives non assegnato.", this);
-            return;
-        }
-
-        int slotIndex = player.SlotIndex;
-
-        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
-        {
-            Debug.LogWarning("[PhotonGameManager] " + $"SlotIndex HUD non valido: {slotIndex}.", player);
-            return;
-        }
-
-        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
-
-        if (playerLivesUI == null)
-        {
-            Debug.LogWarning("[PhotonGameManager] " + $"UIPlayerLives mancante per lo Slot {slotIndex}.", this);
-            return;
-        }
-
-        playerLivesUI.Bind(player);
-
-        Debug.Log("[PhotonGameManager] " + $"HUD vite collegato allo Slot {slotIndex}, " + $"ViewID {player.ViewId}.");
-    }
-
-
-    // Scollega il personaggio dal relativo HUD
-    // Se il personaggio lascia la partita senza morire, il suo pannello viene comunque mostrato come eliminato
-    private void UnbindPlayerFromHUD(PhotonPlayerController player)
-    {
-        if (player == null || uiPlayerLives == null)
-        {
-            return;
-        }
-
-        int slotIndex = player.SlotIndex;
-
-        if (slotIndex < 0 || slotIndex >= uiPlayerLives.Length)
-        {
-            return;
-        }
-
-        UIPlayerLives playerLivesUI = uiPlayerLives[slotIndex];
-
-        if (playerLivesUI == null)
-        {
-            return;
-        }
-
-        if (playerLivesUI.GetTargetPhotonPlayer() != player)
-        {
-            return;
-        }
-
-        playerLivesUI.UpdateHearts(0);
-
-        playerLivesUI.Unbind();
-    }
-
-
-    // Riceva la richiesta di Replay dalla UI locale
-    // Il Master può avviare direttamente il caricamento
-    // Un client invece invia la richiesta al Master.
-    public void RequestReplay()
-    {
-        if (!PhotonNetwork.InRoom)
-        {
-            Debug.LogError("[PhotonGameManager] Replay impossibile: il client non è dentro una Room.", this);
-            return;
-        }
-
-        if (!isMatchEnded)
-        {
-            Debug.LogWarning("[PhotonGameManager] Replay richiesto prima della fine della partita.", this);
-            return;
-        }
-
-        if (isReplayStarting)
-        {
-            return;
-        }
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            StartReplayAsMaster();
-            return;
-        }
-
-        photonView.RPC(
-            nameof(RPC_RequestReplay),
-            RpcTarget.MasterClient
-        );
-    }
-
-
-    // Riceve sul Master la richiesta inviata da un altro giocatore
-    [PunRPC]
-    private void RPC_RequestReplay(PhotonMessageInfo messageInfo)
-    {
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
-
-        if (!isMatchEnded || isReplayStarting)
-        {
-            return;
-        }
-
-        Debug.Log("[PhotonGameManager] " + $"Replay richiesto dall'Actor {messageInfo.Sender.ActorNumber}.");
-
-        StartReplayAsMaster();
-    }
-
-
-    // Avvia una nuova partita mantenendo la stessa Room, gli stessi player e la stessa configurazione
-    private void StartReplayAsMaster()
-    {
-        if (!PhotonNetwork.IsMasterClient || isReplayStarting)
-        {
-            return;
-        }
-
-        isReplayStarting = true;
-        StartCoroutine(ReloadMatchRoutine());
-    }
-
-
-     // Pulisce gli oggetti della partita terminata e invia a tutti i client la richiesta di ricaricare la scena.
-    private IEnumerator ReloadMatchRoutine()
-    {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-
-        // Il master rimuove player, bombe e RPC precedenti dalal Room prima di iniziare la nuova partita
-        PhotonNetwork.DestroyAll();
-
-        PhotonNetwork.SendAllOutgoingCommands();
-
-        yield return null;
-
-        // Il reload della stessa scena non viene propagato da AutomaticallySyncScene
-        // Inviamo quindi una RPC a tutti, Master compreso
-        photonView.RPC(nameof(RPC_ReloadMatchScene), RpcTarget.AllViaServer, currentSceneName);
-
-        // Forza l'invio della RPC prima che il Master inizi il proprio caricamento
-        PhotonNetwork.SendAllOutgoingCommands();
-    }
-
-
-    // Viene eseguito su ogni client della Room
-    // Ogni dispositivo ricarica localmente la stessa scena, mantenendo la connessione alla Room Photon
-    [PunRPC]
-    private void RPC_ReloadMatchScene(string sceneName)
-    {
-        if (string.IsNullOrWhiteSpace(sceneName))
-        {
-            Debug.LogError("[PhotonGameManager] Impossibile ricaricare la partita: nome scena non valido.", this);
-            return;
-        }
-
-        Debug.Log("[PhotonGameManager] " + $"Ricaricamento sincronizzato della scena '{sceneName}'.");
-
-        // PhotonNetwork.LoadLevel gestisce automaticametne la pausa della coda dei messaggi durante il caricamento
-        PhotonNetwork.LoadLevel(sceneName);
-    }
-
-
-
-
 }

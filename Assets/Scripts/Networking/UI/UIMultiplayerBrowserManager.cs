@@ -36,6 +36,7 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button hostButton;
     [SerializeField] private Button refreshButton;
     [SerializeField] private Button backButton;
+    [SerializeField] private Button exitRoomButton;
 
     [Header("Feedback")]
     [SerializeField] private TMP_Text statusText;
@@ -50,6 +51,8 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
     private PhotonRoomListManager roomListManager;
 
     private bool isBusy;
+    private bool isRefreshingLobby;
+    private bool returnToMainMenuAfterLeavingRoom;
 
 
     public override void OnEnable()
@@ -79,6 +82,11 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
             backButton.onClick.AddListener(HandleBackButtonClicked);
         }
 
+        if (exitRoomButton != null)
+        {
+            exitRoomButton.onClick.AddListener(HandleExitRoomButtonClicked);
+        }
+
         RebuildRoomList(roomListManager.CurrentRooms);
         RefreshStatus();
         UpdateInteractionState();
@@ -105,6 +113,11 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
         if (backButton != null)
         {
             backButton.onClick.RemoveListener(HandleBackButtonClicked);
+        }
+
+        if (exitRoomButton != null)
+        {
+            exitRoomButton.onClick.RemoveListener(HandleExitRoomButtonClicked);
         }
 
         base.OnDisable();
@@ -151,9 +164,9 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
 
         if (connectionManager == null)
         {
-            Debug.LogError("[UIMultiplayerBrowserManager] " + "PhotonConnectionManager non trovato.");
+            Debug.LogError("[UIMultiplayerBrowserManager] PhotonConnectionManager non trovato.");
 
-            SetStatus("Networking non disponibile.");
+            SetStatus("Networking unavailable.");
             return false;
         }
 
@@ -163,14 +176,14 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
 
         if (roomManager == null)
         {
-            Debug.LogError("[UIMultiplayerBrowserManager] " + "PhotonRoomManager non trovato sul GameObject Networking.");
+            Debug.LogError("[UIMultiplayerBrowserManager] PhotonRoomManager non trovato sul GameObject Networking.");
 
             return false;
         }
 
         if (roomListManager == null)
         {
-            Debug.LogError("[UIMultiplayerBrowserManager] " + "PhotonRoomListManager non trovato sul GameObject Networking.");
+            Debug.LogError("[UIMultiplayerBrowserManager] PhotonRoomListManager non trovato sul GameObject Networking.");
 
             return false;
         }
@@ -192,7 +205,7 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
 
         if (roomListContent == null || roomListItemPrefab == null)
         {
-            Debug.LogError("[UIMultiplayerBrowserManager] " + "Content o prefab RoomListItem non assegnato.");
+            Debug.LogError("[UIMultiplayerBrowserManager] Content o prefab RoomListItem non assegnato.");
 
             return;
         }
@@ -256,7 +269,7 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
 
         string roomName = $"{roomNamePrefix}-{randomIdentifier}";
 
-        SetBusy(true, $"Creazione Room {roomName}...");
+        SetBusy(true, $"Creating room {roomName}...");
 
         roomManager.CreateRoom(roomName);
     }
@@ -270,7 +283,7 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        SetBusy(true, $"Ingresso in {roomName}...");
+        SetBusy(true, $"Joining {roomName}...");
 
         roomManager.JoinRoom(roomName);
     }
@@ -278,14 +291,36 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
     // Richiamato quando l'utente clicca il pulsante Refresh
     private void HandleRefreshButtonClicked()
     {
-        if (roomListManager == null || isBusy)
+        if (isBusy || !PhotonNetwork.IsConnectedAndReady || PhotonNetwork.InRoom)
         {
             return;
         }
 
-        // Photon aggiorna automaticamente la cache delle Room
-        RebuildRoomList(roomListManager.CurrentRooms);
-        RefreshStatus();
+        SetBusy(true, "Refreshing rooms...");
+
+        if (!PhotonNetwork.InLobby)
+        {
+            bool joinStarted = PhotonNetwork.JoinLobby();
+
+            if (!joinStarted)
+            {
+                SetBusy(false);
+                SetStatus("Unable to refresh the lobby.");
+            }
+
+            return;
+        }
+
+        isRefreshingLobby = true;
+
+        bool leaveStarted = PhotonNetwork.LeaveLobby();
+
+        if (!leaveStarted)
+        {
+            isRefreshingLobby = false;
+            SetBusy(false);
+            SetStatus("Unable to refresh the lobby.");
+        }
     }
 
     // Richiamato quando l'utente clicca il pulsante Back
@@ -360,7 +395,7 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsConnected)
         {
-            SetStatus("Connessione a Photon...");
+            SetStatus("Connecting...");
             return;
         }
 
@@ -373,14 +408,13 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.InLobby)
         {
-            SetStatus("Ingresso nella Lobby...");
+            SetStatus("Connecting...");
             return;
         }
 
         int roomCount = roomListManager != null ? roomListManager.CurrentRooms.Count : 0;
 
-        SetStatus(roomCount == 1 ? "1 Room disponibile" : $"{roomCount} Room disponibili"
-        );
+        SetStatus(roomCount == 1 ? "1 room available" : $"{roomCount} rooms available");
     }
 
     // Imposta il messaggio di stato nella UI
@@ -402,6 +436,7 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
     // Callback di Photon
     public override void OnJoinedLobby()
     {
+        isRefreshingLobby = false;
         SetBusy(false);
 
         if (roomListManager != null)
@@ -440,20 +475,23 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
     {
         SetBusy(false);
 
-        SetStatus($"Creazione Room fallita: {message}");
+        SetStatus($"Room creation failed: {message}");
     }
 
     // Callback di Photon
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         SetBusy(false);
-
-        SetStatus($"Ingresso nella Room fallito: {message}");
+        SetStatus($"Failed to join room: {message}");
     }
 
-    // Callback di Photon
+    // Aggiorna i pannelli dopo che il Client ha lasciato la Room.
     public override void OnLeftRoom()
     {
+        bool openMainMenu = returnToMainMenuAfterLeavingRoom;
+
+        returnToMainMenuAfterLeavingRoom = false;
+
         SetBusy(false);
 
         if (roomLobbyPanel != null)
@@ -463,23 +501,71 @@ public sealed class UIMultiplayerBrowserManager : MonoBehaviourPunCallbacks
 
         if (mainMenuPanel != null)
         {
-            mainMenuPanel.SetActive(false);
+            mainMenuPanel.SetActive(openMainMenu);
         }
 
         if (multiplayerBrowserPanel != null)
         {
-            multiplayerBrowserPanel.SetActive(true);
+            multiplayerBrowserPanel.SetActive(!openMainMenu);
         }
 
         RefreshStatus();
+        UpdateInteractionState();
     }
 
     // Callback di Photon
     public override void OnDisconnected(DisconnectCause cause)
     {
         SetBusy(false);
+        SetStatus($"Disconnected: {cause}");
+    }
 
-        SetStatus($"Disconnesso: {cause}");
+    // Rientra nella Lobby quando l'uscita è stata richiesta dal Refresh.
+    public override void OnLeftLobby()
+    {
+        if (!isRefreshingLobby)
+        {
+            RefreshStatus();
+            UpdateInteractionState();
+            return;
+        }
+
+        bool joinStarted = PhotonNetwork.JoinLobby();
+
+        if (joinStarted)
+        {
+            return;
+        }
+
+        isRefreshingLobby = false;
+        SetBusy(false);
+        SetStatus("Unable to rejoin the lobby.");
+    }
+
+
+    // Lascia la Room corrente e torna al pannello principale.
+    private void HandleExitRoomButtonClicked()
+    {
+        if (isBusy || !PhotonNetwork.InRoom)
+        {
+            return;
+        }
+
+        returnToMainMenuAfterLeavingRoom = true;
+
+        SetBusy(true, "Leaving room...");
+
+        bool requestStarted = PhotonNetwork.LeaveRoom(false);
+
+        if (requestStarted)
+        {
+            return;
+        }
+
+        returnToMainMenuAfterLeavingRoom = false;
+        SetBusy(false);
+
+        SetStatus("Unable to leave the room.");
     }
 
 }

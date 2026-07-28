@@ -5,17 +5,11 @@ using UnityEngine;
 
 
 /*
- * Controlla un personaggio nella partita multiplayer
+ * Gestisce un personaggio nella partita multiplayer.
  *
- * È utilizzato esclusivamente dai prefab presenti in Resources/PhotonPrefabs.
- *
- * Responsabilità:
- * - leggere i dati ricevuti durante PhotonNetwork.Instantiate;
- * - creare copie runtime di CharacterData e PlayerInstanceData;
- * - attivare l'input locale soltanto sul proprietario;
- * - attivare l'intelligenza artificiale soltanto sul Master;
- * - impedire alle copie remote di eseguire input;
- * - inizializzare movimento, salute, bombe e audio.
+ * Legge i dati ricevuti dallo spawn Photon, crea i dati runtime
+ * e configura input, movimento, salute, bombe e audio.
+ * Il danno e la morte vengono determinati dal Master Client.
  */
 
 [RequireComponent(typeof(PhotonView))]
@@ -33,10 +27,6 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     [SerializeField] private HumanInstanceData humanInstanceDataTemplate;
     [Tooltip("Dati utilizzati quando il personaggio è controllato dalla AI.")]
     [SerializeField] private BotInstanceData botInstanceDataTemplate;
-
-    [Header("Temporary Networking Settings")]
-    [Tooltip( "Le bombe restano disattivate finché non implementiamo lo spawn sincronizzato delle bombe.")]
-    [SerializeField] private bool enableBombPlacement;
 
 
     private LocalInputHandler localInputHandler;
@@ -146,7 +136,6 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             return;
         }
 
-
         // CharacterData contiene anche isMoving. Creiamo una copia per evitare che 
         // più personaggi condividano lo stesso runtime
         runtimeCharacterData = Instantiate(characterDataTemplate);
@@ -190,14 +179,6 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             Debug.LogError("[PhotonPlayerController] PhotonGameManager non presente nella scena.", this);
         }
 
-        Debug.Log(
-            "[PhotonPlayerController] " +
-            $"Actor proprietario: {photonView.OwnerActorNr}. " +
-            $"Slot: {slotIndex}. " +
-            $"Character: {runtimeCharacterData.type}. " +
-            $"Type: {runtimeInstanceData.type}. " +
-            $"IsMine: {photonView.IsMine}."
-        );
     }
 
 
@@ -237,13 +218,6 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     private void ConfigureInput()
     {
         DisableInputHandlers();
-
-        // Solo il proprietario Photon simula il personaggio.
-        if (!photonView.IsMine)
-        {
-            activeInput = null;
-            return;
-        }
 
         if (isAI)
         {
@@ -327,7 +301,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
         bool bombRequested = activeInput.GetBombInput();
 
-        if (enableBombPlacement && bombRequested)
+        if (bombRequested)
         {
             photonBombHandler.TryRequestBomb();
         }
@@ -368,8 +342,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             nameof(RPC_ApplyExplosionHitResult),
             RpcTarget.Others,
             remainingHp,
-            died,
-            attackerPlayerViewId
+            died
         );
 
         if (died)
@@ -382,7 +355,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
 
     [PunRPC]
-    private void RPC_ApplyExplosionHitResult(int remainingHp, bool died, int attackerPlayerViewId)
+    private void RPC_ApplyExplosionHitResult(int remainingHp, bool died)
     {
         if (!isInitialized)
         {
@@ -399,9 +372,6 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             ScheduleOwnedPlayerDestruction();
         }
 
-        // Verrà utilizzato nel prossimo passaggio
-        // per attribuire uccisioni e punteggi.
-        _ = attackerPlayerViewId;
     }
 
     // Riproduce localmente la  stessa reazione grafica utilizzata dal PlayerController single Player
@@ -446,19 +416,19 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
         if (playerBombHandler == null)
         {
-            Debug.LogError("[PhotonPlayerController] " + "PlayerBombHandler non trovato.", this);
+            Debug.LogError("[PhotonPlayerController] PlayerBombHandler non trovato.", this);
             return false;
         }
 
         if (playerHealth == null)
         {
-            Debug.LogError("[PhotonPlayerController] " + "PlayerHealth non trovato.", this);
+            Debug.LogError("[PhotonPlayerController] PlayerHealth non trovato.", this);
             return false;
         }
 
         if (photonBombHandler == null)
         {
-            Debug.LogError("[PhotonPlayerController] " + "PhotonBombHandler non trovato.", this);
+            Debug.LogError("[PhotonPlayerController] PhotonBombHandler non trovato.", this);
             return false;
         }
 
@@ -524,18 +494,11 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             Destroy(runtimeInstanceData);
         }
 
-        if (destroyAfterDeathCoroutine != null)
-        {
-            StopCoroutine(destroyAfterDeathCoroutine);
-            destroyAfterDeathCoroutine = null;
-        }
-
         if (PhotonGameManager.Instance != null)
         {
             PhotonGameManager.Instance.UnregisterPlayer(this);
         }
 
-        OnNetworkPlayerDied = null;
     }
 
 }

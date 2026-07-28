@@ -5,19 +5,21 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
 /*
- * Gestisce la fase post-partita e la richiesta di rivincita
+ * Gestisce il sistema di rivincita al termine della partita.
  *
- * Responsabilità:
- * - sincronizzare il Ready della rivincita
- * - aggiornare le righe del ResultPanel
- * - considerare automaticamente pronte le AI
- * - impedire il Replay quando un giocatore ha lasciato la Room
- * - permettere soltanto al Master di avviare la nuova partita
- */
+ * Sincronizza il Ready dei giocatori, aggiorna la tabella
+ * dei risultati e permette al Master di avviare il Replay.
+ */ 
 
 [DisallowMultipleComponent]
 public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
 {
+    private const string PlayAgainLabel = "PLAY AGAIN";
+    private const string CancelReadyLabel = "CANCEL READY";
+    private const string StartMatchLabel = "START MATCH";
+    private const string StartingLabel = "STARTING...";
+    private const string PlayerLeftLabel = "PLAYER LEFT";
+
     [Header("Result UI")]
     [SerializeField] private MultiplayerResultPanelController resultPanel;
 
@@ -28,6 +30,7 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
     private bool localRematchReady;
 
 
+    // Recupera il gestore degli slot quando non è assegnato nell'Inspector.
     private void Awake()
     {
         if (roomSlotManager == null)
@@ -37,9 +40,9 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
     }
 
 
+    // Registra i callback Photon e gli aggiornamenti degli slot.
     private void OnEnable()
     {
-        // Registra questo componento come destinatario dei callback Photon
         base.OnEnable();
 
         if (roomSlotManager != null)
@@ -49,13 +52,14 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
     }
 
 
+    // Azzera il Ready della rivincita all'inizio di ogni partita.
     private void Start()
     {
-        // Ogni nuova partita parte con il giocatore locale non pronto
         ResetLocalReadyProperty();
     }
 
 
+    // Rimuove le iscrizioni prima di disattivare il componente.
     private void OnDisable()
     {
         if (roomSlotManager != null)
@@ -63,45 +67,34 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
             roomSlotManager.SlotsChanged -= HandleSlotsChanged;
         }
 
-        // Rimuove correttamente questo componente dai destinatari dei callback Photon
         base.OnDisable();
     }
 
 
-    // Viene chiamato dal PhotonGameManager quando compare la schermata del risultato
+    // Attiva la fase post partita ed inizializza il giocatore locale come non pronto per la rivincita
     public void BeginPostMatch()
     {
-        if (!PhotonNetwork.InRoom)
+        if (!ValidatePostMatchState())
         {
-            Debug.LogError("[PhotonRematchManager] Impossibile iniziare la fase post-partita: il client non è dentro una Room.", this);
-            return;
-        }
-
-        if (resultPanel == null)
-        {
-            Debug.LogError("[PhotonRematchManager] " + "MultiplayerResultPanel non assegnato.", this);
-            return;
-        }
-
-        if (roomSlotManager == null)
-        {
-            Debug.LogError("[PhotonRematchManager] " + "PhotonRoomSlotManager non trovato.", this);
             return;
         }
 
         isPostMatchActive = true;
-
         localRematchReady = false;
 
-        PhotonPlayerProperties.SetRematchReady(PhotonNetwork.LocalPlayer, false);
+        bool requestStarted = PhotonPlayerProperties.SetRematchReady(PhotonNetwork.LocalPlayer, false);
 
-        RefreshAllRows();
-        RefreshPlayAgainButton();
+        if (!requestStarted)
+        {
+            Debug.LogWarning("[PhotonRematchManager] Impossibile inizializzare il Ready locale.", this);
+        }
+
+        RefreshPostMatchUI();
     }
 
 
-    // Evento pulsante PlayAgain, se premuto diventa ready, altrimenti non ready 
-    // Quando tutti sono pronti, il Master utilizza lo stesso pulsante per avviare il Replay
+    // Cambia il Ready del giocatore locale
+    // Quando tutti i player sono pronti il Master utilizza lo stesso pulsante per avviare la nuova partita
     public void OnPlayAgainPressed()
     {
         if (!isPostMatchActive || !PhotonNetwork.InRoom)
@@ -111,47 +104,22 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
 
         if (HasMissingHumanPlayer())
         {
-            Debug.LogWarning( "[PhotonRematchManager] " + "Replay non disponibile: un giocatore ha lasciato la Room.", this);
+            Debug.LogWarning("[PhotonRematchManager] Replay non disponibile: un giocatore ha lasciato la Room.", this);
             return;
         }
 
-
-        // Quando tutti sono pronti, il pulsante sul Master diventa START MATCH
         if (PhotonNetwork.IsMasterClient && AreAllHumanPlayersReady())
         {
-            if (PhotonGameManager.Instance == null)
-            {
-                Debug.LogError("[PhotonRematchManager] " + "PhotonGameManager non presente nella scena.", this);
-                return;
-            }
-
-            resultPanel.SetPlayAgainButtonState( "STARTING...", false);
-
-            PhotonGameManager.Instance.RequestReplay();
+            StartReplay();
             return;
         }
 
-        bool newReadyState = !localRematchReady;
-
-        bool requestAccepted = PhotonPlayerProperties.SetRematchReady(PhotonNetwork.LocalPlayer, newReadyState);
-
-        if (!requestAccepted)
-        {
-            Debug.LogError("[PhotonRematchManager] Photon non ha accettato il cambio di stato Ready.", this);
-            return;
-        }
-
-
-        // Aggiornamento immediato locale, il Callback Photon confermerà poi il valore anche su tutti i client
-        localRematchReady = newReadyState;
-
-        RefreshAllRows();
-        RefreshPlayAgainButton();
+        ToggleLocalReady();
     }
 
 
 
-    // Photon richiama questo callback su tutti i client quando cambia una Player Custom Property
+    // Aggiorna lo stato qunado cambia una Custom Property relativa al Ready della rivincita
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProperties)
     {
         if (!isPostMatchActive || targetPlayer == null || changedProperties == null)
@@ -164,17 +132,16 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (targetPlayer.IsLocal && PhotonPlayerProperties.TryGetRematchReady(targetPlayer, out bool ready))
+        if (targetPlayer.IsLocal && PhotonPlayerProperties.TryGetRematchReady(targetPlayer, out bool isReady))
         {
-            localRematchReady = ready;
+            localRematchReady = isReady;
         }
 
-        RefreshAllRows();
-        RefreshPlayAgainButton();
+        RefreshPostMatchUI();
     }
 
 
-    // Aggiorna la tabella se un player lascia la Room
+    // Aggiorna la tabella quando un giocatore lascia la Room.
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         if (!isPostMatchActive)
@@ -182,24 +149,11 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        RefreshAllRows();
-        RefreshPlayAgainButton();
+        RefreshPostMatchUI();
     }
 
 
-    // Aggiorna il pulsante quando cambia il Master
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        if (!isPostMatchActive)
-        {
-            return;
-        }
-
-        RefreshAllRows();
-        RefreshPlayAgainButton();
-    }
-
-
+    // Aggiorna la schermata quando cambia l'assegnazione degli slot.
     private void HandleSlotsChanged()
     {
         if (!isPostMatchActive)
@@ -207,12 +161,80 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        RefreshPostMatchUI();
+    }
+
+
+    // Controlla che la fase post-partita possa essere avviata.
+    private bool ValidatePostMatchState()
+    {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogError("[PhotonRematchManager] Il Client non si trova dentro una Room.", this);
+            return false;
+        }
+
+        if (resultPanel == null)
+        {
+            Debug.LogError("[PhotonRematchManager] MultiplayerResultPanel non assegnato.", this);
+            return false;
+        }
+
+        if (roomSlotManager == null)
+        {
+            Debug.LogError("[PhotonRematchManager] PhotonRoomSlotManager non trovato.", this);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    // Inverte e sincronizza il Ready del giocatore locale.
+    private void ToggleLocalReady()
+    {
+        bool newReadyState = !localRematchReady;
+
+        bool requestStarted = PhotonPlayerProperties.SetRematchReady(PhotonNetwork.LocalPlayer, newReadyState);
+
+        if (!requestStarted)
+        {
+            Debug.LogError("[PhotonRematchManager] Photon non ha accettato il cambio di Ready.", this);
+            return;
+        }
+
+
+        // Aggiorniamo subito il valore locale senza attendere la conferma della Custom Prop da photon
+        localRematchReady = newReadyState;
+
+        RefreshPostMatchUI();
+    }
+
+
+    // Richiede al PhotonGameManager di avviare la rivincita.
+    private void StartReplay()
+    {
+        if (PhotonGameManager.Instance == null)
+        {
+            Debug.LogError("[PhotonRematchManager] PhotonGameManager non presente nella scena.", this);
+            return;
+        }
+
+        resultPanel.SetPlayAgainButtonState(StartingLabel, false);
+
+        PhotonGameManager.Instance.RequestReplay();
+    }
+
+
+    // Aggiorna la tabella e il pulsante della rivincita.
+    private void RefreshPostMatchUI()
+    {
         RefreshAllRows();
         RefreshPlayAgainButton();
     }
 
 
-    // Aggionra tutte le righe 
+    // Aggioran ogni riga in base al tipo di slot, alla presenza ed allo stato del Ready del Player
     private void RefreshAllRows()
     {
         if (resultPanel == null || roomSlotManager == null || GameSession.PlayerSlots == null)
@@ -226,41 +248,39 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
 
             if (slot == null)
             {
-                resultPanel.SetPlayerStatus(slotIndex, E_RematchPlayerStatus.Left);
+                SetPlayerStatus(slotIndex, E_RematchPlayerStatus.Left);
                 continue;
             }
 
             if (slot.pType == PlayerInstanceData.E_PlayerSlotType.AI)
             {
-                resultPanel.SetPlayerStatus(slotIndex, E_RematchPlayerStatus.AI);
+                SetPlayerStatus(slotIndex, E_RematchPlayerStatus.AI);
                 continue;
             }
 
-            int actorNumber = roomSlotManager.GetActorNumberAtSlot(slotIndex);
-
-            if (actorNumber <= 0)
-            {
-                resultPanel.SetPlayerStatus(slotIndex, E_RematchPlayerStatus.Left);
-                continue;
-            }
-
-            Player photonPlayer = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+            Player photonPlayer = GetPhotonPlayerAtSlot(slotIndex);
 
             if (photonPlayer == null)
             {
-                resultPanel.SetPlayerStatus(slotIndex, E_RematchPlayerStatus.Left);
+                SetPlayerStatus(slotIndex, E_RematchPlayerStatus.Left);
                 continue;
             }
 
             bool isReady = GetPlayerRematchReady(photonPlayer);
 
-            resultPanel.SetPlayerStatus(slotIndex, isReady ? E_RematchPlayerStatus.Ready : E_RematchPlayerStatus.NotReady);
+            SetPlayerStatus(slotIndex, isReady ? E_RematchPlayerStatus.Ready : E_RematchPlayerStatus.NotReady);
         }
     }
 
 
+    // Imposta lo stato grafico di una riga del pannello.
+    private void SetPlayerStatus(int slotIndex, E_RematchPlayerStatus status)
+    {
+        resultPanel.SetPlayerStatus(slotIndex, status);
+    }
 
-    // Aggiona testo e comportamento del pulsante locale
+
+    // Aggiorna testo e interazione del pulsante locale in base allo stato corrente dell rivincita
     private void RefreshPlayAgainButton()
     {
         if (resultPanel == null)
@@ -270,21 +290,22 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
 
         if (HasMissingHumanPlayer())
         {
-            resultPanel.SetPlayAgainButtonState("PLAYER LEFT", false);
+            resultPanel.SetPlayAgainButtonState(PlayerLeftLabel, false);
             return;
         }
 
         if (PhotonNetwork.IsMasterClient && AreAllHumanPlayersReady())
         {
-            resultPanel.SetPlayAgainButtonState("START MATCH", true);
+            resultPanel.SetPlayAgainButtonState(StartMatchLabel, true);
             return;
         }
 
-        resultPanel.SetPlayAgainButtonState(localRematchReady ? "CANCEL READY" : "PLAY AGAIN", true);
+        resultPanel.SetPlayAgainButtonState(localRematchReady ? CancelReadyLabel : PlayAgainLabel, true);
     }
 
 
-    // Controlla che tutti gli umani ancora previsti dalla partita siano presenti e Ready
+
+    // Restituisce true quando tutti i player umani ancora presenti hanno confermato il Ready
     private bool AreAllHumanPlayersReady()
     {
         if (GameSession.PlayerSlots == null || roomSlotManager == null)
@@ -302,15 +323,8 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
             }
 
             foundHumanPlayer = true;
-            
-            int actorNumber = roomSlotManager.GetActorNumberAtSlot(slot.slotIndex);
 
-            if (actorNumber <= 0)
-            {
-                return false;
-            }
-
-            Player player = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+            Player player = GetPhotonPlayerAtSlot(slot.slotIndex);
 
             if (player == null || !GetPlayerRematchReady(player))
             {
@@ -322,39 +336,23 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
     }
 
 
-    /*
-     * Restituisce true quando uno slot originariamente umano
-     * non è più occupato da un Photon Player.
-     *
-     * In questo caso il Replay viene bloccato e il Master
-     * dovrà usare RETURN MENU.
-     */
-    // Restituisce true quando uno slot umano non è più occupato da un Photon Player
-    // In questo caso il Replay viene bloccato ed il Master dovrà usare Return Menu
+
+    // Restituisce true quando uno slot umano non è più occupato da un player Photon
     private bool HasMissingHumanPlayer()
     {
-        if (GameSession.PlayerSlots == null || roomSlotManager == null)
+        if (GameSession.PlayerSlots == null || roomSlotManager == null) 
         {
             return true;
         }
 
         foreach (PlayerSlotConfig slot in GameSession.PlayerSlots)
         {
-            if (slot == null || slot.pType == PlayerInstanceData.E_PlayerSlotType.AI)        
+            if (slot == null || slot.pType == PlayerInstanceData.E_PlayerSlotType.AI)
             {
                 continue;
             }
 
-            int actorNumber = roomSlotManager.GetActorNumberAtSlot(slot.slotIndex);
-
-            if (actorNumber <= 0)
-            {
-                return true;
-            }
-
-            Player player = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
-
-            if (player == null)
+            if (GetPhotonPlayerAtSlot(slot.slotIndex) == null)
             {
                 return true;
             }
@@ -364,6 +362,27 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
     }
 
 
+    // Restituisce il giocatore Photon assegnato a uno slot.
+    private Player GetPhotonPlayerAtSlot(int slotIndex)
+    {
+        if (!PhotonNetwork.InRoom || PhotonNetwork.CurrentRoom == null || roomSlotManager == null)
+        {
+            return null;
+        }
+
+        int actorNumber = roomSlotManager.GetActorNumberAtSlot(slotIndex);
+
+        if (actorNumber <= 0)
+        {
+            return null;
+        }
+
+        return PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+    }
+
+
+
+    // Legge il Ready di un player.
     private bool GetPlayerRematchReady(Player player)
     {
         if (player == null)
@@ -371,16 +390,16 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
             return false;
         }
 
-        // Il valore locale viene aggionato immediatamente senza aspettare il round di Photon
         if (player.IsLocal)
         {
             return localRematchReady;
         }
 
-        return PhotonPlayerProperties.TryGetRematchReady(player, out bool ready) && ready;
+        return PhotonPlayerProperties.TryGetRematchReady(player, out bool isReady) && isReady;
     }
 
 
+    // Cerca la configurazione corrispondente a uno SlotIndex.
     private PlayerSlotConfig GetSlotConfiguration(int slotIndex)
     {
         if (GameSession.PlayerSlots == null)
@@ -400,10 +419,11 @@ public sealed class PhotonRematchManager : MonoBehaviourPunCallbacks
     }
 
 
+    // Reimposta la Custom Property locale all'inizio del match.
     private void ResetLocalReadyProperty()
     {
         localRematchReady = false;
-
+         
         if (!PhotonNetwork.InRoom || PhotonNetwork.LocalPlayer == null)
         {
             return;

@@ -1,8 +1,16 @@
+using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Photon.Pun;
-using Photon.Realtime;
+
+
+/*
+ * Gestisce i pannelli principali dell'interfaccia durante la partita
+ *
+ * Nel Single Player controlla anche pausa, risultato e Replay.
+ * Nel Multiplayer il menu di pausa è solamente locale e l'uscita dalla partita viene gestita attraverso la Room Photon.
+ */
 
 public class UIGameManager : MonoBehaviourPunCallbacks
 {
@@ -25,23 +33,22 @@ public class UIGameManager : MonoBehaviourPunCallbacks
     [Header("Scene")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
-    private bool isPaused = false;
-
-    // Impedisce di inviare più richieste di uscita mentre Photon sta lasciando la Room
+    private bool isPaused;
     private bool isLeavingRoom;
 
 
-
+    // Ripristina lo stato iniziale dell'interfaccia e del tempo di gioco
     private void Start()
     {
-        HideAllPanels();
-        SetMobileControlsVisible(true);
         Time.timeScale = 1f;
         isPaused = false;
+
+        HideAllPanels();
+        SetMobileControlsVisible(true);
     }
 
 
-    // UTILITY
+    // Nasconde tutti i pannelli gestiti da questo componente
     private void HideAllPanels()
     {
         if (pausePanel != null) pausePanel.SetActive(false);
@@ -51,21 +58,27 @@ public class UIGameManager : MonoBehaviourPunCallbacks
         if (quitDialogPanel != null) quitDialogPanel.SetActive(false);
     }
 
+
+    // Mostra o nasconde i controlli mobile e ne aggiorna l'interazione.
     private void SetMobileControlsVisible(bool visible)
     {
-        if (mobileControlsCanvasGroup == null)
-            return;
-
+        if (mobileControlsCanvasGroup == null) return;
+   
         mobileControlsCanvasGroup.alpha = visible ? 1f : 0f;
         mobileControlsCanvasGroup.interactable = visible;
         mobileControlsCanvasGroup.blocksRaycasts = visible;
     }
 
 
-
-    // PAUSE
-    // Single Player: ferma il gioco tramite Time.timeScale
-    // Multiplayer: apre soltatno il menu locale, gli altri player continuano a giocare
+    /*
+     * Apre il menu di pausa.
+     *
+     * Nel Single Player ferma il tempo.
+     * Nel Multiplayer mette in pausa solamente l'interfaccia locale.
+     */
+    // Apre il menu di pausa
+    // Single Player: ferma il tempo
+    // Multiplayer: mette in pausa l'interfaccia locale
     public void OnPausePressed()
     {
         if (isPaused || isLeavingRoom) return;
@@ -75,139 +88,196 @@ public class UIGameManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.InRoom) Time.timeScale = 0f;
 
         SetMobileControlsVisible(false);
-        pausePanel.SetActive(true);
+
+        if (pausePanel != null) pausePanel.SetActive(true);
     }
 
-    // RESUME
-    // SinglePlayer: viene riattivato il timer
-    // Multiplayer: continua 
+
+    // Chiude il menu di pausa e ripristina i controlli del giocatore.
     public void OnResumePressed()
     {
         if (!isPaused) return;
-
+  
         isPaused = false;
 
-        if (!PhotonNetwork.InRoom) Time.timeScale = 1f;
+        if (!PhotonNetwork.InRoom)
+        {
+            Time.timeScale = 1f;
+        }
 
         SetMobileControlsVisible(true);
-        pausePanel.SetActive(false);
+
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
     }
 
+
+    // Apre il pannello delle impostazioni dal menu di pausa
     public void OnSettingsPressed()
     {
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(true);
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
+
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
     }
 
-    public void OnQuitGamePressed()
-    {
-        pausePanel.SetActive(false);
-        quitDialogPanel.SetActive(true);
-    }
 
-
-    // SETTINGS
+    // Torna al menu di pausa dal pannello delle impostazioni.
     public void OnSettingsBackPressed()
     {
-        settingsPanel.SetActive(false);
-        pausePanel.SetActive(true);
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(true);
+        }
     }
 
 
-    // Aggiungere bottone Apply 
+    // Apre la finestra di conferma per abbandonare la partita.
+    public void OnQuitGamePressed()
+    {
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
+
+        if (quitDialogPanel != null)
+        {
+            quitDialogPanel.SetActive(true);
+        }
+    }
 
 
-    // QUIT GAME
+    // Chiude la finestra di conferma e torna al menu di pausa.
     public void OnCancelQuitPressed()
     {
-        quitDialogPanel.SetActive(false);
-        pausePanel.SetActive(true);
+        if (quitDialogPanel != null)
+        {
+            quitDialogPanel.SetActive(false);
+        }
+
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(true);
+        }
     }
 
-    // Single Player: carica direttamente il menu
-    // Multiplayer: lascia la Room di Photon poi carica il menu
+
+    // Conferma l'uscita dalla partita e avvia il ritorno al menu
     public void OnConfirmQuitPressed()
     {
         ReturnToMainMenu();
     }
 
 
-    // WIN / LOSE
-
-    // Mostra la vittoria nella modalità single player.
+    // Mostra il pannello di vittoria nella modalità Single Player
     public void ShowWinPanel(string finalTime, string localKillCounter)
     {
-        if (winPanel == null)
-        {
-            Debug.LogWarning("[UIGameManager] WinPanel non presente nella scena.", this);
-            return;
-        }
-
-        HideAllPanels();
-        SetMobileControlsVisible(false);
-        Time.timeScale = 0f;
-        isPaused = false;
-        if (winTimeText != null) winTimeText.text = finalTime;
-        if (winKillText != null) winKillText.text = localKillCounter;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayWinSound();
-        winPanel.SetActive(true);
+        ShowSinglePlayerResult(
+            winPanel,
+            winTimeText,
+            winKillText,
+            finalTime,
+            localKillCounter,
+            true
+        );
     }
 
-    // Mostra la sconfitta nella modalità single player.
+
+    // Mostra il pannello di sconfitta nella modalità Single Player.
     public void ShowLosePanel(string finalTime, string localKillCounter)
     {
-        if (losePanel == null)
+        ShowSinglePlayerResult(
+            losePanel,
+            loseTimeText,
+            loseKillText,
+            finalTime,
+            localKillCounter,
+            false
+        );
+    }
+
+
+    // Configura e mostra il pannello finale del Single Player.
+    private void ShowSinglePlayerResult(
+        GameObject resultPanel,
+        TextMeshProUGUI timeText,
+        TextMeshProUGUI killText,
+        string finalTime,
+        string localKillCounter,
+        bool isWin
+    )
+    {
+        if (resultPanel == null)
         {
-            Debug.LogWarning("[UIGameManager] LosePanel non presente nella scena.", this);
+            Debug.LogWarning("[UIGameManager] Pannello del risultato non presente nella scena.", this);
             return;
         }
 
         HideAllPanels();
         SetMobileControlsVisible(false);
+
         Time.timeScale = 0f;
         isPaused = false;
-        if (loseTimeText != null) loseTimeText.text = finalTime;
-        if (loseKillText != null) loseKillText.text = localKillCounter;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayLoseSound();
-        losePanel.SetActive(true);
+
+        if (timeText != null)
+        {
+            timeText.text = finalTime;
+        }
+
+        if (killText != null)
+        {
+            killText.text = localKillCounter;
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            if (isWin)
+            {
+                AudioManager.Instance.PlayWinSound();
+            }
+            else
+            {
+                AudioManager.Instance.PlayLoseSound();
+            }
+        }
+
+        resultPanel.SetActive(true);
     }
 
 
-    // Single Player: ricarica la partita
-    // Multiplayer: se è il Master, ricarica la partita per tutti. Se client invia la richiesta
+    // SinglePlayer: ricarica la scena corrente
+    // Multiplayer: viene gestita separatamente dal PhotonRematchManager
     public void OnReplayPressed()
     {
         Time.timeScale = 1f;
 
-        if (PhotonNetwork.InRoom)
-        {
-            if (PhotonGameManager.Instance == null)
-            {
-                Debug.LogError("[UIGameManager] PhotonGameManager non presente nella scena.", this);
-                return;
-            }
-
-            PhotonGameManager.Instance.RequestReplay();
-            return;
-        }
-
         Scene currentScene = SceneManager.GetActiveScene();
+
         SceneManager.LoadScene(currentScene.name);
     }
 
 
+    // Avvia il ritorno al Main Menu dal pannello finale.
     public void OnMainMenuPressed()
     {
         ReturnToMainMenu();
     }
 
 
-
-    // MULTIPLAYER
-
-    // Avvia il ritorno al Menu
-    // Se il client si trova in una Room, invia una richiesta di uscita, aspetta OnLeftRoom,
-    // altrimenti carica direttamente il Main Menu 
+    // SinglePlayer: carica sunbito la scena
+    // Multiplayer: lascia la Room di Photon
     private void ReturnToMainMenu()
     {
         if (isLeavingRoom)
@@ -216,11 +286,9 @@ public class UIGameManager : MonoBehaviourPunCallbacks
         }
 
         Time.timeScale = 1f;
-
         isPaused = false;
 
         SetMobileControlsVisible(false);
-
         HideAllPanels();
 
         if (!PhotonNetwork.InRoom)
@@ -231,50 +299,54 @@ public class UIGameManager : MonoBehaviourPunCallbacks
 
         isLeavingRoom = true;
 
-        // false indica che il player deve lasciare definitivamente la Room e non restare inattivo
         bool requestStarted = PhotonNetwork.LeaveRoom(false);
 
-        if (!requestStarted)
+        if (requestStarted)
         {
-            Debug.LogError("[UIGameManager] " + "Photon non ha accettato la richiesta LeaveRoom.", this);
-            isLeavingRoom = false;
-            LoadMainMenu();
+            return;
         }
-    }
 
-
-    // Photon richiama questo metodo quando il client ha completato l'uscita dalla Room
-    public override void OnLeftRoom()
-    {
-        if (!isLeavingRoom) return;
+        Debug.LogError("[UIGameManager] Photon non ha accettato la richiesta LeaveRoom.", this);
 
         isLeavingRoom = false;
         LoadMainMenu();
     }
 
 
-    // In PaoPao non supportiamo la migrazione del Master Client
-    public override void OnMasterClientSwitched(Player newMasterClient)
+    // Carica il Main Menu dopo aver completato l'uscita dalla Room.
+    public override void OnLeftRoom()
+    {
+        if (!isLeavingRoom)
+        {
+            return;
+        }
+
+        isLeavingRoom = false;
+
+        LoadMainMenu();
+    }
+
+
+    // Termina la sessione quando l'Host lascia la Room
+    public override void OnMasterClientSwitched(
+        Player newMasterClient
+    )
     {
         if (isLeavingRoom || !PhotonNetwork.InRoom)
         {
             return;
         }
 
-        Debug.LogWarning("[UIGameManager] Il Master Client ha lasciato la Room. La sessione viene terminata per tutti.", this);
+        Debug.LogWarning("[UIGameManager] Il Master Client ha lasciato la Room. La sessione viene terminata.", this);
         ReturnToMainMenu();
     }
 
 
-    // Carica localmente il Main Menu quando il client non appartiene più alla partita Multiplayer
+    // Carica localmente la scena del Main Menu.
     private void LoadMainMenu()
     {
         Time.timeScale = 1f;
+
         SceneManager.LoadScene(mainMenuSceneName);
     }
-
 }
-
-
-
-
