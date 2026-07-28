@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class UIGameManager : MonoBehaviourPunCallbacks
 {
@@ -28,6 +29,7 @@ public class UIGameManager : MonoBehaviourPunCallbacks
 
     // Impedisce di inviare più richieste di uscita mentre Photon sta lasciando la Room
     private bool isLeavingRoom;
+
 
 
     private void Start()
@@ -111,7 +113,7 @@ public class UIGameManager : MonoBehaviourPunCallbacks
         pausePanel.SetActive(true);
     }
 
-  
+
     // Aggiungere bottone Apply 
 
 
@@ -202,7 +204,7 @@ public class UIGameManager : MonoBehaviourPunCallbacks
 
 
     // MULTIPLAYER
-   
+
     // Avvia il ritorno al Menu
     // Se il client si trova in una Room, invia una richiesta di uscita, aspetta OnLeftRoom,
     // altrimenti carica direttamente il Main Menu 
@@ -251,6 +253,19 @@ public class UIGameManager : MonoBehaviourPunCallbacks
     }
 
 
+    // In PaoPao non supportiamo la migrazione del Master Client
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (isLeavingRoom || !PhotonNetwork.InRoom)
+        {
+            return;
+        }
+
+        Debug.LogWarning("[UIGameManager] Il Master Client ha lasciato la Room. La sessione viene terminata per tutti.", this);
+        ReturnToMainMenu();
+    }
+
+
     // Carica localmente il Main Menu quando il client non appartiene più alla partita Multiplayer
     private void LoadMainMenu()
     {
@@ -258,5 +273,8 @@ public class UIGameManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
-
 }
+
+
+
+
