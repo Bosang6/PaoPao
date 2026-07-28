@@ -53,4 +53,15 @@ public class UITimer : MonoBehaviour
         return $"{minutes:00}:{seconds:00}";
     }
 
+
+    // Multiplayer: Ferma il timer e lo allinea la tempo ufficiale deciso dal Master Client
+    public void StopTimerAt(float officialTime)
+    {
+        currentTime = Mathf.Max(0f, officialTime);
+        isRunning = false;
+
+        UpdateTimerText();
+    }
+
+
 }

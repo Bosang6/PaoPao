@@ -207,7 +207,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
 
         int winnerViewId = alivePlayers.Count == 1 ? alivePlayers[0].ViewId : -1;
 
-        string finalTime = uiTimer != null ? uiTimer.GetFormattedTime() : "00:00";
+        float finalTimeSeconds = uiTimer != null ? uiTimer.GetTime() : 0f;
 
         int[] playerViewIds = new int[killCounts.Count];
 
@@ -228,7 +228,7 @@ public sealed class PhotonGameManager : MonoBehaviourPun
             nameof(RPC_EndMatch),
             RpcTarget.AllViaServer,
             winnerViewId,
-            finalTime,
+            finalTimeSeconds,
             playerViewIds,
             playerKillCounts
         );
@@ -247,16 +247,25 @@ public sealed class PhotonGameManager : MonoBehaviourPun
 
     // Applica localmente il risultato deciso dal Master
     [PunRPC]
-    private void RPC_EndMatch(int winnerViewId, string finalTime, int[] playerViewIds, int[] playerKillCounts)
+    private void RPC_EndMatch(int winnerViewId, float finalTimeSeconds, int[] playerViewIds, int[] playerKillCounts)
     {
         isMatchEnded = true;
 
+        string finalTime = "00:00";
+
         if (uiTimer != null)
         {
-            uiTimer.StopTimer();
+            uiTimer.StopTimerAt(finalTimeSeconds);
+            finalTime = uiTimer.GetFormattedTime();
+        }
+        else
+        {
+            int minutes = Mathf.FloorToInt(finalTimeSeconds / 60f);
+            int seconds = Mathf.FloorToInt(finalTimeSeconds % 60f);
+            finalTime = $"{minutes:00}:{seconds:00}";
         }
 
-        PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(FindObjectsSortMode.None);
+PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(FindObjectsSortMode.None);
 
         foreach (PhotonPlayerController player in players)
         {
