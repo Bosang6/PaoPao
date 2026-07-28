@@ -47,6 +47,7 @@ MonoBehaviour:
   - RPC_EndMatch
   - RPC_PlayFinalBattleMusic
   - RPC_RequestReplay
+  - RPC_ReloadMatchScene
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

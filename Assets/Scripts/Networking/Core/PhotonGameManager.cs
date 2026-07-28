@@ -44,6 +44,9 @@ public sealed class PhotonGameManager : MonoBehaviourPun
     [Header("Multiplayer Result Panel")]
     [SerializeField] private MultiplayerResultPanelController multiplayerResultPanel;
 
+    [Header("Rematch")]
+    [SerializeField] private PhotonRematchManager photonRematchManager;
+
     private readonly List<PhotonPlayerController> alivePlayers = new List<PhotonPlayerController>();
 
     private readonly Dictionary<int, int> killCounts = new Dictionary<int, int>();
@@ -317,6 +320,15 @@ PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(Fin
         }
 
         multiplayerResultPanel.ShowResult(isWin, finalTime, localKillCounter);
+
+        if (photonRematchManager != null)
+        {
+            photonRematchManager.BeginPostMatch();
+        }
+        else
+        {
+            Debug.LogError("[PhotonGameManager] PhotonRematchManager non assegnato.", this);
+        }
     }
 
    
@@ -477,21 +489,42 @@ PhotonPlayerController[] players = FindObjectsByType<PhotonPlayerController>(Fin
     }
 
 
-    // Rimuove gli oggetti Photon dalla partita terminata
+     // Pulisce gli oggetti della partita terminata e invia a tutti i client la richiesta di ricaricare la scena.
     private IEnumerator ReloadMatchRoutine()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
 
-        // Elimina player, bombe, e altri oggetti creati tramite Photon
-        // Evita che gli eventi di istanziazione della vecchia partita rimangono memorizzati nella Room
+        // Il master rimuove player, bombe e RPC precedenti dalal Room prima di iniziare la nuova partita
         PhotonNetwork.DestroyAll();
 
         PhotonNetwork.SendAllOutgoingCommands();
 
         yield return null;
 
-        // Il cambio scena viene replicato automaticamente a tutti i Client
-        PhotonNetwork.LoadLevel(currentSceneName);
+        // Il reload della stessa scena non viene propagato da AutomaticallySyncScene
+        // Inviamo quindi una RPC a tutti, Master compreso
+        photonView.RPC(nameof(RPC_ReloadMatchScene), RpcTarget.AllViaServer, currentSceneName);
+
+        // Forza l'invio della RPC prima che il Master inizi il proprio caricamento
+        PhotonNetwork.SendAllOutgoingCommands();
+    }
+
+
+    // Viene eseguito su ogni client della Room
+    // Ogni dispositivo ricarica localmente la stessa scena, mantenendo la connessione alla Room Photon
+    [PunRPC]
+    private void RPC_ReloadMatchScene(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            Debug.LogError("[PhotonGameManager] Impossibile ricaricare la partita: nome scena non valido.", this);
+            return;
+        }
+
+        Debug.Log("[PhotonGameManager] " + $"Ricaricamento sincronizzato della scena '{sceneName}'.");
+
+        // PhotonNetwork.LoadLevel gestisce automaticametne la pausa della coda dei messaggi durante il caricamento
+        PhotonNetwork.LoadLevel(sceneName);
     }
 
 

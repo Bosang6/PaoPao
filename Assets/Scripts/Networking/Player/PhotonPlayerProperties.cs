@@ -18,6 +18,9 @@ public static class PhotonPlayerProperties
     // Chiave per memorizzare lo stato Ready del player
     public const string ReadyKey = "is_ready";
 
+    // Stato Ready utilizzato esclusivamente nella schermata post-partita
+    public const string RematchReadyKey = "rematch_ready";
+
     // Prova a leggere il personaggio selezionato dalle Custom Properties di un Player Photon
     // Restituisce true se il valore esiste ed è valido
     public static bool TryGetCharacterId(Player player, out int characterId)
@@ -111,6 +114,47 @@ public static class PhotonPlayerProperties
         }
 
         Hashtable properties = new Hashtable{{ ReadyKey, isReady }};
+
+        return player.SetCustomProperties(properties);
+    }
+
+
+    // Legge lo stato Ready della rivincita
+    public static bool TryGetRematchReady(Player player, out bool isReady)
+    {
+        isReady = false;
+
+        if (player == null) return false;
+
+        if (!player.CustomProperties.TryGetValue(RematchReadyKey, out object storedValue))
+        {
+            return false;
+        }
+
+        if (storedValue == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            isReady = Convert.ToBoolean(storedValue);
+            return true;
+        }
+        catch
+        {
+            isReady = false;
+            return false;
+        }
+    }
+
+
+    // Imposta lo stato Ready della rivincita
+    public static bool SetRematchReady(Player player, bool isReady    )
+    {
+        if (player == null) return false;
+
+        Hashtable properties = new Hashtable{{ RematchReadyKey, isReady }};
 
         return player.SetCustomProperties(properties);
     }
