@@ -1525,7 +1525,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2308602892591478668, guid: cb6d1398ff2a41a40a7df7041070da7f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2741,7 +2742,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f22731848705edc428494cf4c1430de4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhotonGameManager
-  uiGameManager: {fileID: 227441004}
   uiPlayerLives:
   - {fileID: 759461323}
   - {fileID: 759461322}
