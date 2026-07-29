@@ -288,7 +288,6 @@ MonoBehaviour:
   characterDataTemplate: {fileID: 11400000, guid: 36ce15d7c7ce870419ffec7208981d24, type: 2}
   humanInstanceDataTemplate: {fileID: 11400000, guid: edca1c686b7c60246a83e5ffdd44c9a9, type: 2}
   botInstanceDataTemplate: {fileID: 11400000, guid: ca8b11e88c41c504a8bcbf3bd7a72120, type: 2}
-  enableBombPlacement: 1
 --- !u!114 &1403502864686304216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,11 +326,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformViewClassic
   m_PositionModel:
     SynchronizeEnabled: 1
-    TeleportEnabled: 1
+    TeleportEnabled: 0
     TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
+    InterpolateOption: 4
     InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
+    InterpolateLerpSpeed: 10
     ExtrapolateOption: 0
     ExtrapolateSpeed: 1
     ExtrapolateIncludingRoundTripTime: 1

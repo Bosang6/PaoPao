@@ -219,11 +219,16 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     {
         DisableInputHandlers();
 
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         if (isAI)
         {
             if (botInputHandler == null)
             {
-                Debug.LogError("[PhotonPlayerController] " + "BotInputHandler non trovato.", this);
+                Debug.LogError("[PhotonPlayerController] BotInputHandler non trovato.", this);
                 return;
             }
 
