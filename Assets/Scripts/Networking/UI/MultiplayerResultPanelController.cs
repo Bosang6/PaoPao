@@ -36,19 +36,21 @@ public sealed class MultiplayerResultPanelController : MonoBehaviour
     [SerializeField] private Button returnMenuButton;
 
     [Header("Decorations")]
-    [SerializeField] private GameObject star1;
-    [SerializeField] private GameObject star2;
+    [SerializeField] private GameObject winDecorations;
+    [SerializeField] private GameObject loseDecorations;
 
 
 
     // Mostra il pannello e inserisce i dati relativi alla partita appena terminata
     public void ShowResult(bool localPlayerWon, string finalTime, string localKillCount)
     {
+        SetDecorations(localPlayerWon);
+
         gameObject.SetActive(true);
 
         if (resultTitleText != null)
         {
-            resultTitleText.text = localPlayerWon ? "WIN" : "LOSE";
+            resultTitleText.text = localPlayerWon ? "YOU WIN" : "YOU LOSE";
         }
 
         if (timeValueText != null)
@@ -62,9 +64,6 @@ public sealed class MultiplayerResultPanelController : MonoBehaviour
         }
 
         InitializePlayerRows();
-
-        // Le animazioni delle stelle verranno aggiunte dopo.
-        SetStarsVisible(false);
 
         SetPlayAgainButtonState("PLAY AGAIN", true);
 
@@ -155,16 +154,32 @@ public sealed class MultiplayerResultPanelController : MonoBehaviour
 
 
     // Mostra o nasconde le due descrizioni
-    public void SetStarsVisible(bool visible)
+    private void SetDecorations(bool localPlayerWon)
     {
-        if (star1 != null)
+        // Prima le disattiviamo entrambe per resettare correttamente l'animazione.
+        if (winDecorations != null)
         {
-            star1.SetActive(visible);
+            winDecorations.SetActive(false);
         }
 
-        if (star2 != null)
+        if (loseDecorations != null)
         {
-            star2.SetActive(visible);
+            loseDecorations.SetActive(false);
+        }
+
+        if (localPlayerWon)
+        {
+            if (winDecorations != null)
+            {
+                winDecorations.SetActive(true);
+            }
+        }
+        else
+        {
+            if (loseDecorations != null)
+            {
+                loseDecorations.SetActive(true);
+            }
         }
     }
 
