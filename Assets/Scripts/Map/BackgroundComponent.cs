@@ -10,6 +10,12 @@ public class BackgroundComponent : MonoBehaviour
     private void Fit()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        if (!sr.sprite)
+        {
+            return;
+        }
+        
         Camera cam = Camera.main;
 
         float cameraHeight = cam.orthographicSize * 2f;

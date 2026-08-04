@@ -4,7 +4,8 @@ using UnityEngine;
 public enum E_Map
 {
     Spring,
-    Winter
+    Winter,
+    Cave
 }
 
 public class MapManager : MonoBehaviour
@@ -61,6 +62,9 @@ public class MapManager : MonoBehaviour
                 break;
             case E_Map.Winter:
                 path = "Prefabs/Maps/MapWinter";
+                break;
+            case E_Map.Cave:
+                path = "Prefabs/Maps/MapCave";
                 break;
         }
 

@@ -134,6 +134,11 @@ public class UIMainMenuManager : MonoBehaviour
     {
         SelectMap(E_Map.Winter);
     }
+    
+    public void SelectCaveMap()
+    {
+        SelectMap(E_Map.Cave);
+    }
 
     public void SelectBombermanCharacter()
     {
