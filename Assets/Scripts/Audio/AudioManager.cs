@@ -143,6 +143,9 @@ public class AudioManager : MonoBehaviour
             case E_Map.Winter:
                 PlayMusic(AudioEvent.BackgroundMusicWinter);
                 break;
+            case E_Map.Cave:
+                PlayMusic(AudioEvent.BackgroundMusicCave);
+                break;
         }
     }
 

@@ -14,6 +14,7 @@ public enum AudioEvent
     BombExplosion,
     BackgroundMusicSpring,
     BackgroundMusicWinter,
+    BackgroundMusicCave,
     Footstep,
     BrickBreakSound,
     IceBreakSound,
