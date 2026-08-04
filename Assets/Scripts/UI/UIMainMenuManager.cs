@@ -23,6 +23,7 @@ public class UIMainMenuManager : MonoBehaviour
     [Header("Map Selection Glow")]
     [SerializeField] private GameObject springGlow;
     [SerializeField] private GameObject winterGlow;
+    [SerializeField] private GameObject caveGlow;
 
     [Header("Match Preset")]
     [SerializeField] private SinglePlayerMatchPreset singlePlayerMatchPreset;
@@ -105,7 +106,8 @@ public class UIMainMenuManager : MonoBehaviour
         selectedMap = map;
 
         if(springGlow != null) springGlow.SetActive(map == E_Map.Spring);
-        if(winterGlow != null) winterGlow.SetActive(map == E_Map.Winter);
+        if(winterGlow != null) winterGlow.SetActive(map == E_Map.Winter); 
+        if (caveGlow != null) caveGlow.SetActive(map == E_Map.Cave);
 
         UpdateMatchPlayButton();
 
@@ -265,6 +267,7 @@ public class UIMainMenuManager : MonoBehaviour
         selectedMap = null;
         if (springGlow != null) springGlow.SetActive(false);
         if (winterGlow != null) winterGlow.SetActive(false);
+        if (caveGlow != null) caveGlow.SetActive(false);
 
         UpdateMatchPlayButton();
     }
