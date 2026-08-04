@@ -3,7 +3,7 @@ Shader "Custom/BuiltIn2DVisibilityMask"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _DarkColor ("Dark Color", Color) = (0, 0, 0, 0.95)
+        _DarkColor ("Dark Color", Color) = (0, 0, 0, 0.99)
         _Center ("Light Center", Vector) = (0.5, 0.5, 0, 0)
         _Radius ("Light Radius", Float) = 0.2
         _Softness ("Edge Softness", Float) = 0.05

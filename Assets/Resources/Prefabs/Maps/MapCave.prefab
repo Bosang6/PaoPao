@@ -417,7 +417,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 75
-      m_TileSpriteIndex: 3
+      m_TileSpriteIndex: 61
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1307,7 +1307,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 11
-      m_TileSpriteIndex: 9
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2242,8 +2242,8 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: -873442028, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 1966112646, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 4
     m_Data: {fileID: 1507502272, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 3
@@ -2254,14 +2254,14 @@ Tilemap:
     m_Data: {fileID: -1434518568, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
-    m_Data: {fileID: -405591921, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 3
     m_Data: {fileID: 68454032, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 328247687, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -405591921, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: -1381028272, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 3
@@ -2358,8 +2358,8 @@ Tilemap:
     m_Data: {fileID: 1216286470, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -718534327, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 1966112646, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 856293540, guid: 4a054edcfcfc64fad9362e8ff8e1e1e7, type: 3}
   - m_RefCount: 4
@@ -2828,6 +2828,7 @@ GameObject:
   - component: {fileID: 2224980735370281597}
   - component: {fileID: 6846582653470251510}
   - component: {fileID: 1353333683089538910}
+  - component: {fileID: 6542051396309599483}
   m_Layer: 0
   m_Name: MapCave
   m_TagString: Untagged
@@ -2884,6 +2885,25 @@ MonoBehaviour:
   - {x: 6, y: 5}
   - {x: -6, y: -5}
   - {x: 6, y: -5}
+--- !u!114 &6542051396309599483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4439200358209453943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eaf740551d2c476c97af6eda28cea69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CaveLightingInstaller
+  darknessCanvasPrefab: {fileID: 2268889214331685318, guid: 0feb68b3f5dd546d681d2120929501a3, type: 3}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  lightRadius: 1
+  edgeSoftness: 1
+  darknessColor: {r: 0, g: 0, b: 0, a: 0.9607843}
 --- !u!1 &4884500525823637375
 GameObject:
   m_ObjectHideFlags: 0
