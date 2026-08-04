@@ -1,3 +1,4 @@
+using System;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -20,7 +21,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
 {
     [Header("Map Selection")]
-    [Tooltip("Pulsanti ordinati secondo i Map ID: " + "Spring e Winter.")]
+    [Tooltip("Pulsanti ordinati secondo i Map ID: Spring, Winter e Cave.")]
     [SerializeField] private Button[] mapButtons;
     [Tooltip("Glow ordinati nello stesso modo dei pulsanti.")]
     [SerializeField] private GameObject[] selectionGlows;
@@ -63,6 +64,7 @@ public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
     // L'indice nell'array rappresenta:
     // 0 = spring
     // 1 = winter
+    // 2 = cave
     private void BindButtons()
     {
         buttonActions = new UnityAction[mapButtons.Length];
@@ -301,8 +303,11 @@ public sealed class UIRoomMapSelectionManager : MonoBehaviourPunCallbacks
     {
         return
             mapId >= 0 &&
+            Enum.IsDefined(typeof(E_Map), mapId) &&
             mapButtons != null &&
-            mapId < mapButtons.Length;
+            selectionGlows != null &&
+            mapId < mapButtons.Length &&
+            mapId < selectionGlows.Length;
     }
 
 
