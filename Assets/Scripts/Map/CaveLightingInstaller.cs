@@ -74,26 +74,48 @@ public sealed class CaveLightingInstaller : MonoBehaviour
 
         controller.Initialize(worldCamera, player, lightRadius, edgeSoftness, darknessColor);
     }
-    
+
+    // Cerca il giocatore locale nella modalità Single Player o Multiplayer
     private Transform FindLocalPlayer()
     {
         int playerLayer = LayerMask.NameToLayer("Player");
 
         if (playerLayer == -1)
         {
-            Debug.LogError(
-                "Not found Player Layer。",
-                this
-            );
-
+            Debug.LogError("Not found Player Layer.", this);
             return null;
         }
 
+        // MULTIPLAYER:
+        // cerca prima un PhotonPlayerController umano controllato da questo client
+        PhotonPlayerController[] photonPlayers = FindObjectsByType<PhotonPlayerController>(FindObjectsSortMode.None);
+
+        foreach (PhotonPlayerController photonPlayer in photonPlayers)
+        {
+            if (photonPlayer == null)
+            {
+                continue;
+            }
+
+            bool isOnPlayerLayer = photonPlayer.gameObject.layer == playerLayer;
+
+            if (isOnPlayerLayer && photonPlayer.IsLocalHuman)
+            {
+                return photonPlayer.transform;
+            }
+        }
+
+        // SINGLE PLAYER:
+        // se non trova player Photon, cerca il normale PlayerController
         PlayerController[] playerControllers = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
 
-        // Looking for local player
         foreach (PlayerController playerController in playerControllers)
         {
+            if (playerController == null)
+            {
+                continue;
+            }
+
             bool isOnPlayerLayer = playerController.gameObject.layer == playerLayer;
             bool isLocalHumanPlayer = playerController.IsHuman;
 
