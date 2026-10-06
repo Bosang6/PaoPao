@@ -26,6 +26,8 @@ public sealed class CaveLightingInstaller : MonoBehaviour
 
     private GameObject darknessCanvasInstance;
 
+    private PhotonPlayerController networkLocalPlayer;
+
     private IEnumerator Start()
     {
         if (darknessCanvasPrefab == null)
@@ -39,19 +41,19 @@ public sealed class CaveLightingInstaller : MonoBehaviour
         }
 
         Camera worldCamera = null;
-        Transform player = null;
+        Transform playerTransform = null;
         
         // Get camera and player reference
-        while (worldCamera == null || player == null)
+        while (worldCamera == null || playerTransform == null)
         {
             if (worldCamera == null)
             {
                 worldCamera = Camera.main;
             }
 
-            if (player == null)
+            if (playerTransform == null)
             {
-                player = FindLocalPlayer();
+                playerTransform = FindLocalPlayer();
             }
 
             yield return null;
@@ -72,7 +74,7 @@ public sealed class CaveLightingInstaller : MonoBehaviour
             yield break;
         }
 
-        controller.Initialize(worldCamera, player, lightRadius, edgeSoftness, darknessColor);
+        controller.Initialize(worldCamera, playerTransform, lightRadius, edgeSoftness, darknessColor, networkLocalPlayer);
     }
 
     // Cerca il giocatore locale nella modalità Single Player o Multiplayer
@@ -101,6 +103,7 @@ public sealed class CaveLightingInstaller : MonoBehaviour
 
             if (isOnPlayerLayer && photonPlayer.IsLocalHuman)
             {
+                networkLocalPlayer = photonPlayer;
                 return photonPlayer.transform;
             }
         }

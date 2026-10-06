@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +15,15 @@ public sealed class DarknessMaskController : MonoBehaviour
 
     private RawImage rawImage;
     private Material runtimeMaterial;
+    
+    [Header("Death Reveal")]
+    [SerializeField]
+    private float spectatorRadius = 80.0f;
+
+    [SerializeField]
+    private float revealDuration = 3.0f;
+    
+    private PhotonPlayerController networkLocalPlayer;
 
     private static readonly int CenterId =
         Shader.PropertyToID("_Center");
@@ -56,10 +67,17 @@ public sealed class DarknessMaskController : MonoBehaviour
         Transform targetReference,
         float radius,
         float softness,
-        Color darkColor)
+        Color darkColor,
+        PhotonPlayerController localPlayer)
     {
         worldCamera = cameraReference;
         target = targetReference;
+
+        networkLocalPlayer = localPlayer;
+        if (networkLocalPlayer != null)
+        {
+            networkLocalPlayer.OnLocalPlayerDied += OnLocalPlayerDied;
+        }
 
         lightRadius = Mathf.Max(radius, 0.01f);
         edgeSoftness = Mathf.Max(softness, 0f);
@@ -68,6 +86,18 @@ public sealed class DarknessMaskController : MonoBehaviour
         UpdateMask();
     }
 
+    private void OnDisable()
+    {
+        if (networkLocalPlayer != null)
+        {
+            networkLocalPlayer.OnLocalPlayerDied -= OnLocalPlayerDied;
+        }
+        
+        if (runtimeMaterial != null)
+        {
+            Destroy(runtimeMaterial);
+        }
+    }
 
     private void LateUpdate()
     {
@@ -112,5 +142,29 @@ public sealed class DarknessMaskController : MonoBehaviour
         {
             Destroy(runtimeMaterial);
         }
+    }
+
+    private void OnLocalPlayerDied()
+    {
+        StartCoroutine(ExpandLightRadius());
+    }
+
+    private IEnumerator ExpandLightRadius()
+    {
+        float startRadius = lightRadius;
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime < revealDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float t = Mathf.Clamp(elapsedTime / revealDuration, 0.0f, 1.0f);
+
+            lightRadius = Mathf.Lerp(startRadius, spectatorRadius, t);
+            
+            yield return null;
+        }
+        
+        lightRadius = spectatorRadius;
     }
 }

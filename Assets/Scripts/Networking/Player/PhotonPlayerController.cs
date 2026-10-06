@@ -19,13 +19,13 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     [SerializeField] private GameData gameData;
 
     [Header("Character Template")]
-    [Tooltip("CharacterData corrispondente al personaggio del prefab. Verrà clonata durante il runtime.")]
+    [Tooltip("CharacterData corrispondente al personaggio del prefab. Verrï¿½ clonata durante il runtime.")]
     [SerializeField] private CharacterData characterDataTemplate;
 
     [Header("Instance Data Templates")]
-    [Tooltip( "Dati utilizzati quando il personaggio è controllato da un giocatore umano.")]
+    [Tooltip( "Dati utilizzati quando il personaggio ï¿½ controllato da un giocatore umano.")]
     [SerializeField] private HumanInstanceData humanInstanceDataTemplate;
-    [Tooltip("Dati utilizzati quando il personaggio è controllato dalla AI.")]
+    [Tooltip("Dati utilizzati quando il personaggio ï¿½ controllato dalla AI.")]
     [SerializeField] private BotInstanceData botInstanceDataTemplate;
 
 
@@ -48,7 +48,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     private bool isAI;
     private int slotIndex = -1;
 
-    // L'invincibilità viene controllata dal Master Client, che possiede l'autorità sul danno
+    // L'invincibilitï¿½ viene controllata dal Master Client, che possiede l'autoritï¿½ sul danno
     private float invincibilityTimer;
     private bool isDead;
 
@@ -73,7 +73,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     // Evento autoritativo invocato esclusivamente sul Master quando il personaggio muore
     public event Action<PhotonPlayerController, int> OnNetworkPlayerDied;
 
-
+    public event Action OnLocalPlayerDied;
 
     // Recupera tutti i componenti necessari alla gestione del personaggio multiplayer e delle bombe sincronizzate
     private void Awake()
@@ -137,7 +137,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         }
 
         // CharacterData contiene anche isMoving. Creiamo una copia per evitare che 
-        // più personaggi condividano lo stesso runtime
+        // piï¿½ personaggi condividano lo stesso runtime
         runtimeCharacterData = Instantiate(characterDataTemplate);
 
         runtimeCharacterData.isMoving = false;
@@ -291,7 +291,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
     private void Update()
     {
-        // Il Master aggiorna il timer di invincibilità per tutte le copie autoritative dei personaggi
+        // Il Master aggiorna il timer di invincibilitï¿½ per tutte le copie autoritative dei personaggi
         if (PhotonNetwork.IsMasterClient && invincibilityTimer > 0f)
         {
             invincibilityTimer -= Time.deltaTime;
@@ -352,7 +352,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
         if (died)
         {
-            // Viene eseguito esclusivametne sul Master, quindi anche l'evento di morte è authoritative
+            // Viene eseguito esclusivametne sul Master, quindi anche l'evento di morte ï¿½ authoritative
             OnNetworkPlayerDied?.Invoke(this, attackerPlayerViewId);
             ScheduleOwnedPlayerDestruction();
         }
@@ -390,6 +390,12 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
             playerMove.SetAnimatorIsDead();
             playerAudio?.PlayDeath();
+
+            // For Cave map lighting radius
+            if (IsLocalHuman)
+            {
+                OnLocalPlayerDied?.Invoke();
+            }
 
             return;
         }
