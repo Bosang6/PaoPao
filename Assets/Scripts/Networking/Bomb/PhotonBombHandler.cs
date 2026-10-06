@@ -153,6 +153,8 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
 
         activeBombCount++;
 
+        photonView.RPC(nameof(RPC_PlayBombTimer), photonView.Owner);
+
         Debug.Log(
             "[PhotonBombHandler] " +
             $"Bomba creata per Player ViewID " +
@@ -160,6 +162,18 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
             $"Bombe attive: {activeBombCount}/" +
             $"{characterData.maxBombs}."
         );
+    }
+
+
+    [PunRPC]
+    private void RPC_PlayBombTimer()
+    {
+        if (AudioManager.Instance == null)
+        {
+            return;
+        }
+
+        AudioManager.Instance.PlaySFX(AudioEvent.BombTimer);
     }
 
 
