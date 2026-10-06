@@ -15,7 +15,7 @@ The game, that is a replica of Bomberman, has the following steps:
 
 ## Team
 The team consists of:
-- Conforti Riccardo (main focus: UI + Sound)
+- Conforti Riccardo (main focus: UI + Sound + Multiplayer)
 - D'Ambrosio Lorenzo (main focus: Gameplay + Sound)
 - Huang Zhikang (main focus: Design and Animations + Sound)
 
@@ -26,10 +26,14 @@ The team consists of:
 - Number of enemy character: 3
 - Number of map: 2
 
+### Version 2.0 (10/2026)
+- Added a new map with new gameplay areas and level content.
+- Added new background music to improve the overall game atmosphere.
+- Added multiplayer support, allowing players to play together online.
+
 ## Future developments
 
 The next step will be:
-- Adding a multiplayer-network mode
 - Increase the AI of the bot
 
 ---
@@ -43,3 +47,7 @@ The next step will be:
   <img src="Docs/Images/MapSpring.jpg" width="30%">
   <img src="Docs/Images/MapWinter.jpg" width="30%">
 </p>
+
+## Media Version 2.0
+
+- link: 
