@@ -52,7 +52,7 @@ The next step will be:
 
 - link: https://youtu.be/vvPt_-8rNBo?si=mfArcvNCdfYzNGiP
 <p align="center">
-  <img src="Docs/Images/PaoPao_MultiServerLooby.jpg" width="30%">
+  <img src="Docs/Images/PaoPao_MultiServerLobby.jpg" width="30%">
   <img src="Docs/Images/PaoPao_MultiRoomLobby.jpg" width="30%">
   <img src="Docs/Images/PaoPao_MultiPostGame.jpg" width="30%">
 </p>
