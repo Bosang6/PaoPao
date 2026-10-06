@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPC_RequestReplay
   - RPC_ReloadMatchScene
   - RPC_PlayBombTimer
+  - RPC_PlayExplosionSound
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

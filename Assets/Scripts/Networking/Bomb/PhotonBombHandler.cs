@@ -153,7 +153,9 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
 
         activeBombCount++;
 
-        photonView.RPC(nameof(RPC_PlayBombTimer), photonView.Owner);
+        // Comunica a tutti quale player ha piazzato la bomba.
+        // Solo il client che controlla quel player riprodurrà il suono.
+        photonView.RPC(nameof(RPC_PlayBombTimer), RpcTarget.AllViaServer, photonView.ViewID);
 
         Debug.Log(
             "[PhotonBombHandler] " +
@@ -165,9 +167,24 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
     }
 
 
+    // Riproduce il timer solo sul client del player umano che ha piazzato la bomba
     [PunRPC]
-    private void RPC_PlayBombTimer()
+    private void RPC_PlayBombTimer(int ownerPlayerViewId)
     {
+        PhotonView ownerView = PhotonView.Find(ownerPlayerViewId);
+
+        if (ownerView == null)
+        {
+            return;
+        }
+
+        PhotonPlayerController ownerPlayer = ownerView.GetComponent<PhotonPlayerController>();
+
+        if (ownerPlayer == null || !ownerPlayer.IsLocalHuman)
+        {
+            return;
+        }
+
         if (AudioManager.Instance == null)
         {
             return;

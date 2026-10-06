@@ -125,6 +125,9 @@ public sealed class PhotonExplosionManager : MonoBehaviourPun
         // Verrà utilizzato successivamente per danni e uccisioni.
         _ = ownerPlayerViewId;
 
+        // Comunica a tutti quale player ha piazzato la bomba, solo il proprietario riprodurrà il suono
+        photonView.RPC(nameof(RPC_PlayExplosionSound), RpcTarget.AllViaServer, ownerPlayerViewId);
+
         ActivateFlameCell(origin, FlameType.Center, explosionData, ownerPlayerViewId);
 
         VerifyDirection(origin, Vector2.up, explosionData, ownerPlayerViewId);
@@ -134,6 +137,33 @@ public sealed class PhotonExplosionManager : MonoBehaviourPun
         VerifyDirection(origin, Vector2.left, explosionData, ownerPlayerViewId);
 
         VerifyDirection(origin, Vector2.right, explosionData, ownerPlayerViewId);
+    }
+
+
+    // Riproduce l'esplosione solo sul client del player umano proprietario della bomba
+    [PunRPC]
+    private void RPC_PlayExplosionSound(int ownerPlayerViewId)
+    {
+        PhotonView ownerView = PhotonView.Find(ownerPlayerViewId);
+
+        if (ownerView == null)
+        {
+            return;
+        }
+
+        PhotonPlayerController ownerPlayer = ownerView.GetComponent<PhotonPlayerController>();
+
+        if (ownerPlayer == null || !ownerPlayer.IsLocalHuman)
+        {
+            return;
+        }
+
+        if (AudioManager.Instance == null)
+        {
+            return;
+        }
+
+        AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion);
     }
 
 
