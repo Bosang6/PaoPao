@@ -1,17 +1,39 @@
 # PaoPao - Mobile game for MasterCGD (UniVR)
 
-## Project description
 
-Development of a mobile game (assignment of the class Mobile Programming of the Master in Computer Game Development of the University of Verona).
+## Overview
 
-The game is entirely developed with Unity game engine, the integration of the sound is made with FMOD Studio.
+PaoPao is a Bomberman-inspired mobile game developed in Unity using C# as a group project for the Mobile Programming course of the Master in Computer Game Development at the University of Verona.
 
-The game, that is a replica of Bomberman, has the following steps:
-- [Title screen](#title-screen)
-- [Match settings](#match-setting) (such as character and map selection)
-- [Audio settings](#audio-settings)
-- [Game](#game)
-- [End game](#end-game) (report with win / lose screen)
+The game combines strategic bomb placement, enemy avoidance, and arena-based gameplay, offering both single-player matches against AI-controlled enemies and online multiplayer matches.
+
+Sound integration is handled through FMOD Studio.
+
+## Project Goals
+
+The main goal of the project was to develop a complete mobile gaming experience, from menu navigation and match configuration to gameplay and end-game management.
+
+The project initially focused on single-player gameplay, with enemy AI and different playable maps. It was later expanded to support online multiplayer using Photon PUN, introducing network synchronization and multiplayer session management.
+
+## Gameplay
+
+Players compete in Bomberman-style arenas, strategically placing bombs to defeat their opponents while avoiding explosions.
+
+The game includes:
+
+- **Single-player:** matches against AI-controlled enemies.
+- **Online Multiplayer:** online matches with other players.
+- **Match Settings:** character and map selection before starting a match.
+- **Audio Settings:** management of the game's audio preferences.
+- **End Game:** victory and defeat screens displaying the match result.
+
+## Multiplayer & Technologies
+
+The project was developed using **Unity 6000.3.6f1 and C#**, with **FMOD Studio** for audio integration and **Photon PUN** for online multiplayer functionality.
+
+The multiplayer implementation includes online lobby and room management, player synchronization, and synchronization of networked gameplay objects, including bombs.
+
+These systems allow players to interact within the same arena while maintaining a consistent multiplayer experience.
 
 ## Team
 The team consists of:
