@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Bot;
 using Photon.Pun;
 using UnityEngine;
 
@@ -65,6 +66,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     public PlayerHealth Health => playerHealth;
 
     private bool isMatchEnded;
+    private bool pendingBombRequest;
 
     private Coroutine destroyAfterDeathCoroutine;
 
@@ -304,10 +306,10 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
 
         playerMove.HandleInput(activeInput.GetMoveInput());
 
-        bool bombRequested = activeInput.GetBombInput();
-
-        if (bombRequested)
+        pendingBombRequest |= activeInput.GetBombInput();
+        if (pendingBombRequest && !runtimeCharacterData.isMoving)
         {
+            pendingBombRequest = false;
             photonBombHandler.TryRequestBomb();
         }
     }

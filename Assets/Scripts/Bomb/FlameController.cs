@@ -25,12 +25,21 @@ public class FlameController : MonoBehaviour
     private Animator animator;
     private static readonly int FlameTypeHash = Animator.StringToHash("FlameType"); //Ottimizzazione
 
+    //[AI] Istante (Time.time) in cui la fiamma si spegne (stima, vedi RemainingTime)
+    private float flameEndTime;
+
+    //[AI] Informazioni di sola lettura per il bot
+    public Vector3 Position => transform.position;
+    public float RemainingTime => Mathf.Max(0f, flameEndTime - Time.time);
+
     void Awake() { animator = GetComponent<Animator>(); }
 
     public void Initialize(ExplosionData data, bool PlacedByLocalPlayer, FlameType type = FlameType.Center)
     {
         if(data == null) { Debug.LogError("FlameController: ExplosionData == null"); }
         this.data = data;
+
+        flameEndTime = Time.time + data.fFlameDuration;     //[AI]
 
         if (animator != null)
         {
@@ -61,7 +70,7 @@ public class FlameController : MonoBehaviour
         if(flameCoroutine != null) { StopCoroutine(flameCoroutine); }
         flameCoroutine = StartCoroutine(Flame(PlacedByLocalPlayer));
 
-        //Se l'esplosione � verticale, ruota lo sprite
+        //Se l'esplosione è verticale, ruota lo sprite
         if(type == FlameType.VerticalTopMid || type == FlameType.VerticalTopEnd) { 
             transform.rotation = Quaternion.Euler(0, 0, 90f); 
         }
@@ -88,7 +97,7 @@ public class FlameController : MonoBehaviour
             yield return new WaitForSeconds(fTimeToCall);   //Attende un tot (evita chiamata ad ogni fraem)
             fElapsedTime += fTimeToCall;
 
-            //Nota: nel playerHealth gestisco la ricezione di pi� chiamate, altrimenti subirebbe pi� volte danno
+            //Nota: nel playerHealth gestisco la ricezione di più chiamate, altrimenti subirebbe più volte danno
         }
 
         FlamePool.Instance.ReturnToPool(this);

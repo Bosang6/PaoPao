@@ -16,6 +16,8 @@ public class MapManager : MonoBehaviour
     private MapComponent mapComponent = null;
     
     public E_Map cuurEMap { get; private set; }
+    
+    public MapComponent CurrentMapComponent => currentMap != null ? currentMap.GetComponent<MapComponent>() : null;
 
     private void Awake()
     {

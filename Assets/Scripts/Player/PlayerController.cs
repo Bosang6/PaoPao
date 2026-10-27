@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     private PlayerBombHandler _pBombHandler;
     private PlayerHealth _pHealth;
     private PlayerAudio _pAudio;
+    private bool ownsRuntimeCharacterData;
 
     public int MaxHealth => _characterData.maxHp;
     public int PlayerID => _instanceData.playerID;
@@ -33,6 +34,11 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     {
         _gameData.localPlayerKill = 0;
 
+        // Runtime movement state must not be shared by players using the same CharacterData asset.
+        _characterData = Instantiate(_characterData);
+        _characterData.isMoving = false;
+        ownsRuntimeCharacterData = true;
+
         //Recupera i componenti
         _pInput = GetComponent<IPlayerInput>();
         _pMove = GetComponent<PlayerMove>();
@@ -47,6 +53,11 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         _pHealth.Initialize(_characterData);
         if (IsHuman) { _pAudio.Initialize(_characterData, _pBombHandler); }
         else { _pAudio.Initialize(_characterData); }
+    }
+
+    private void OnDestroy()
+    {
+        if (ownsRuntimeCharacterData && _characterData != null) Destroy(_characterData);
     }
 
     public void Update()

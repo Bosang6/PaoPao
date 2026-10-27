@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerMove : MonoBehaviour
 {
     public event System.Action OnStartSliding;
+    public event System.Action OnMoveBlocked;
 
     private GameData _gameData;
     private CharacterData _characterData;
@@ -15,6 +16,8 @@ public class PlayerMove : MonoBehaviour
     private Vector2 v2LastDirection = Vector2.zero;
     private Vector2 boxSize;
     private Animator animator;
+    private BotInputHandler botInputHandler;
+    private Rigidbody2D body;
 
     void Start()
     {
@@ -28,6 +31,16 @@ public class PlayerMove : MonoBehaviour
         _gameData = gameData;
         _characterData = characterData;
         _instanceData = instanceData;
+        botInputHandler = GetComponent<BotInputHandler>();
+        body = GetComponent<Rigidbody2D>();
+        if (body != null)
+        {
+            // Movement is grid-stepped by this component, not driven by forces.
+            // A dynamic body is pushed by a bomb spawned under the player and
+            // desynchronizes the Transform from v3TargetPosition.
+            body.bodyType = RigidbodyType2D.Kinematic;
+            body.gravityScale = 0f;
+        }
 
         // Spawn di fallback, usato solo se enssuno lo sovrascrive 
         _instanceData.spawnPosition = transform.position;
@@ -83,17 +96,21 @@ public class PlayerMove : MonoBehaviour
         }
 
         Collider2D hit = Physics2D.OverlapBox(target, boxSize, 0f, _gameData.lmCollisionLayer);
+        bool botAllowsMove = botInputHandler == null || !botInputHandler.enabled || botInputHandler.CanMoveTo(target);
+        bool reserved = hit == null && botAllowsMove && (PlayerManager.Instance == null ||
+            PlayerManager.Instance.TryReserveMove(transform, target, _gameData.fCellSize));
 
-        if (hit == null)    //Cella libera, ci si può muovere
+        if (reserved)
         {
             v3TargetPosition = target;
             v2LastDirection = direction;
             _characterData.isMoving = true;
-            if(animator != null) { animator.SetBool("IsMoving", true); }
+            if (animator != null) animator.SetBool("IsMoving", true);
         }
-        else                //Cella occupata, ci si ferma
+        else
         {
             v2LastDirection = Vector2.zero;
+            OnMoveBlocked?.Invoke();
         }
     }
 
@@ -107,7 +124,8 @@ public class PlayerMove : MonoBehaviour
 
         if (transform.position == end)  //Invocato al termine del movimento (arrivato a destinazione)
         {
-            transform.position = GridUtils.AdjustPosition(end, _gameData.fCellSize);   //Doppio controllo sull'accuratezza della posizione
+            transform.position = GridUtils.AdjustPosition(end, _gameData.fCellSize);
+            PlayerManager.Instance?.ReleaseMove(transform);   //Doppio controllo sull'accuratezza della posizione
             _characterData.isMoving = false;
             //if (animator != null) { animator.SetBool("IsMoving", false); }
 

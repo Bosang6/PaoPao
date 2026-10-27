@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class BreakableTilemap : MonoBehaviour
 {
+    public static BreakableTilemap Instance { get; private set; }
+    private static readonly List<BreakableTilemap> Instances = new List<BreakableTilemap>();
     private Tilemap tilemap;
+    private Tilemap wallTilemap;
 
     [SerializeField]
     private GameObject breakEffectPrefab;
@@ -11,16 +15,46 @@ public class BreakableTilemap : MonoBehaviour
     [SerializeField]
     private string targetTag = "Flame";
     
-    void Start()
+    private void Awake()
     {
         tilemap = GetComponent<Tilemap>();
+        Instance = this;
+        if (!Instances.Contains(this)) Instances.Add(this);
+        Tilemap[] tilemaps = transform.parent != null
+            ? transform.parent.GetComponentsInChildren<Tilemap>()
+            : GetComponentsInChildren<Tilemap>();
+        foreach (Tilemap candidate in tilemaps)
+            if (candidate != null && candidate.gameObject.layer == LayerMask.NameToLayer("Wall"))
+                wallTilemap = candidate;
+    }
+
+    public static bool HasBreakableAtWorldPosition(Vector3 worldPosition)
+    {
+        foreach (BreakableTilemap instance in Instances)
+            if (instance != null && instance.tilemap != null &&
+                instance.tilemap.HasTile(instance.tilemap.WorldToCell(worldPosition))) return true;
+        return false;
+    }
+
+    public static bool HasWallAtWorldPosition(Vector3 worldPosition)
+    {
+        foreach (BreakableTilemap instance in Instances)
+            if (instance != null && instance.wallTilemap != null &&
+                instance.wallTilemap.HasTile(instance.wallTilemap.WorldToCell(worldPosition))) return true;
+        return false;
+    }
+
+    private void OnDestroy()
+    {
+        Instances.Remove(this);
+        if (Instance == this) Instance = Instances.Count > 0 ? Instances[Instances.Count - 1] : null;
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if (!other.CompareTag(targetTag)) return;
 
-        // La fiamma è già centrata sulla cella, usiamo direttamente la sua posizione
+        // La fiamma ï¿½ giï¿½ centrata sulla cella, usiamo direttamente la sua posizione
         Vector3Int cellPos = tilemap.WorldToCell(other.transform.position);
         TileBase tile = tilemap.GetTile(cellPos);
 

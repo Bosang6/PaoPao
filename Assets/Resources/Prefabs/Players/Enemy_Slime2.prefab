@@ -127,6 +127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d485f707acb00e5469de214d7cac9f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotInputHandler
+  gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  strategy: 2
 --- !u!114 &2060775463785302385
 MonoBehaviour:
   m_ObjectHideFlags: 0

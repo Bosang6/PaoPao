@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: SinglePlayer_Default
   m_EditorClassIdentifier: Assembly-CSharp::SinglePlayerMatchPreset
   aiEnemies:
-  - {fileID: 11400000, guid: 36ce15d7c7ce870419ffec7208981d24, type: 2}
-  - {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
+  - {fileID: 11400000, guid: dc33e0b106da9984fa697b6f9aa1739e, type: 2}
   - {fileID: 11400000, guid: dc33e0b106da9984fa697b6f9aa1739e, type: 2}

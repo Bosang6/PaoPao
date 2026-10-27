@@ -1,7 +1,9 @@
+using Bot;
 using UnityEngine;
 
 public interface IBotStrategy
 {
-    Vector2 DecideMovement(BotContext context);
+    void Think(BotContext context);
+    Vector2 DecideMove(BotContext context);
     bool DecideBomb(BotContext context);
 }
