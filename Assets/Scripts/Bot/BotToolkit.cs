@@ -778,7 +778,7 @@ namespace Bot
         /*
          * Verifica se due posizioni appartengono alla stessa cella
          */
-        private static bool SameCell(Vector3 a, Vector3 b, float size)
+        public static bool SameCell(Vector3 a, Vector3 b, float size)
         {
             return (GridUtils.AdjustPosition(a, size) - GridUtils.AdjustPosition(b, size)).sqrMagnitude < 0.01f;
         }

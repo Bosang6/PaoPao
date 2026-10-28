@@ -304,13 +304,26 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             return;
         }
 
-        playerMove.HandleInput(activeInput.GetMoveInput());
+        Vector2 moveInput = activeInput.GetMoveInput();
+        bool placeBomb = activeInput.GetBombInput();
 
-        pendingBombRequest |= activeInput.GetBombInput();
-        if (pendingBombRequest && !runtimeCharacterData.isMoving)
+        // Una AI decide di piazzare la bomba sulla cella attuale e iniziare subito la fuga
+        if (isAI && placeBomb)
         {
-            pendingBombRequest = false;
-            photonBombHandler.TryRequestBomb();
+            photonBombHandler.TryRequestBomb(transform.position);
+        }
+
+        playerMove.HandleInput(moveInput);
+
+        // Per il giocatore umano la richiesta rimane fino al termine del movimento, così la bomba viene piazzata su una cella centrata
+        if (!isAI)
+        {
+            pendingBombRequest |= placeBomb;
+            if (pendingBombRequest && !runtimeCharacterData.isMoving)
+            {
+                pendingBombRequest = false;
+                photonBombHandler.TryRequestBomb(transform.position);
+            }
         }
     }
 

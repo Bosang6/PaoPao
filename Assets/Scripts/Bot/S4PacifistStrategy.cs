@@ -14,28 +14,27 @@ namespace Bot
          *
          * Nota: se rimane 1vs1 passa a modalità Kamikaze
          */
-        
         protected override Vector2 ChooseMove(BotContext context)
         {
             //Se nPlayer == 2 -> diventa un Kamikaze
             if (BotToolkit.CountPlayers() == 2)
             {
-                Debug.Log("Im a kamikaze");
                 if (!BotToolkit.TryNearestCellPlayer(context, out Vector3 target)) return Vector2.zero;
                 return BotToolkit.BfsToTile(context, target);
             }
-                Debug.Log("Im a pacifist");
 
             //Se nPlayer > 2 -> "pacifista"
+            Vector3 currentCell = context.CellPosition;
+            Vector3 safeCell = BotToolkit.NearestCellSafe(context);
 
             //Se la cella attuale non è pericolosa, rimane fermo
-            if (BotToolkit.IsCellSafe(context, context.CellPosition))
+            if (BotToolkit.SameCell(currentCell, safeCell, context.GameData.fCellSize))
             {
                 return Vector2.zero;
             }
 
             //Se la cella attuale è pericolosa, si muove verso quella safe più vicina
-            return BotToolkit.BfsToTile(context, BotToolkit.NearestCellSafe(context));
+            return BotToolkit.BfsToTile(context, safeCell);
         }
 
         protected override bool WantsBomb(BotContext context)
