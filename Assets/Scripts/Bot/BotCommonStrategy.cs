@@ -12,28 +12,10 @@ namespace Bot
          */
         public void Think(BotContext context)
         {
-            //#1 Aggiorna la posizione del bot e il cooldown della bomba
-            context.Position = context.Transform.position;
-            context.BombCooldownRemaining -= Time.deltaTime;
+            //#0 Se è in fuga, prosegue la fuga
+            if (context.Status == BotContext.MovingStatus.Escaping) { return; }
 
-            
-            //#2 Se si è in fase di fuga, aggiorna i timer della bomba e continua la fuga
-            if (context.Status == BotContext.MovingStatus.Escaping)
-            {
-                context.LastBombTimer -= Time.deltaTime;
-                context.LastBombFuseTimer -= Time.deltaTime;
-                
-                //Se i timer arriva a zero (bomba esplosa), torna nello stato di exploring
-                if (context.LastBombTimer <= 0f)
-                {
-                    context.Status = BotContext.MovingStatus.Exploring;
-                    context.PreferredEscapeDirection = Vector2.zero;
-                }
-                return;
-            }
-
-
-            //#3 condizioni dove think non deve intervenire
+            //#1 condizioni dove think non deve intervenire
             bool isMoving = context.CharacterData.isMoving;                         //Se è in "animazione" di movimento
             bool hasCooldown = context.BombCooldownRemaining > 0f;                  //Se è in cooldown di bomba
             bool notNeedToPlaceBomb = !WantsBomb(context);                          //Se la strategia ha deciso che deve mettere una bomba
@@ -42,7 +24,7 @@ namespace Bot
             if (isMoving || hasCooldown || notNeedToPlaceBomb || isNotSafeToPlaceBomb) return;
 
             
-            //#4 condizioni superate, si può *pensare di* piazzare una bomba e scappare
+            //#2 condizioni superate, si può *pensare di* piazzare una bomba e scappare
             
             //Salva l'eventuale posizione della bomba
             context.LastBombPosition = context.CellPosition;
@@ -66,6 +48,23 @@ namespace Bot
             
             //Se la trova, si mette in attesa di piazzare la bomba
             context.BombRequestPending = true;
+        }
+
+        /*
+         * Aggiorna i timer
+         */
+        public void UpdateTimers(BotContext context, float deltaTime)
+        {
+            context.BombCooldownRemaining = Mathf.Max(0f, context.BombCooldownRemaining - deltaTime);
+            if (context.Status != BotContext.MovingStatus.Escaping) return;
+
+            context.LastBombTimer -= deltaTime;
+            context.LastBombFuseTimer -= deltaTime;
+            if (context.LastBombTimer <= 0f)
+            {
+                context.Status = BotContext.MovingStatus.Exploring;
+                context.PreferredEscapeDirection = Vector2.zero;
+            }
         }
 
         /*

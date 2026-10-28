@@ -117,13 +117,15 @@ namespace Bot
          * - Controlla se la cella non è già occupata da un altro player
          * - Controlla se la cella non è già occupata da una bomba
          * - Controlla se la cella è safe (invocando IsCellSafe)
+         * Nota: ignoreOtherPlayers serve per ignorare, nei nodi futuri della BFS, la presenza di altri player
+         *  poiché ora ostacolano il percorso ma non è detto che lo faranno anche al raggiungimento di quella tile
          */
-        public static bool CanReachCell(BotContext context, Vector3 cell, float arrivalTime = 0f)
+        public static bool CanReachCell(BotContext context, Vector3 cell, float arrivalTime = 0f, bool ignoreOtherPlayers = false)
         {
             float cellSize = context.GameData.fCellSize;
             
             //Controlla se la cella è già occupata da un player
-            if (PlayerManager.Instance != null && PlayerManager.Instance.IsCellReservedByOther(context.Transform, cell, cellSize)) return false;
+            if (!ignoreOtherPlayers && PlayerManager.Instance != null && PlayerManager.Instance.IsCellReservedByOther(context.Transform, cell, cellSize)) return false;
             
             //Controlla se la cella è occupata da una bomba
             if (HasBombAt(cell, cellSize)) return false;
@@ -136,6 +138,7 @@ namespace Bot
                 if (collider == null) continue;
                 Transform hit = collider.transform;
                 if (hit == context.Transform || hit.IsChildOf(context.Transform)) continue;
+                if (ignoreOtherPlayers && hit.GetComponentInParent<PlayerMove>() != null) continue;
                 return false;
             }
 
@@ -211,6 +214,146 @@ namespace Bot
             //Se trova un player, restituisce la cella più vicina al player (passa un predicato per determinare il concetto di "vicino")
             bool Check(Vector3 cell) => IsAdjacent(cell, playerCell, context.GameData.fCellSize);
             return TryFindNearestCell(context, Check , out result);
+        }
+
+        /*
+         * Controlla se è possibile "creare" un percorso verso un player distruggendo dei breakable
+         * - BreakableCell: la prima cella con una breakable (andrà distrutta)
+         * - StandingCell: la cella precedente alla BreakableCell (il bot deve raggiungerla per distruggere BreakableCell)
+         */
+        public static bool TryFindBreakableBlockingPlayerRoute(BotContext context, out Vector3 breakableCell, out Vector3 standingCell)
+        {
+            //#0 Preparazione
+            
+            //In caso di fallimento, breakableCell e standingCell mantengono valori safe
+            breakableCell = context.CellPosition;
+            standingCell = context.CellPosition;
+
+            //Cerca il player più vicino, se non ce ne sono termina il metodo
+            Transform player = FindNearestPlayer(context);
+            if (player == null) return false;
+
+            //Memorizza dimensione della griglia e vincoli sulla ricerca
+            float size = context.GameData.fCellSize;
+            Vector3 playerCell = GridUtils.AdjustPosition(player.position, size);
+            Vector2Int start = ToCell(context.CellPosition, size);
+            GetBounds(out Vector2Int min, out Vector2Int max);
+
+            
+            //#1 BFS (simile a TryFindNearestCell) 
+            Queue<Vector2Int> open = new Queue<Vector2Int>();
+            HashSet<Vector2Int> visited = new HashSet<Vector2Int> { start };
+            Dictionary<Vector2Int, Vector2Int> parents = new Dictionary<Vector2Int, Vector2Int>();
+            Dictionary<Vector2Int, int> distances = new Dictionary<Vector2Int, int> { [start] = 0 };
+            open.Enqueue(start);
+
+            float stepTime = size / Mathf.Max(0.1f, context.CharacterData.moveSpeed);
+            Vector2Int goal = start;
+            bool foundGoal = false;
+
+            while (open.Count > 0)
+            {
+                Vector2Int current = open.Dequeue();
+                int currentDistance = distances[current];
+
+                foreach (Vector2 direction in Directions)
+                {
+                    Vector2Int next = current + Vector2Int.RoundToInt(direction);
+                    if (next.x < min.x || next.x > max.x || next.y < min.y || next.y > max.y || visited.Contains(next)) continue;
+
+                    int distance = currentDistance + 1;
+                    float arrivalTime = Mathf.Max(0f, (distance - 0.5f) * stepTime);
+                    Vector3 world = ToWorld(next, context.Position.z, size);
+                    if (!CanTraverseBreachRoute(context, world, playerCell, arrivalTime)) continue;
+
+                    visited.Add(next);
+                    parents[next] = current;
+                    distances[next] = distance;
+                    if (IsAdjacent(world, playerCell, size))
+                    {
+                        goal = next;
+                        foundGoal = true;
+                        break;
+                    }
+
+                    open.Enqueue(next);
+                }
+
+                if (foundGoal) break;
+            }
+
+            //Non esistono percorsi per raggiungere il player
+            if (!foundGoal) return false;
+
+            
+            //#2 Ricostruzione path
+            List<Vector2Int> path = new List<Vector2Int> { goal };
+            while (path[path.Count - 1] != start) path.Add(parents[path[path.Count - 1]]);
+            path.Reverse();
+
+            //Cerca il primo breakable lungo il percorso (sarà breakableCell) e la tile precedente (standingCell)
+            for (int i = 1; i < path.Count; i++)
+            {
+                Vector3 cell = ToWorld(path[i], context.Position.z, size);
+                if (!IsBreakableCell(context, cell)) continue;
+
+                breakableCell = cell;
+                standingCell = ToWorld(path[i - 1], context.Position.z, size);
+                return true;
+            }
+
+            return false;
+        }
+
+        /*
+         * Helper per TryFindBreakableBlockingPlayerRoute, verifica se una cella è utilizzabile per il percorso ipotetico
+         * - Se è la cella che contiene il player -> non serve per il percorso (bisogna fermarsi la tile prima) [#1]
+         * - Se la cella contiene una bomba -> non è safe [#1]
+         * - Se la cella contiene un wall -> non è percorribile [#2]
+         * - Se è breakable -> controlla se è safe (no bombe / fiamme) e in caso la approva [#3] (utilizza IsBreakableCell())
+         * - Se non è breakable -> fa un controllo fisico (per vedere se è vuota) ed eventualmente la approva
+         */
+        private static bool CanTraverseBreachRoute(BotContext context, Vector3 cell, Vector3 playerCell, float arrivalTime)
+        {
+            float size = context.GameData.fCellSize;
+            
+            //[#1]
+            if (SameCell(cell, playerCell, size) || HasBombAt(cell, size)) return false;    
+
+            //[#2]
+            Vector2 box = Vector2.one * (size * 0.9f);
+            if (BreakableTilemap.HasWallAtWorldPosition(cell) || Physics2D.OverlapBox(cell, box, 0f, context.CharacterData.explosionData.lmWallLayer) != null)
+            {
+                return false;
+            }
+
+            //[#3]
+            bool isBreakable = IsBreakableCell(context, cell);
+            if (!IsCellSafe(context, cell, arrivalTime)) return false;
+            if (isBreakable) return true;
+
+            //[#4]
+            Collider2D[] colliders = Physics2D.OverlapBoxAll(cell, box, 0f, context.GameData.lmCollisionLayer);
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider == null) continue;
+                Transform hit = collider.transform;
+                if (hit == context.Transform || hit.IsChildOf(context.Transform)) continue;
+                return false;
+            }
+
+            return true;
+        }
+
+        /*
+         * Helper per CanTraverseBreachRoute e TryFindBreakableBlockingPlayerRoute, verifica se la tile è breakable
+         * Nota: verifica se è *attualmente* breakable, quindi se il collider è ancora attivo
+         */
+        private static bool IsBreakableCell(BotContext context, Vector3 cell)
+        {
+            if (!BreakableTilemap.HasBreakableAtWorldPosition(cell)) return false;
+            Vector2 box = Vector2.one * (context.GameData.fCellSize * 0.9f);
+            return Physics2D.OverlapBox(cell, box, 0f, context.CharacterData.explosionData.lmBreakableLayer) != null;
         }
 
         /*
@@ -325,7 +468,7 @@ namespace Bot
         }
 
         /*
-         * Trova il player più vicino e scglie una direzione per allontanarsi da lui
+         * Trova il player più vicino e sceglie una direzione per allontanarsi da lui
          * - Se non trova un altro player, restituisce Vector2.zero
          * - Restituisce la direzione che da maggiore distanza
          * -- Se la differenza orizzontale è maggiore, restituisce destra o sinistra
@@ -442,7 +585,8 @@ namespace Bot
                     float arrivalTime = Mathf.Max(0f, (distance - 0.5f) * stepTime);
                     
                     //Controlla se la cella è raggiungibile (fisicamente e logicamente), altrimenti la skippa
-                    if (!CanReachCell(context, world, arrivalTime)) continue;
+                    //IgnoreOtherPlayers dev'essere attivo solo per i nodi con distanza > 1, poichè potrebbero liberarsi nel frattempo
+                    if (!CanReachCell(context, world, arrivalTime, distance > 1)) continue;
 
                     //Se è il primo passo, memorizza la direzione scelta (andrà restituita), altrimenti la mantiene invariata
                     Vector2 routeFirstStep = current.Distance == 0 ? direction : current.FirstStep;

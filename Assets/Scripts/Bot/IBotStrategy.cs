@@ -1,9 +1,12 @@
-using Bot;
 using UnityEngine;
 
-public interface IBotStrategy
+namespace Bot
 {
-    void Think(BotContext context);
-    Vector2 DecideMove(BotContext context);
-    bool DecideBomb(BotContext context);
+    public interface IBotStrategy
+    {
+        void Think(BotContext context);
+        void UpdateTimers(BotContext context, float deltaTime);
+        Vector2 DecideMove(BotContext context);
+        bool DecideBomb(BotContext context);
+    }
 }

@@ -5,17 +5,23 @@ using UnityEngine;
 //Simula l'input di un utente, implementando gli stessi metodi (tramite IPlayerInput)
 public class BotInputHandler : MonoBehaviour, IPlayerInput
 {
-    private IBotStrategy _strategy;
-    private BotContext _botContext;
-    private Vector2 _currentMove;
-    private PlayerMove _playerMove;
-
+    [Header("Bot Configuration")]
     [SerializeField] private GameData gameData;
-    [SerializeField] private BotStrategyType strategy = BotStrategyType.Random;
+    [SerializeField] private BotStrategyType strategyType = BotStrategyType.Random;
+    [SerializeField, Min(0.01f)] private float idleDecisionRetryInterval = 0.25f;
 
-    
+    private PlayerMove playerMove;          //Componente che muove il personaggio
+    private Vector2 currentMove;            //Ultima direzione scelta (usata durante il movimento)
+    private BotContext botContext;          //Informazioni conosciute dal bot
+    private IBotStrategy activeStrategy;    //Componente di ia del bot, varia in base al tipo di strategia
+    private Vector2Int lastThoughtCell;     //Tile dove il bot ha preso l'ultima decisione
+    private bool hasThoughtCell;            //Flag che indica se in questa tile ha già preso una decisione 
+    private float nextIdleDecisionTime;     //Timer che indica quanti secondi mancano alla prossima decisione
+
     public void Initialize(CharacterData characterData, PlayerInstanceData instanceData)
     {
+        idleDecisionRetryInterval = Mathf.Max(0.01f, idleDecisionRetryInterval);
+
         BotInstanceData botData = instanceData as BotInstanceData;
         if (botData == null)
         {
@@ -31,10 +37,10 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
         }
 
         //Se un movimento viene bloccato, HandleMoveBlocked può cercare un’altra mossa
-        _playerMove = GetComponent<PlayerMove>();
-        if (_playerMove != null) _playerMove.OnMoveBlocked += HandleMoveBlocked;
+        playerMove = GetComponent<PlayerMove>();
+        if (playerMove != null) { playerMove.OnMoveBlocked += HandleMoveBlocked; }
 
-        _botContext = new BotContext
+        botContext = new BotContext
         {
             Status = BotContext.MovingStatus.Exploring,
             LastBombPosition = transform.position,
@@ -44,16 +50,16 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
             GameData = gameData,
             BombHandler = GetComponent<PlayerBombHandler>(),
             NetworkBombHandler = GetComponent<PhotonBombHandler>(),
-            Transform = transform
+            Transform = transform,
+            BombCooldownRemaining = botData.bombCooldown
         };
 
-        _botContext.BombCooldownRemaining = botData.bombCooldown;
-        _strategy = CreateStrategy(strategy);
+        activeStrategy = CreateStrategy(strategyType);
     }
 
-    private IBotStrategy CreateStrategy(BotStrategyType strategyType)
+    private IBotStrategy CreateStrategy(BotStrategyType newStrategyType)
     {
-        switch (strategyType)
+        switch (newStrategyType)
         {
             case BotStrategyType.Random: return new S0RandomStrategy();
             case BotStrategyType.PlaceAndRun: return new S1PlaceAndRun();
@@ -61,7 +67,7 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
             case BotStrategyType.Kamikaze: return new S3KamikazeStrategy();
             case BotStrategyType.Pacifist: return new S4PacifistStrategy();
             default:
-                Debug.LogError($"Strategia bot non valida: {strategyType}. Uso Random.", this);
+                Debug.LogError($"Strategia bot non valida: {newStrategyType}. Uso Random.", this);
                 return new S0RandomStrategy();
         }
     }
@@ -71,14 +77,43 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
      */
     public Vector2 GetMoveInput()
     {
-        if (_botContext == null || _strategy == null) return Vector2.zero;
-        _botContext.Position = transform.position;
-        _strategy.Think(_botContext);
-        if (!_botContext.CharacterData.isMoving)
+        if (botContext == null || activeStrategy == null) return Vector2.zero;
+
+        //Aggiorna costantemente i timer
+        botContext.Position = transform.position;
+        activeStrategy.UpdateTimers(botContext, Time.deltaTime);
+
+        //Se si è in movimento, lo si continua
+        if (botContext.CharacterData.isMoving) return currentMove;
+
+        Vector3 cellPosition = botContext.CellPosition;
+        Vector2Int currentCell = new Vector2Int(
+            Mathf.RoundToInt(cellPosition.x / gameData.fCellSize),
+            Mathf.RoundToInt(cellPosition.y / gameData.fCellSize));
+
+        bool reachedNewCell = !hasThoughtCell || currentCell != lastThoughtCell;
+        if (reachedNewCell)
         {
-            _currentMove = _strategy.DecideMove(_botContext);
+            lastThoughtCell = currentCell;
+            hasThoughtCell = true;
         }
-        return _currentMove;
+
+        //Se è fermo senza una mossa, riprova a castarne una ogni [nextIdleDecisionTime] secondi
+        nextIdleDecisionTime -= Time.deltaTime;
+        bool retryWhileIdle = currentMove == Vector2.zero && nextIdleDecisionTime <= 0f;
+        if (reachedNewCell || retryWhileIdle)
+        {
+            activeStrategy.Think(botContext);
+            currentMove = activeStrategy.DecideMove(botContext);
+            nextIdleDecisionTime = idleDecisionRetryInterval;
+        }
+
+        return currentMove;
+    }
+
+    public bool GetBombInput()
+    {
+        return botContext != null && activeStrategy != null && activeStrategy.DecideBomb(botContext);
     }
 
     /*
@@ -86,9 +121,9 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
      */
     public bool CanMoveTo(Vector3 destination)
     {
-        if (_botContext == null) return false;
-        float stepTime = _botContext.GameData.fCellSize / Mathf.Max(0.1f, _botContext.CharacterData.moveSpeed);
-        return BotToolkit.CanReachCell(_botContext, destination, stepTime * 0.5f);
+        if (botContext == null) return false;
+        float stepTime = botContext.GameData.fCellSize / Mathf.Max(0.1f, botContext.CharacterData.moveSpeed);
+        return BotToolkit.CanReachCell(botContext, destination, stepTime * 0.5f);
     }
 
     /*
@@ -96,18 +131,13 @@ public class BotInputHandler : MonoBehaviour, IPlayerInput
      */
     private void HandleMoveBlocked()
     {
-        if (_botContext == null) return;
-        _botContext.Position = transform.position;
-        _currentMove = _strategy.DecideMove(_botContext);
+        if (botContext == null) return;
+        botContext.Position = transform.position;
+        currentMove = activeStrategy.DecideMove(botContext);
     }
 
     private void OnDestroy()
     {
-        if (_playerMove != null) _playerMove.OnMoveBlocked -= HandleMoveBlocked;
-    }
-
-    public bool GetBombInput()
-    {
-        return _botContext != null && _strategy != null && _strategy.DecideBomb(_botContext);
+        if (playerMove != null) playerMove.OnMoveBlocked -= HandleMoveBlocked;
     }
 }

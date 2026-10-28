@@ -17,9 +17,25 @@ namespace Bot
         
         protected override Vector2 ChooseMove(BotContext context)
         {
-            if (BotToolkit.CountPlayers() != 2) return BotToolkit.RandomSafeMove(context);
-            if (!BotToolkit.TryNearestCellPlayer(context, out Vector3 target)) return Vector2.zero;
-            return BotToolkit.BfsToTile(context, target);
+            //Se nPlayer == 2 -> diventa un Kamikaze
+            if (BotToolkit.CountPlayers() == 2)
+            {
+                Debug.Log("Im a kamikaze");
+                if (!BotToolkit.TryNearestCellPlayer(context, out Vector3 target)) return Vector2.zero;
+                return BotToolkit.BfsToTile(context, target);
+            }
+                Debug.Log("Im a pacifist");
+
+            //Se nPlayer > 2 -> "pacifista"
+
+            //Se la cella attuale non è pericolosa, rimane fermo
+            if (BotToolkit.IsCellSafe(context, context.CellPosition))
+            {
+                return Vector2.zero;
+            }
+
+            //Se la cella attuale è pericolosa, si muove verso quella safe più vicina
+            return BotToolkit.BfsToTile(context, BotToolkit.NearestCellSafe(context));
         }
 
         protected override bool WantsBomb(BotContext context)

@@ -62,8 +62,13 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
 
     public void Update()
     {
-        _pMove.HandleInput(_pInput.GetMoveInput());
-        if (_pInput.GetBombInput()) { _pBombHandler.TryPlaceBomb(); }
+        Vector2 moveInput = _pInput.GetMoveInput();
+        bool placeBomb = _pInput.GetBombInput();
+
+        // Il bot può decidere di piazzare e fuggire nello stesso frame: piazza
+        // prima di avviare il movimento, così la bomba resta sulla tile corrente.
+        if (placeBomb) { _pBombHandler.TryPlaceBomb(); }
+        _pMove.HandleInput(moveInput);
         if(invicibilityTimer > 0) { invicibilityTimer -= Time.deltaTime; }  //Se in fase invincibile
     }
 

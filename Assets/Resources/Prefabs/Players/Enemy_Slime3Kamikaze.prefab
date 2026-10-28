@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 4666184065354329312}
   - component: {fileID: 1339868068114803448}
   m_Layer: 7
-  m_Name: Enemy_Slime3
+  m_Name: Enemy_Slime3Kamikaze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128,7 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotInputHandler
   gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
-  strategy: 4
+  strategyType: 3
+  idleDecisionRetryInterval: 0.25
 --- !u!114 &2060775463785302385
 MonoBehaviour:
   m_ObjectHideFlags: 0
