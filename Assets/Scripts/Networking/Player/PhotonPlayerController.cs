@@ -316,10 +316,11 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
         playerMove.HandleInput(moveInput);
 
         // Per il giocatore umano la richiesta rimane fino al termine del movimento, così la bomba viene piazzata su una cella centrata
+        
         if (!isAI)
         {
             pendingBombRequest |= placeBomb;
-            if (pendingBombRequest && !runtimeCharacterData.isMoving)
+            if (pendingBombRequest)
             {
                 pendingBombRequest = false;
                 photonBombHandler.TryRequestBomb(transform.position);
