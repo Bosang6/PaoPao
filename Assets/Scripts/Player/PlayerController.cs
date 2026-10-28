@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     private PlayerBombHandler _pBombHandler;
     private PlayerHealth _pHealth;
     private PlayerAudio _pAudio;
+    private bool ownsRuntimeCharacterData;
 
     public int MaxHealth => _characterData.maxHp;
     public int PlayerID => _instanceData.playerID;
@@ -32,6 +33,11 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
     private void Awake()
     {
         _gameData.localPlayerKill = 0;
+
+        // Runtime movement state must not be shared by players using the same CharacterData asset.
+        _characterData = Instantiate(_characterData);
+        _characterData.isMoving = false;
+        ownsRuntimeCharacterData = true;
 
         //Recupera i componenti
         _pInput = GetComponent<IPlayerInput>();
@@ -49,10 +55,20 @@ public class PlayerController : MonoBehaviour, IExplosionReceiver
         else { _pAudio.Initialize(_characterData); }
     }
 
+    private void OnDestroy()
+    {
+        if (ownsRuntimeCharacterData && _characterData != null) Destroy(_characterData);
+    }
+
     public void Update()
     {
-        _pMove.HandleInput(_pInput.GetMoveInput());
-        if (_pInput.GetBombInput()) { _pBombHandler.TryPlaceBomb(); }
+        Vector2 moveInput = _pInput.GetMoveInput();
+        bool placeBomb = _pInput.GetBombInput();
+
+        // Il bot può decidere di piazzare e fuggire nello stesso frame: piazza
+        // prima di avviare il movimento, così la bomba resta sulla tile corrente.
+        if (placeBomb) { _pBombHandler.TryPlaceBomb(); }
+        _pMove.HandleInput(moveInput);
         if(invicibilityTimer > 0) { invicibilityTimer -= Time.deltaTime; }  //Se in fase invincibile
     }
 

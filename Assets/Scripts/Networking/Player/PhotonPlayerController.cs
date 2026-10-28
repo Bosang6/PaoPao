@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Bot;
 using Photon.Pun;
 using UnityEngine;
 
@@ -65,6 +66,7 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
     public PlayerHealth Health => playerHealth;
 
     private bool isMatchEnded;
+    private bool pendingBombRequest;
 
     private Coroutine destroyAfterDeathCoroutine;
 
@@ -302,13 +304,26 @@ public sealed class PhotonPlayerController :  MonoBehaviourPun, IPunInstantiateM
             return;
         }
 
-        playerMove.HandleInput(activeInput.GetMoveInput());
+        Vector2 moveInput = activeInput.GetMoveInput();
+        bool placeBomb = activeInput.GetBombInput();
 
-        bool bombRequested = activeInput.GetBombInput();
-
-        if (bombRequested)
+        // Una AI decide di piazzare la bomba sulla cella attuale e iniziare subito la fuga
+        if (isAI && placeBomb)
         {
-            photonBombHandler.TryRequestBomb();
+            photonBombHandler.TryRequestBomb(transform.position);
+        }
+
+        playerMove.HandleInput(moveInput);
+
+        // Per il giocatore umano la richiesta rimane fino al termine del movimento, così la bomba viene piazzata su una cella centrata
+        if (!isAI)
+        {
+            pendingBombRequest |= placeBomb;
+            if (pendingBombRequest && !runtimeCharacterData.isMoving)
+            {
+                pendingBombRequest = false;
+                photonBombHandler.TryRequestBomb(transform.position);
+            }
         }
     }
 

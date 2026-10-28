@@ -7,7 +7,7 @@ using UnityEngine;
 /*
  * Gestisce una bomba sincronizzata nella partita multiplayer
  *
- * Responsabilità:
+ * Responsabilitï¿½:
  * - leggere i dati ricevuti durante l'istanziazione Photon
  * - disabilitare inizialmente il collider
  * - permettere al player di uscire dalla cella della bomba
@@ -37,12 +37,17 @@ public sealed class PhotonBombController : MonoBehaviourPun, IPunInstantiateMagi
 
     private int ownerPlayerViewId = -1;
     private float fuseDuration;
+    private float explodeAtTime;
+
+    public Vector3 Position => transform.position;
+    public float TimeToExplode => Mathf.Max(0f, explodeAtTime - Time.time);
+    public ExplosionData Data => PhotonView.Find(ownerPlayerViewId)?.GetComponent<PhotonBombHandler>()?.ExplosionData;
 
     private Coroutine fuseCoroutine;
     private Coroutine colliderCoroutine;
 
 
-    // Recupera il collider e lo disabilita finché tutti i player non hanno lasciato la cella.
+    // Recupera il collider e lo disabilita finchï¿½ tutti i player non hanno lasciato la cella.
     private void Awake()
     {
         if (bombCollider == null)
@@ -85,7 +90,9 @@ public sealed class PhotonBombController : MonoBehaviourPun, IPunInstantiateMagi
             fuseDuration = fallbackFuseDuration;
         }
 
-        // La bomba è un Room Object: soltanto il Master Client ne gestisce collider, timer e distruzione
+        explodeAtTime = Time.time + fuseDuration;
+
+        // La bomba ï¿½ un Room Object: soltanto il Master Client ne gestisce collider, timer e distruzione
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
@@ -104,7 +111,7 @@ public sealed class PhotonBombController : MonoBehaviourPun, IPunInstantiateMagi
     }
 
 
-    // Attende che nessun personaggio si trovi più sulla cella della bomba e abilita il collider su tutti
+    // Attende che nessun personaggio si trovi piï¿½ sulla cella della bomba e abilita il collider su tutti
     private IEnumerator EnableColliderWhenCellIsClear()
     {
         while (IsAnyPlayerOnBombCell())

@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,51 +6,86 @@ public class BombController : MonoBehaviour
 {
     [Header("Bomb Settings")]
     [SerializeField] private ExplosionData explosionData;
-
     [Header("Game Settings")]
     [SerializeField] private GameData gameData;
 
     public event System.Action OnBombReturned;
     private Coroutine explodingCoroutine;
-
+    private readonly List<Collider2D> ignoredPlayerColliders = new List<Collider2D>();
     private List<Transform> playersTransforms;
     private Collider2D bombCollider;
 
     public bool IsHuman = false;
+    private float explodeAtTime;
+
+    public Vector3 Position => transform.position;
+    public float TimeToExplode => Mathf.Max(0f, explodeAtTime - Time.time);
+    public ExplosionData Data => explosionData;
 
     private void Awake() { bombCollider = GetComponent<Collider2D>(); }
 
-    public void Initialize(List<Transform> players, bool IsHuman)    //Chiamato da BombPool.Get() ad ogni utilizzo della bomba
+    public void Initialize(List<Transform> players, bool isHuman)
     {
-        this.playersTransforms = players;
-        this.IsHuman = IsHuman;
+        RestoreIgnoredCollisions();
+        playersTransforms = players;
+        IsHuman = isHuman;
+        explodeAtTime = Time.time + explosionData.fTimeToExplode;
 
-        if (explodingCoroutine != null) { StopCoroutine(explodingCoroutine); }
-        explodingCoroutine = StartCoroutine(Exploding());
-        StartCoroutine(EnableColliderWhenClear(transform.position));
-    }
-
-    private IEnumerator EnableColliderWhenClear(Vector3 bombCell)
-    {
-        //Si parte col collider disattivato
-        bombCollider.enabled = false;
-        
-        //Si aspetta che non ci sia pi� nessun player sulla bomba
-        while (AnyPlayerOnCell(bombCell)) { yield return null; }
-
-        //Il collider diventa attivo
-        bombCollider.enabled = true;
-    }
-
-    private bool AnyPlayerOnCell(Vector3 cell)
-    {
-        foreach (Transform player in playersTransforms)
+        // Keep the collider active and ignore only players already overlapping it.
+        // Disabling/re-enabling a Collider2D can clear IgnoreCollision state.
+        if (playersTransforms != null)
         {
-            //Si controlla se ci sono player sulla stessa tile della bomba
-            Vector3 playerCell = GridUtils.AdjustPosition(player.position, gameData.fCellSize);
-            if (Vector3.Distance(playerCell, cell) < 0.1f) { return true; }
+            foreach (Transform player in playersTransforms)
+            {
+                if (player == null) continue;
+                Collider2D playerCollider = player.GetComponent<Collider2D>();
+                if (playerCollider == null) playerCollider = player.GetComponentInChildren<Collider2D>();
+                if (playerCollider == null || !PlayerOverlapsBomb(playerCollider)) continue;
+
+                Physics2D.IgnoreCollision(bombCollider, playerCollider, true);
+                ignoredPlayerColliders.Add(playerCollider);
+                StartCoroutine(RestoreCollisionWhenClear(playerCollider));
+            }
         }
-        return false;
+        if (explodingCoroutine != null) StopCoroutine(explodingCoroutine);
+        explodingCoroutine = StartCoroutine(Exploding());
+    }
+
+    private IEnumerator RestoreCollisionWhenClear(Collider2D playerCollider)
+    {
+        while (bombCollider != null && bombCollider.enabled &&
+               playerCollider != null && playerCollider.enabled && PlayerOverlapsBomb(playerCollider))
+            yield return null;
+
+        if (bombCollider != null && playerCollider != null)
+            Physics2D.IgnoreCollision(bombCollider, playerCollider, false);
+        ignoredPlayerColliders.Remove(playerCollider);
+    }
+
+    private bool PlayerOverlapsBomb(Collider2D playerCollider)
+    {
+        return playerCollider != null && playerCollider.bounds.Intersects(GetBombBounds());
+    }
+
+    private Bounds GetBombBounds()
+    {
+        if (bombCollider is BoxCollider2D box)
+        {
+            Vector3 center = transform.TransformPoint(box.offset);
+            Vector3 size = Vector3.Scale(box.size, transform.lossyScale);
+            return new Bounds(center, new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y),
+                Mathf.Max(0.01f, Mathf.Abs(size.z))));
+        }
+
+        return new Bounds(transform.position, Vector3.one * gameData.fCellSize * 0.9f);
+    }
+
+    private void RestoreIgnoredCollisions()
+    {
+        foreach (Collider2D playerCollider in ignoredPlayerColliders)
+            if (bombCollider != null && playerCollider != null)
+                Physics2D.IgnoreCollision(bombCollider, playerCollider, false);
+        ignoredPlayerColliders.Clear();
     }
 
     private IEnumerator Exploding()
@@ -62,35 +96,17 @@ public class BombController : MonoBehaviour
 
     private void Explode()
     {
-        //AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion, transform.position);
-        //Debug.Log($"Bomba esplosa in {transform.position}");
         OnBombReturned?.Invoke();
         OnBombReturned = null;
-
-        /*  Invoca un evento di tipo event System.Action. Il simbolo "?." significa "invoca
-         *  solo se qualcuno sta ascoltando" (quindi se ci sono listener registrati).
-         *  Successivamente, si de-registra dall'evento (poich� la bomba torna nel pool).
-         *  La prossima volta che la bomba verr� estratta dal pool, gli verr� agganciato
-         *  un nuovo listener
-         *  La sintassi = null permette di chiudere il canale di comunicazione coi listener
-         */
-
-        if (IsHuman) { 
-            AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion); 
-        }
-
-        //Delega l'esplosione all'ExplosionManager
+        if (IsHuman && AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioEvent.BombExplosion);
         ExplosionManager.Instance.OnExplode(transform.position, explosionData, IsHuman);
         BombPool.Instance.ReturnToPool(this);
     }
 
-    //Se il GameObject viene disattivato prima dello scadere del timer
-    void OnDisable()
+    private void OnDisable()
     {
-        if (explodingCoroutine != null)
-        {
-            StopCoroutine(explodingCoroutine);
-            explodingCoroutine = null;
-        }
+        StopAllCoroutines();
+        explodingCoroutine = null;
+        RestoreIgnoredCollisions();
     }
 }

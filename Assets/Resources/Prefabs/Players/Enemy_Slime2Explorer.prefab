@@ -10,22 +10,17 @@ GameObject:
   m_Component:
   - component: {fileID: 4460567357172676665}
   - component: {fileID: 6274750021995017542}
-  - component: {fileID: 1240003441511018218}
+  - component: {fileID: 7418047975958127747}
+  - component: {fileID: -1258666353239835286}
   - component: {fileID: 2060775463785302385}
   - component: {fileID: 1317502994822445219}
   - component: {fileID: 1903433651284525295}
-  - component: {fileID: 3905129330378257220}
+  - component: {fileID: -1533925464762217076}
   - component: {fileID: 8783822051681364641}
   - component: {fileID: 4666184065354329312}
   - component: {fileID: 1339868068114803448}
-  - component: {fileID: 74469242085118035}
-  - component: {fileID: 257404136824131085}
-  - component: {fileID: 1403502864686304216}
-  - component: {fileID: 6719842213003806602}
-  - component: {fileID: 4991836051681169792}
-  - component: {fileID: -5207369292144970776}
   m_Layer: 7
-  m_Name: NetwokPlayer_Slime3
+  m_Name: Enemy_Slime2Explorer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,18 +100,36 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &1240003441511018218
+--- !u!114 &7418047975958127747
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91049d72afe2d9845ae60d16a3c37acf, type: 3}
+  m_Script: {fileID: 11500000, guid: 1739e1e3ec9a729498193348117a22d7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalInputHandler
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  _gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  _characterData: {fileID: 11400000, guid: 33426d42ac401b2499e306dd777bc1e0, type: 2}
+  _instanceData: {fileID: 11400000, guid: ca8b11e88c41c504a8bcbf3bd7a72120, type: 2}
+--- !u!114 &-1258666353239835286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118495651096295261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d485f707acb00e5469de214d7cac9f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BotInputHandler
+  gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
+  strategyType: 2
+  idleDecisionRetryInterval: 0.25
 --- !u!114 &2060775463785302385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9e07eaa0be3ee4ea0dcad9f622fdf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
---- !u!114 &3905129330378257220
+--- !u!114 &-1533925464762217076
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -175,7 +188,7 @@ Animator:
   m_GameObject: {fileID: 5118495651096295261}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 6098d002eef4745b0a74cc137c120cda, type: 2}
+  m_Controller: {fileID: 22100000, guid: 116939b3fd4f14ceda8d4a405b380d17, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -260,131 +273,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &74469242085118035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d485f707acb00e5469de214d7cac9f8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BotInputHandler
---- !u!114 &257404136824131085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 833017f8c63c234468cc026282801bbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PhotonPlayerController
-  gameData: {fileID: 11400000, guid: ea35ef0cdb7332b49900a5aa9ef0a483, type: 2}
-  characterDataTemplate: {fileID: 11400000, guid: dc33e0b106da9984fa697b6f9aa1739e, type: 2}
-  humanInstanceDataTemplate: {fileID: 11400000, guid: edca1c686b7c60246a83e5ffdd44c9a9, type: 2}
-  botInstanceDataTemplate: {fileID: 11400000, guid: ca8b11e88c41c504a8bcbf3bd7a72120, type: 2}
---- !u!114 &1403502864686304216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6719842213003806602}
-  - {fileID: 4991836051681169792}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &6719842213003806602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformViewClassic
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 0
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 4
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 10
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
---- !u!114 &4991836051681169792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonAnimatorView
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 1
-    Name: IsMoving
-  - Type: 3
-    SynchronizeType: 1
-    Name: MovingDir
-  - Type: 4
-    SynchronizeType: 0
-    Name: IsDead
-  - Type: 9
-    SynchronizeType: 0
-    Name: Hurting
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
---- !u!114 &-5207369292144970776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118495651096295261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92ef7679dfa422f48afff531bf55ca36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PhotonBombHandler
-  networkBombPrefab: {fileID: 3814818534713039899, guid: f44f91193e16d9441bd190a55d0ca4c6, type: 3}

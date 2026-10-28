@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ccdf0c3fc197f8419894f36f6741a6d, type: 3}
   m_Name: BotPlaceAndRun
-  m_EditorClassIdentifier: Assembly-CSharp::BasicBotInstanceData
+  m_EditorClassIdentifier: Assembly-CSharp::BotInstanceData
   type: 1
   playerName: MajinBu
   playerID: 3

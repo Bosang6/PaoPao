@@ -24,6 +24,9 @@ public sealed class PhotonFlameVisual : MonoBehaviour
     private Animator flameAnimator;
 
     private Coroutine lifetimeCoroutine;
+    private float flameEndTime;
+
+    public float RemainingTime => Mathf.Max(0f, flameEndTime - Time.time);
 
     private Action<PhotonFlameVisual> releaseCallback;
 
@@ -34,7 +37,7 @@ public sealed class PhotonFlameVisual : MonoBehaviour
     }
 
 
-    // Prepara la fiamma grafica e avvia il timer dopo il quale verrà restituita al pool
+    // Prepara la fiamma grafica e avvia il timer dopo il quale verrï¿½ restituita al pool
     public void Initialize(FlameType flameType, float duration, Action<PhotonFlameVisual> onFinished)
     {
         if (lifetimeCoroutine != null)
@@ -48,6 +51,7 @@ public sealed class PhotonFlameVisual : MonoBehaviour
         ConfigureVisual(flameType);
 
         float safeDuration = Mathf.Max(0.01f, duration);
+        flameEndTime = Time.time + safeDuration;
 
         lifetimeCoroutine = StartCoroutine(LifetimeRoutine(safeDuration));
     }

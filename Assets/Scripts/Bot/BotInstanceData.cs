@@ -1,11 +1,24 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BotInstanceData", menuName = "PaoPaoOBJ/InstanceData/BotInstanceData")]
-public class BotInstanceData : PlayerInstanceData
+namespace Bot
 {
-    [Header("Bot")]
-    public float moveChangeCooldown;
-    public float bombCooldown;
-    public int difficulty;
-    //dipendono dalla difficoltà, quindi diversi per ogni partita (quindi per ogni istanza)
+    public enum BotStrategyType
+    {
+        Random = 0,
+        PlaceAndRun = 1,
+        Explorer = 2,
+        Kamikaze = 3,
+        Pacifist = 4
+    }
+
+    [CreateAssetMenu(fileName = "BotInstanceData", menuName = "PaoPaoOBJ/InstanceData/BotInstanceData")]
+    public class BotInstanceData : PlayerInstanceData
+    {
+        [Header("Bot settings")]
+        public float moveChangeCooldown = 0.2f;
+        public float bombCooldown = 1f;
+        [HideInInspector, FormerlySerializedAs("difficulty")]
+        public int legacyDifficulty;
+    }
 }

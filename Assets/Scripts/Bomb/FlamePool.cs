@@ -10,19 +10,24 @@ public class FlamePool : MonoBehaviour
 
     private Queue<FlameController> pool = new Queue<FlameController>();
 
+    //[AI] Registro delle fiamme attualmente accese (fuori dal pool)
+    private readonly List<FlameController> activeFlames = new List<FlameController>();
+    public IReadOnlyList<FlameController> ActiveFlames => activeFlames;
+
     private void Awake()
     {
         if(Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        for(int i = 0; i < iPoolSize; i++) { CreateFlame(); }
+        for(int i = 0; i < iPoolSize; i++) { pool.Enqueue(CreateFlame()); }
     }
+
+    //[AI] Crea una fiamma spenta, senza accodarla (vedi nota in BombPool.CreateBomb)
     FlameController CreateFlame()
     {
         GameObject obj = Instantiate(flamePrefab, transform);
         FlameController flame = obj.GetComponent<FlameController>();
         obj.SetActive(false);
-        pool.Enqueue(flame);
         return flame;
     }
 
@@ -34,11 +39,13 @@ public class FlamePool : MonoBehaviour
 
         flame.transform.position = v3Position;
         flame.gameObject.SetActive(true);
+        activeFlames.Add(flame);            //[AI] registra la fiamma come attiva
         return flame;
     }
 
     public void ReturnToPool(FlameController flame)
     {
+        activeFlames.Remove(flame);         //[AI] non è più attiva
         flame.gameObject.SetActive(false);
         pool.Enqueue(flame);
     }

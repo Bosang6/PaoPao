@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54d3d96b8d50f344c988a3a3aecf1557, type: 3}
-  m_Name: CharacterSlime3
+  m_Name: CharacterSlime1Pacifist
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
-  type: 4
+  type: 2
   maxHp: 3
   hp: 3
   maxBombs: 3
   moveSpeed: 3
   invincibilityDuration: 3
-  isMoving: 1
+  isMoving: 0
   explosionData: {fileID: 11400000, guid: 68d54f3ddabe4544ab9c942acfa56466, type: 2}
-  animatorType: 2
+  animatorType: 0
   eFootstep: 1
   deathSound: 14

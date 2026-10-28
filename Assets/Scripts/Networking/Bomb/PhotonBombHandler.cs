@@ -72,7 +72,7 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
 
 
     // Viene chiamato dal PhotonPlayerController quando il giocatore locale o una AI richiedono una bomba.
-    public void TryRequestBomb()
+    public void TryRequestBomb(Vector3 requestedPosition)
     {
         if (!isInitialized || !isPrefabRegistered)
         {
@@ -93,13 +93,14 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
             return;
         }
 
-        photonView.RPC(nameof(RPC_RequestPlaceBomb), RpcTarget.MasterClient);
+        Vector3 bombPosition = GridUtils.AdjustPosition(requestedPosition, gameData.fCellSize);
+        photonView.RPC(nameof(RPC_RequestPlaceBomb), RpcTarget.MasterClient, bombPosition);
     }
 
 
     // Riceve sul Master Client la richiesta di piazzamento e verifica che provenga dal proprietario del personaggio
     [PunRPC]
-    private void RPC_RequestPlaceBomb(PhotonMessageInfo messageInfo)
+    private void RPC_RequestPlaceBomb(Vector3 bombPosition, PhotonMessageInfo messageInfo)
     {
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -122,8 +123,6 @@ public sealed class PhotonBombHandler : MonoBehaviourPun
         {
             return;
         }
-
-        Vector3 bombPosition = GridUtils.AdjustPosition(transform.position, gameData.fCellSize);
 
         if (IsBombAlreadyOnCell(bombPosition))
         {
