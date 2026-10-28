@@ -16,7 +16,7 @@ The game, that is a replica of Bomberman, has the following steps:
 ## Team
 The team consists of:
 - Conforti Riccardo (main focus: UI + Sound + Multiplayer)
-- D'Ambrosio Lorenzo (main focus: Gameplay + Sound)
+- D'Ambrosio Lorenzo (main focus: Gameplay + Sound + AI)
 - Huang Zhikang (main focus: Design and Animations + Sound)
 
 ## Version
@@ -31,9 +31,7 @@ The team consists of:
 - Added new background music to improve the overall game atmosphere.
 - Added multiplayer support, allowing players to play together online.
 
-## Future developments
-
-The next step will be:
+### Version 3.0 (10/2026)
 - Increase the AI of the bot
 
 ---
@@ -48,7 +46,7 @@ The next step will be:
   <img src="Docs/Images/MapWinter.jpg" width="30%">
 </p>
 
-## Media Version 2.0
+## Media Version 2.0 & 3.0
 
 - link: https://youtu.be/vvPt_-8rNBo?si=mfArcvNCdfYzNGiP
 <p align="center">
