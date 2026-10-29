@@ -54,7 +54,12 @@ The team consists of:
 - Added multiplayer support, allowing players to play together online.
 
 ### Version 3.0 (10/2026)
-- Increase the AI of the bot
+Increase the AI of the bot
+- Kamikaze: focuses on reach the nearest player (using BFS), places a bomb next to them, and then runs away
+- Explorer: focuses on reaching the nearest destructible tile (using BFS) and placing a bomb next to it. If no destructible tiles are present, it use the Kamikaze strategy
+- Pacifist: if the number of surviving players is greater than 2, the focus is exclusively on avoiding the bomb. When it comes down to a 1vs1 duel, it use the Kamikaze strategy
+
+All the AI has as first priority to dodge the bomb and stay alive, then everyone has its own custom strategy
 
 ---
 
