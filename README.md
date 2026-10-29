@@ -75,9 +75,11 @@ All the AI has as first priority to dodge the bomb and stay alive, then everyone
 
 ## Media Version 2.0 & 3.0
 
-- link: https://youtu.be/vvPt_-8rNBo?si=mfArcvNCdfYzNGiP
+- link v2.0: https://youtu.be/vvPt_-8rNBo?si=mfArcvNCdfYzNGiP
 <p align="center">
   <img src="Docs/Images/PaoPao_MultiServerLobby.jpg" width="30%">
   <img src="Docs/Images/PaoPao_MultiRoomLobby.jpg" width="30%">
   <img src="Docs/Images/PaoPao_MultiPostGame.jpg" width="30%">
 </p>
+
+- link v3.0: https://youtu.be/vY9ex_s5akA
